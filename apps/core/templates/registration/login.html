@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="col-xs-12">
+  <div class="bs-example">
+    <div class="jumbotron main">
+      {% if user.is_authenticated %}
+      Что такое, {{ user.username }}? Вы же уже авторизорваны. 
+      Впрочем, всегда можно <a href="{% url 'logout' %}">выйти</a>.<br/><br/>
+      {% else %}
+      {% if form.non_field_errors %}
+      {{ form.non_field_errors }}
+      {% endif %}
+      <form class="form-horizontal login_form" method="post" action="">
+	<div class="control-group">
+	  <label class="control-label">&nbsp;</label>
+	  <div class="controls"><h1>Авторизация</h1></div>
+	</div>
+	{% csrf_token %}
+	{% for field in form %}
+	<div class="control-group">
+	  {{ field.label_tag }}<div class="controls">{{ field }}</div>
+	  {% if field.help_text %}<div class="clearfix">{{ field.help_text }}</div>{% endif %}
+	  {% if field.errors %}<div class="myerrors clearfix">{{ field.errors }}</div>{% endif %}
+	</div>
+	{% endfor %}
+	<div class="control-group">
+	  <div class="controls">
+            <input type="submit" value="Вход" class="btn btn-primary">
+	  </div>
+	</div>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock body %}

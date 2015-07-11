@@ -1,0 +1,26 @@
+{% load static from staticfiles %}
+<!doctype html>
+<html lang="ru">
+<head>
+  {% block head %}
+  {% block meta %}
+  <meta charset="utf-8">
+  {% endblock meta %}
+  <title>
+    {% block title %}Tpl site{% endblock title %}
+  </title>
+  {% block js %}
+  {% endblock js %}
+  {% block extra_js %}
+  {% endblock extra_js %}
+  {% block extra_css %}
+  {% endblock extra_css %}
+  {% endblock head %}
+</head>
+<body>
+  {% block header %}
+  {% endblock header %}
+  {% block body %}
+  {% endblock body %}
+</body>
+</html>
