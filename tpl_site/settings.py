@@ -23,15 +23,23 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
+#SESSION_COOKIE_DOMAIN = ".raccoongang.com"
+
 ALLOWED_HOSTS = ['*']
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'oauth2_provider.ext.rest_framework.OAuth2Authentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
-    'PAGE_SIZE': 10,
-}
+#REST_FRAMEWORK = {
+#    'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework.authentication.OAuth2Authentication',
+#         'rest_framework.authentication.SessionAuthentication'
+#    ),
+#    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+#    'PAGE_SIZE': 10,
+#}
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    #'provider.oauth2.AccessTokenBackend',
+)
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -47,7 +55,7 @@ INSTALLED_APPS = (
     'oauth2_provider',
 )
 
-OAUTH_OIDC_ISSUER = 'https://example.com/'
+OAUTH_OIDC_ISSUER = "https:///oauth2"
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -63,6 +71,11 @@ ROOT_URLCONF = 'tpl_site.urls'
 
 WSGI_APPLICATION = 'tpl_site.wsgi.application'
 
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR,  "static_col")
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+    )
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
@@ -96,6 +109,7 @@ STATIC_URL = '/static/'
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
 
 try:
     from local_settings import *
