@@ -7,5 +7,13 @@
 {% endif %}
 {% endblock header %}
 {% block body %}
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+{% if user.is_authenticated %}
+<form method="post" action="">
+  {% csrf_token %}
+  <table>
+  {{ form.as_table }}
+  </table>
+  <input type="submit" value="Create">
+</form>
+{% endif %}
 {% endblock body %}
