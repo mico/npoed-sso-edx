@@ -32,7 +32,7 @@ class CreateUserForm(forms.Form):
     def clean_username(self):
         try:
             User.objects.get(username=self.cleaned_data['username'])
-        except User.DoesNotExist :
+        except ObjectDoesNotExist:
             return self.cleaned_data['username']
 
         raise forms.ValidationError("this user exist already")
@@ -89,7 +89,6 @@ class Home(FormView):
                 scope=2
             )
             r = requests.get(url + '?state=FntJ1v4fBr16sRqsH4N6fph2CXT4BEB7&code=' + grant.code)
-            print r.text
         return redirect(self.success_url)
 
 
