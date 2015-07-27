@@ -23,7 +23,9 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-#SESSION_COOKIE_DOMAIN = ".raccoongang.com"
+#SESSION_COOKIE_DOMAIN = ".rnoep.raccoongang.com"
+AUTH_SESSION_COOKIE_DOMAIN = ".rnoep.raccoongang.com"
+
 
 ALLOWED_HOSTS = ['*']
 

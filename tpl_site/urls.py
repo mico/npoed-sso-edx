@@ -1,16 +1,18 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.contrib.auth.views import login, logout
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
 from apps.core.views import AccessTokenDetailView
+from apps.core.decorators import set_auth_cookie
 
 
 urlpatterns = patterns(
     '', 
     url(r'^$', include('apps.core.urls')),
-    url(r'^login/', 'django.contrib.auth.views.login', name='login'),
-    url(r'^logout/', 'django.contrib.auth.views.logout',
+    url(r'^login/', set_auth_cookie(login), name='login'),
+    url(r'^logout/', set_auth_cookie(logout),
         {'next_page': '/'}, name='logout'),
     url(r'^admin/', include(admin.site.urls)),
     url('^oauth2/access_token/(?P<token>[\w]+)/$',
