@@ -5,14 +5,14 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
 from apps.core.views import AccessTokenDetailView
-from apps.core.decorators import set_auth_cookie
+from apps.core.decorators import set_auth_cookie, external_redirect
 
 
 urlpatterns = patterns(
     '', 
     url(r'^$', include('apps.core.urls')),
     url(r'^login/', set_auth_cookie(login), name='login'),
-    url(r'^logout/', set_auth_cookie(logout),
+    url(r'^logout/', external_redirect(set_auth_cookie(logout)),
         {'next_page': '/'}, name='logout'),
     url(r'^admin/', include(admin.site.urls)),
     url('^oauth2/access_token/(?P<token>[\w]+)/$',
