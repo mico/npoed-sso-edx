@@ -1,9 +1,17 @@
 Django==1.7.8
+PyJWT==1.0.1
 argparse==1.2.1
 django-braces==1.8.0
+-e git+https://github.com/edx/django-oauth2-provider.git@3d9fde84c6af7c452428bc1cb68b52979d46f3d6#egg=django_oauth2_provider-dev
+django-registration-redux==1.1
 djangorestframework==3.1.3
+-e git+https://github.com/edx/edx-oauth2-provider.git@5b4fc70f5ad020ec8d0232bb23a8c3a5a4ae1793#egg=edx_oauth2_provider-dev
+gunicorn==19.3.0
 oauthlib==0.7.2
+python-openid==2.2.5
+python-social-auth==0.2.12
+requests==2.7.0
+requests-oauthlib==0.5.0
+shortuuid==0.3
 six==1.9.0
 wsgiref==0.1.2
--e git+https://github.com/edx/django-oauth2-provider.git@0.2.7-fork-edx-5#egg=django-oauth2-provider
--e git+https://github.com/edx/edx-oauth2-provider.git#egg=oauth2_provider

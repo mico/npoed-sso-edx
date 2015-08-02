@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block extra_js %}
+<script type="text/javascript">
+  $(document).ready(function(){ $("label:not(.checkbox)").addClass("control-label") });
+</script>
+{% endblock extra_js %}
+{% block content %}
+
+<ul class="breadcrumb">
+  <li><a href="{% url 'index' %}">Главная</a></li>
+  <li class="active"> Регистрация</li>
+</ul>
+
+<div class="main">
+  <h1 align="center">Регистрация</h1>
+  <form class="form-horizontal" method="post">
+    <div class="container-fluid">
+      <div class="row-fluid">
+	<div class="span6 hero-unit">
+          <h2>Обязательные поля</h2>
+	  {% csrf_token %}
+	  {% for field in form %}
+          <div class="control-group">
+	    {{ field.label_tag }}
+            <div class="controls">{{ field }}</div>
+	    {% if field.help_text %}<div class="clearfix">{{ field.help_text }}</div>{% endif %}
+	    {% if field.errors %}<div class="myerrors clearfix">{{ field.errors }}</div>{% endif %}
+	  </div>
+	  {% endfor %}
+	</div>
+	<div class="span6">
+          <h2>НЕ обязательные поля, но их заполнение позволит Вам получать СКИДКИ</h2>
+          <div class="control-group">
+            <label class="control-label" for="inputName">ФИО</label>
+            <div class="controls">
+              <input type="text" id="inputName" placeholder="ФИО" name="fio" value="">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="inputCompany">Название предприятия</label>
+            <div class="controls">
+              <input type="text" id="inputCompany" placeholder="Название предприятия" name="company" value="">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="inputCode">Код УДРПОУ предприятия</label>
+            <div class="controls">
+              <input type="text" id="inputCode" placeholder="Код УДРПОУ предприятия" name="code" value="">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="inputPost">Должность</label>
+            <div class="controls">
+              <input type="text" id="inputPost" placeholder="Должность" name="position" value="">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="inputPhone">Телефон</label>
+            <div class="controls">
+              <input type="text" id="inputPhone" placeholder="Телефон" name="phone" value="">
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="controls">
+              <label class="checkbox">
+                <input type="checkbox"> Я согласен на обработку моих персональных данных 
+              </label>
+            </div>
+          </div>
+	</div> <!-- /.span6 -->
+      </div>
+      <p align="center">
+	<button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+      </p>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+

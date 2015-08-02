@@ -4,23 +4,116 @@
 <head>
   {% block head %}
   {% block meta %}
-  <meta charset="utf-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   {% endblock meta %}
   <title>
-    {% block title %}Tpl site{% endblock title %}
+    {% block title %}Npoed-Sso{% endblock title %}
   </title>
+  {% block css %}
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}"/>
+    <style>
+      .img-thumbnail { height: 30px; }
+    </style>
+  {% endblock css %}
   {% block js %}
+    <script type="text/javascript" src="{% static 'js/jquery-1.11.3.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/isotope.pkgd.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/moment/min/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
   {% endblock js %}
-  {% block extra_js %}
-  {% endblock extra_js %}
   {% block extra_css %}
   {% endblock extra_css %}
   {% endblock head %}
 </head>
-<body>
+<body style="background-color: #dedede;">
   {% block header %}
+    <nav class="navbar-inverse">
+      <div class="container">
+	<div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="{% url 'home' %}">Npoed</a>
+          </div>
+          <ul class="nav navbar-nav nav-pills">
+            <li role="presentation" {% block active_profile %}{% endblock %}><a href="{% url 'profile' %}">Profile</a></li>
+            <li role="presentation"><a href="#">Link 4</a></li>
+            <li role="presentation" class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+		Dropdown <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+		<li role="presentation"><a href="#">Link 1</a></li>
+		<li role="presentation"><a href="#">Link 2</a></li>
+		<li role="presentation"><a href="#">Link 3</a></li>
+		<li role="presentation"><a href="#">Link 4</a></li>
+              </ul>
+            </li>
+          </ul>
+          <div class="navbar-form navbar-right">
+            <ul class="nav navbar-nav nav-pills" style="margin: 0 50px 0 0;">
+              <li role="presentation" class="dropdown">
+		{% if user.is_authenticated %}
+		<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+                   style="padding:7px 15px 0">
+                  <img src="{% static 'images/vkontakte-256.png' %}" alt="..." class="img-circle" height="22" width="22" style="margin: 0 5px 0 0;">
+                  {{ user.first_name }}
+		</a>
+		<a href="{% url 'logout'%}" role="button"
+                   aria-haspopup="true"
+                   aria-expanded="false"
+                   style="padding:7px 15px 0">logout
+                  <img src="{% static 'images/vkontakte-256.png' %}" alt="..." class="img-circle" height="22" width="22" style="margin: 0 5px 0 0;">
+                  {{ user.first_name }}
+		</a>
+		{% endif %}
+		<ul class="dropdown-menu">
+                  <li role="presentation"><a href="#">Link 1</a></li>
+                  <li role="presentation"><a href="#">Link 2</a></li>
+                  <li role="presentation"><a href="#">Link 3</a></li>
+                  <li role="presentation"><a href="#">Link 4</a></li>
+		</ul>
+              </li>
+            </ul>
+	    {% if not user.is_authenticated %}
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#register_modal">Register</button>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#login_modal">Login</button>
+	    {% endif %}
+          </div>
+	</div>
+      </div>
+    </nav>
   {% endblock header %}
-  {% block body %}
-  {% endblock body %}
+  <div class="container custom_container">
+    {% block content %}
+    {% endblock content %}
+  </div>
+  <footer class="panel-footer">
+    {% block footer %}
+    <div class="container">
+      <p>© Company 2014</p>
+    </div>
+    {% endblock footer %}
+  </footer>
+  {% block modals %}
+    {% include 'modals/login_modal.html' %}
+    {% include 'modals/register_modal.html' %}
+    {% include 'modals/interest_modal.html' %}
+    {% include 'modals/add_discipline_modal.html' %}
+    {% include 'modals/for_editing/edit_book.html' %}
+  {% endblock modals %}
+  {% block extra_js %}
+  {% endblock extra_js %}
 </body>
 </html>

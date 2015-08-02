@@ -1,0 +1,147 @@
+.custom_image {
+    height: 30px;
+    width: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.custom_margin {
+    margin: 0 0 0 9px !important;
+}
+
+.custom_img-responsive {
+    height: 50px;
+    width: 50px;
+    float: left;
+}
+
+.followers_info {
+    font-size: 12px;
+    float: left;
+    margin-left: 10px;
+}
+
+/*.custom_heigth_panel-body {*/
+    /*height: 100px;*/
+/*}*/
+
+.message-item {
+    /*height: 240px;*/
+    width: 100%;
+    padding: 0 10px;
+}
+
+.bottom {
+    padding: 0 10px;
+}
+
+.custom-modal-dialog {
+    margin: 0 0 20px 0;
+    width: 100%;
+}
+
+.custom-row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.custom_gliphycon {
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.custom_container {
+    padding-top: 20px;
+}
+
+.custom_img-thumbnail {
+    padding: 0;
+    border: 0;
+}
+
+.custom_img-thumbnail_link:hover {
+    opacity: 0.8;
+    text-decoration: none !important;
+}
+
+.show_link {
+    display: none;
+}
+
+.profile_photo {
+    /*height: 150px;*/
+    /*width: 150px;*/
+}
+
+.profile_div {
+    position: absolute;
+    /*height: 150px;*/
+    /*width: 150px;*/
+    margin: 0 0 0 0;
+    /*padding: 130px 0 0 ;*/
+    display: none;
+    /*background: grey;*/
+    /*opacity: 0.1;*/
+}
+
+.profile_div a {
+    margin-left: 30px;
+}
+
+.custom_modal-content {
+    -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.3);
+    box-shadow: 0 5px 15px rgba(0,0,0,.3);
+}
+
+.custom_shadow_for_panel-body {
+    -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.3);
+    box-shadow: 0 5px 15px rgba(0,0,0,.3);
+}
+
+.grid-item {
+    width: 33%;
+    padding: 5px;
+}
+
+.menu-fixed {
+    position: static;
+    /*height: 30px;*/
+    /*padding: 0 0 4px;*/
+    text-align: right;
+    background: 0;
+    overflow: hidden;
+}
+
+.cust_button {
+    font-size: 13px;
+    float:left;
+    margin-right: 1px;
+    border: 1px solid #ccc;
+}
+
+.cust_button.is-checked {
+    background: #e7e7e7;
+}
+
+.cust_button:first-child {
+    border-radius: 0.5em 0 0 0.5em;
+}
+
+.cust_button:last-child {
+    border-radius: 0 0.5em 0.5em 0;
+}
+
+.img_for_block_search {
+    padding:5px;
+    margin:0 auto;
+    text-align: center;
+}
+
+.img_for_block_search a, .img_for_block_search img {
+    max-width: 100%;
+}
+
+.thumbnail_img {
+    background-image: url('../images/icons/video_call-256.png');
+    z-index: 1000;
+}

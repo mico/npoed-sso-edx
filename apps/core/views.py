@@ -5,25 +5,57 @@ import urllib
 import string
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.views.generic.edit import FormView
+from django.views.generic import TemplateView
 from django.shortcuts import redirect
+from django.template.loader import render_to_string
+from django.core.urlresolvers import reverse
 
 from provider.oauth2.views import AccessTokenDetailView
 from provider.oauth2.models import Client, AccessToken, Grant
 
 from .forms import CreateUserForm
+from apps.profiler.forms import RegUserForm, LoginForm
 
 
 url = 'http://rnoep.raccoongang.com/auth/complete/sso_npoed-oauth2/'
 
 
-class Home(FormView):
+class Index(TemplateView):
 
     template_name = 'index.html'
-    form_class = CreateUserForm
     success_url = '/'
+
+    def get_context_data(self, **kwargs):
+        context = super(Index, self).get_context_data(**kwargs)
+        context['reg_form'] = render_to_string(
+            'forms/form.html', {'form': RegUserForm()}
+        )
+        context['login_form'] = render_to_string(
+            'forms/form.html', {'form': LoginForm()}
+        )
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return redirect(reverse('home'))
+        return super(Index, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        form = RegUserForm(request.POST)
+        return JsonResponse({
+                'status': 'ok' if form.is_valid() else 'error',
+                'reg_form': render_to_string('forms/form.html', {'form': form})
+                })
+
+
+class Home(FormView):
+
+    template_name = 'home.html'
+    form_class = CreateUserForm
+    success_url = 'home/'
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
