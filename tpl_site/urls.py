@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.contrib.auth.views import login, logout
+from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
 
 from apps.core.views import AccessTokenDetailView
@@ -44,7 +45,11 @@ urlpatterns = patterns(
         csrf_exempt(AccessTokenDetailView.as_view()),
         name='access_token_detail'),
     url(r'^oauth2/', include('oauth2_provider.urls', namespace = 'oauth2')),
+    url(r'^/receiver.html$',
+        TemplateView.as_view(template_name='-receiver.html')
+    ),
 )
+
 
 if settings.DEBUG:
     urlpatterns += patterns(
