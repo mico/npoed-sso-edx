@@ -1,0 +1,46 @@
+@import "variables";
+
+.global-footer {
+  padding: 30px 0;
+  color: #666666;
+  background-color: #000000;
+  div[class*="col-"] {
+    position: relative;
+    padding-left: 60px;
+    .logo {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    h3 {
+      margin: 0 0 5px;
+      font-weight: normal;
+      font-size: 18px;
+      color: #ffffff;
+    }
+    a {
+      color: #999999;
+      &:hover {
+        text-decoration: underline;
+        color: #ffffff;
+      }
+    }
+  }
+  .footer-section-help {
+    li {
+      display: inline-block;
+      margin-right: 10px;
+      white-space: nowrap;
+    }
+  }
+  .footer-section-social {
+    a {
+      display: inline-block;
+      padding: 10px 15px;
+      margin: 0 10px 0 0;
+      color: #ffffff;
+      background-color: #262626;
+      border: 1px solid $global-border-color-light;
+    }
+  }
+}
