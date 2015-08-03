@@ -1,0 +1,133 @@
+@import "variables";
+@import "mixins";
+
+.profile-wrapper {
+  position: relative;
+  margin-top: 150px;
+  padding: 50px;
+  background-color: $global-content-background;
+
+  .profile-nav-links {
+    position: absolute;
+    right: 0;
+    top: -4em;
+    li {
+      display: inline-block;
+      margin-left: 0.5em;
+    }
+    a {
+      display: block;
+      padding: 0.75em 1em;
+      color: $global-border-color-dark;
+      border: 1px solid $global-border-color-dark;
+      border-radius: 5px;
+      &:hover {
+        background-color: $global-content-background;
+      }
+    }
+  }
+
+  .profile-avatar {
+    position: absolute;
+    left: 50px;
+    top: -100px;
+    font-size: 50px;
+    padding: 35px 50px;
+    background-color: #000000;
+    border-radius: 50%;
+    .fa {
+      color: #ffffff;
+    }
+  }
+
+  .profile-section {
+    padding: 0 0 25px 0;
+    border-bottom: 1px solid $global-border-color-light;
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .field {
+    margin-bottom: 1em;
+    .field-label {
+      padding: 0 0 0.25em;
+      font-size: 13px;
+      color: #999999;
+    }
+    .field-content {
+      font-size: 18px;
+      color: #000000;
+      label {
+        display: block;
+        font-size: 13px;
+        color: #333333;
+      }
+    }
+    .field-content-edit {
+      display: none;
+    }
+    &.editable {
+      .field-content {
+        position: relative;
+        &:before {
+          display: none;
+          content: "\f040";
+          font-family: FontAwesome;
+          font-size: 15px;
+          position: absolute;
+          left: -25px;
+          top: 0;
+        }
+        &:hover:before {
+          display: block;
+        }
+      }
+    }
+    &.js-state-edit {
+      .field-content {
+        // display: none;
+        &:hover:before {
+          display: none;
+        }
+      }
+      .field-content-edit {
+        display: block;
+        input[type="text"] {
+          margin-right: 10px;
+          padding: 2px;
+          border: 0;
+          border-bottom: 1px solid $global-border-color-dark;
+        }
+      }
+    }
+  }
+  .field-public-email,
+  .field-socialnetwork-accounts {
+    label {
+      float: right;
+    }
+  }
+  .field-socialnetwork-accounts {
+    ul {
+      li {
+        display: inline-block;
+        margin-right: 0.25em;
+      }
+      a {
+        display: block;
+        padding: 1.5em;
+        line-height: 1;
+        color: #ffffff;
+        background-color: #3852d3;
+      }
+    }
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+  h2 {
+    font-size: 20px;
+  }
+}

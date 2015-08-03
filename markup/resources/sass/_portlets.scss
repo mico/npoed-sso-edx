@@ -1,0 +1,124 @@
+@import "variables";
+
+.portlet {
+  margin: 0 0 20px;
+  padding: 20px;
+  color: #333333;
+  font-size: 13px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #999999;
+}
+.portlet-header {
+
+}
+
+// Subscribe by email
+
+.portlet-subscription {
+  padding-left: 60px;
+  background: #ffffff url("../img/icon-email.png") no-repeat left center;
+  background-size: 50px 50px;
+  span {
+    display: block;
+    font-size: 20px;
+  }
+  input {
+    float: right;
+    margin-left: 10px;
+  }
+}
+
+// Course info
+
+.portlet-course-info {
+  ul {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    li {
+      display: block;
+      width: 50%;
+      height: 80px;
+      float: left;
+    }
+    span {
+      display: block;
+      font-size: 20px;
+    }
+    img {
+      float: left;
+      margin-right: 10px;
+    }
+  }
+}
+
+// Common portlet with icon
+
+.portlet-common-with-icon {
+  position: relative;
+  border-top: 100px solid #cccccc;
+  .portlet-header {
+    position: absolute;
+    left: 30px;
+    top: 0;
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+
+    min-height: 100px;
+    min-width: 100px;
+    line-height: 100px;
+    text-align: center;
+    font-size: 18px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    border: 1px solid #cccccc;
+  }
+  .portlet-body {
+    padding: 50px 0 0;
+  }
+  .portlet-footer {
+    padding: 1em 0 0 0;
+    a {
+      color: #999999;
+    }
+  }
+}
+
+// Univercity portlet
+
+.portlet-univercity {
+  .portlet-body {
+    font-weight: bold;
+    font-size: 16px;
+  }
+}
+
+// Lecturer portlet
+
+.portlet-lecturer {
+  .portlet-body {
+    color: #999999;
+    h3 {
+      margin: 0 0 20px;
+      color: #333333;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+}
+
+// Certificate portlet
+
+.portlet-certificate {
+  .portlet-body {
+    color: #999999;
+    h3 {
+      margin: 0 0 20px;
+      color: #333333;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+}
