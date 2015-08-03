@@ -35,6 +35,7 @@ class User(AbstractUser):
                         [9, u'Другое'],
                         [0, u'Не указан']]
 
+    # email = models.CharField(max_length=50, unique=True)
     second_name = models.CharField(max_length=50, blank=True, null=True)
     gender = models.PositiveSmallIntegerField(blank=True, null=True,
                                               choices=sex_choice)
