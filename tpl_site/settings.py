@@ -145,6 +145,7 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.google.GoogleOpenId',
     'social.backends.google.GoogleOAuth2',
     'social.backends.twitter.TwitterOAuth',
+    'social.backends.mailru.MailruOAuth2',
     'social.backends.vk.VKOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
