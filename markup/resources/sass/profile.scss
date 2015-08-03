@@ -49,7 +49,6 @@
   }
 
   .field {
-    position: relative;
     margin-bottom: 1em;
     .field-label {
       padding: 0 0 0.25em;
@@ -65,16 +64,41 @@
         color: #333333;
       }
     }
-    &.editable:before {
+    .field-content-edit {
       display: none;
-      content: "\f040";
-      font-family: FontAwesome;
-      font-size: 17px;
-      position: absolute;
-      left: -25px;
-      top: 0;
-      &:hover {
+    }
+    &.editable {
+      .field-content {
+        position: relative;
+        &:before {
+          display: none;
+          content: "\f040";
+          font-family: FontAwesome;
+          font-size: 15px;
+          position: absolute;
+          left: -25px;
+          top: 0;
+        }
+        &:hover:before {
+          display: block;
+        }
+      }
+    }
+    &.js-state-edit {
+      .field-content {
+        // display: none;
+        &:hover:before {
+          display: none;
+        }
+      }
+      .field-content-edit {
         display: block;
+        input[type="text"] {
+          margin-right: 10px;
+          padding: 2px;
+          border: 0;
+          border-bottom: 1px solid $global-border-color-dark;
+        }
       }
     }
   }

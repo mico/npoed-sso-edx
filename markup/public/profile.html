@@ -33,13 +33,25 @@
             <div class="profile-avatar">
               <i class="fa fa-user"></i>
             </div>
-            <div class="field field-login editable">
+            <div class="field field-login">
               <div class="field-label">Логин</div>
               <div class="field-content">konstantin999</div>
             </div>
-            <div class="field field-birthdate editable">
+            <div class="field field-name editable js-state-edit">
+              <div class="field-label">ФИО</div>
+              <div class="field-content">Иванов Иван Иванович</div>
+              <div class="field-content-edit">
+                <input type="text" name="surname" value="Иванов">
+                <input type="text" name="firstname" value="Иван">
+                <input type="text" name="patronymic" value="Иванович">
+              </div>
+            </div>
+            <div class="field field-birthdate editable js-state-edit">
               <div class="field-label">Дата рождения</div>
               <div class="field-content">18.03.1980</div>
+              <div class="field-content-edit">
+                <input type="text" name="birthdate" value="18.03.1980">
+              </div>
             </div>
             <div class="field field-region editable">
               <div class="field-label">Регион проживания</div>
