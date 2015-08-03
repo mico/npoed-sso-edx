@@ -39,9 +39,16 @@ ALLOWED_HOSTS = ['*']
 #    'PAGE_SIZE': 10,
 #}
 
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    #'provider.oauth2.AccessTokenBackend',
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages",
+    "django.core.context_processors.request",
+    "apps.profiler.context_processors.forms",
 )
 
 INSTALLED_APPS = (
@@ -157,7 +164,7 @@ SOCIAL_AUTH_ERROR_KEY = 'socialauth_error'
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = False
 
 LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/login/'
+LOGIN_URL = '/'
 LOGIN_ERROR_URL = '/'
 
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.

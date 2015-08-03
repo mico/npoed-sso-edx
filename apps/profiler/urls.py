@@ -20,9 +20,11 @@ from .views import (
 
 urlpatterns = patterns(
     url(r'^user_page/(?P<pk>\d+)/$', UserPage.as_view(), name='user_page'),
-    url(r'^login_auth/$', Login.as_view(), name='login_auth'),
+
+    # url(r'^login_auth/$', Login.as_view(), name='login_auth'),
     url(r'^register/$', MyRegistrationView.as_view(),
         name='registration_register2'),
+
     url(r'^profile/$', TemplateView.as_view(template_name='profile.html'),
         name='profile'),
 )

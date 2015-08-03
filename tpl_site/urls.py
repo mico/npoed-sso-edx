@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from apps.core.views import AccessTokenDetailView
 from apps.core.decorators import set_auth_cookie, external_redirect
-from apps.profiler.views import CustomActivationView
+from apps.profiler.views import CustomActivationView, Login
 
 
 urlpatterns = patterns(
@@ -36,6 +36,7 @@ urlpatterns = patterns(
     
 
     url(r'^login/', set_auth_cookie(login), name='login'),
+    url(r'^login_auth/$', set_auth_cookie(Login.as_view()), name='login_auth'),
     url(r'^logout/', external_redirect(set_auth_cookie(logout)),
         {'next_page': '/'}, name='logout'),
 

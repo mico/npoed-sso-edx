@@ -50,6 +50,28 @@ class TextInput(forms.TextInput):
         return mark_safe(output)
 
 
+class CustomTextInput(forms.TextInput):
+    '''
+    '''
+
+    def render(self, name, value, attrs=None):
+        print name, value, attrs
+        #<input class="span12" id="id_username" maxlength="254" name="username" placeholder="9ineID / Email address" type="text">
+        # output = ''
+        # output_item = '''
+        #     <div class="form-group">
+        #       <label for="inputPassword3" class="col-sm-3 control-label">Nickname</label>
+        #       <div class="col-sm-9">
+        #         <input type="text" class="form-control" id="inputPassword3" placeholder="Nickname">
+        #       </div>
+        #     </div>
+        #     '''
+        # output = output_item % super(TextInput, self).render(
+        #     name, value, attrs=attrs)
+        # return mark_safe(output)
+        return super(CustomTextInput, self).render(name, value, attrs=attrs)
+
+
 class DateInput(forms.DateInput):
     '''
     '''
@@ -150,9 +172,7 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(
         label='', widget=forms.PasswordInput(attrs={
                 "class": "span12", "placeholder": "Password"}))
-    username = forms.CharField(
-        label='', max_length=254, widget=forms.TextInput(attrs={
-                "class": "span12", "placeholder": "9ineID / Email address"}))
+    username = forms.CharField(widget=CustomTextInput())
 
     def confirm_login_allowed(self, user):
         pass

@@ -15,7 +15,7 @@ from django.conf import settings
 from django.views.generic.edit import FormView
 from django.views.generic import View, ListView, TemplateView, DetailView
 from django.http import JsonResponse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, get_user_model
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
@@ -24,8 +24,8 @@ from registration.backends.default.views import RegistrationView, ActivationView
 
 from apps.core.utils import LoginRequiredMixin
 from .forms import UserForm, LoginForm, RegUserForm
-from .models import User
 
+User = get_user_model()
 
 
 class Login(FormView):
@@ -63,4 +63,4 @@ class MyRegistrationView(RegistrationView):
 class CustomActivationView(ActivationView):
 
     def get_success_url(self, request, user):
-        return '/'
+        return reverse('index')
