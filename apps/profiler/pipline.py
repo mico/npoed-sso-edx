@@ -1,49 +1,87 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 """
-    apps.core.pipline
+    apps.profiler.pipline
     ~~~~~~~~~
 
     :copyright: (c) 2015 by dorosh.
 """
 
 __author__ = 'dorosh'
-__date__ = '26.03.2015'
+__date__ = '04.08.2015'
 
-from .models import User
+from social.exceptions import InvalidEmail
+from social.pipeline.partial import partial
+from django.core.urlresolvers import reverse
+from django.conf import settings
+from django.shortcuts import redirect
 
 
-def save_profile(backend, user, response, *args, **kwargs):
-    if backend.name == 'google-oauth2':
-        user.first_name = response.get('name', {}).get('givenName', '')
-        user.last_name = response.get('name', {}).get('familyName', '')
-        user.gender = 1 if response.get('gender') == 'male' else 2
-        email = response.get('emails', [{}])[0].get('value', '')
-        username = email.split('@')[0]
-        if user.username:
-            pass
-        elif username and not User.objects.filter(username=username).exists():
-            user.username = username
-        else:
-            for item in xrange(500):
-                username += str(item)
-                if not User.objects.filter(username=username).exists():
-                    user.username = username
-        user.save()
-    elif backend.name == 'facebook':
-        print response, '<<<<<<<<<<<<<<<'
-        user.gender = 1 if response.get('gender') == 'male' else 2
-        user.first_name = response.get('first_name', '')
-        user.last_name = response.get('last_name', '')
-        user.email = response.get('email', '')
-        username = response.get('email', '')
-        if user.username:
-            pass
-        elif username and not User.objects.filter(username=username).exists():
-            user.username = username
-        else:
-            for item in xrange(500):
-                username += str(item)
-                if not User.objects.filter(username=username).exists():
-                    user.username = username
-        user.save()
+def redirect_if_no_email(backend, response, social, *args, **kwargs):
+    print dir(social), social.extra_data
+    if not kwargs['details'].get('email'):
+        print '!!!!!!!!!!!!!!!'
+        return redirect(reverse('social:complete', args=('email',)))
+
+
+def send_validation(strategy, backend, code):
+    """
+    Send email validation link.
+    """
+    # TODO add email validating regex [^@]+@[^@]+\.[^@]+
+    url = (reverse('social:complete', args=(backend.name,)) +
+           '?verification_code=' + code.code)
+    url = strategy.request.build_absolute_uri(url)
+    send_mail(
+        'Validate your account',
+        'Validate your account {0}'.format(url),
+        settings.EMAIL_FROM,
+        [code.email],
+        fail_silently=False
+    )
+
+# @partial
+# def custom_mail_validation(backend, details, user=None, is_new=False, args, *kwargs):
+#     """Email validation pipeline
+
+#     Verify email or send email with validation link.
+#     """
+#     requires_validation = backend.REQUIRES_EMAIL_VALIDATION or \
+#         backend.setting('FORCE_EMAIL_VALIDATION', False)
+#     send_validation = (details.get('email') and
+#                        (is_new or backend.setting('PASSWORDLESS', False)))
+
+#     if requires_validation and send_validation and backend.name == 'email':
+#         data = backend.strategy.request_data()
+#         if 'verification_code' in data:
+#             backend.strategy.session_pop('email_validation_address')
+#             if not backend.strategy.validate_email(
+#                     details.get('email'),
+#                     data.get('verification_code')
+#             ):
+#                 raise InvalidEmail(backend)
+#             code = backend.strategy.storage.code.get_code(data['verification_code'])
+#             # This is very straightforward method
+#             # TODO Need to check current user to avoid unnecessary check
+#             if code.user_id:
+#                 user_from_code = User.objects.filter(id=code.user_id).first()
+#                 if user_from_code:
+#                     user = user_from_code
+#                     logout(backend.strategy.request)
+#                     user.backend = 'django.contrib.auth.backends.ModelBackend'
+#                     login(backend.strategy.request, user)
+#                     return {'user': user}
+#         else:
+#             if user and user.groups.filter(name='Temporary').exists():
+#                 AnonymEmail.objects.get_or_create(
+#                     user=user,
+#                     email=details.get('email'),
+#                     defaults={'date': datetime.now()}
+#                 )
+#             backend.strategy.send_email_validation(backend, details.get('email'))
+#             backend.strategy.session_set(
+#                 'email_validation_address', details.get('email')
+#             )
+#             return backend.strategy.redirect(
+#                 backend.strategy.setting('EMAIL_VALIDATION_URL')
+#             )

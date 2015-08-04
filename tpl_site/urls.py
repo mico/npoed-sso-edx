@@ -48,6 +48,9 @@ urlpatterns = patterns(
     url(r'^/receiver.html$',
         TemplateView.as_view(template_name='-receiver.html')
     ),
+    url(r'^login-form/$',
+        TemplateView.as_view(template_name='login_form.html')
+    ),
 )
 
 

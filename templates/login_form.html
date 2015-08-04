@@ -8,14 +8,13 @@
 	<div class="span6 hero-unit">
           <h2>Обязательные поля</h2>
 	  {% csrf_token %}
-	  {% for field in reg_form %}
-          <div class="control-group">
-	    {{ field.label_tag }}
-            <div class="controls">{{ field }}</div>
-	    {% if field.help_text %}<div class="clearfix">{{ field.help_text }}</div>{% endif %}
-	    {% if field.errors %}<div class="myerrors clearfix">{{ field.errors }}</div>{% endif %}
+	  <div class="span6 hero-unit">
+	    <input type="hidden" name="csrfmiddlewaretoken" value="b8Pj4yo4NGphSLoslo0HrhgcSG1yKTde">
+	    <input id="id_username" name="username" type="text">
+	    <input class="span12" id="id_email" name="email" placeholder="Email address" type="text">
+	    <input class="span12" id="id_password1" name="password1" placeholder="Password" type="password">
+	    <input id="id_password2" name="password2" type="text">
 	  </div>
-	  {% endfor %}
 	</div>
       </div>
       <p align="center">

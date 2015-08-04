@@ -132,14 +132,16 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.auth_allowed',
     'social.pipeline.social_auth.social_user',
     'social.pipeline.user.get_username',
+    'apps.profiler.pipline.redirect_if_no_email',
     'social.pipeline.mail.mail_validation',
     'social.pipeline.social_auth.associate_by_email',
     'social.pipeline.user.create_user',
-    # 'apps.profiler.pipline.save_profile',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
     'social.pipeline.user.user_details'
 )
+
+SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'apps.profiler.pipline.val_fun'
 
 AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.FacebookOAuth2',
@@ -149,7 +151,7 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.twitter.TwitterOAuth',
     'social.backends.mailru.MailruOAuth2',
     'social.backends.vk.VKOAuth2',
-    'social.backends.email.EmailAuth',
+    'apps.profiler.email.EmailAuth',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -171,6 +173,7 @@ SOCIAL_AUTH_FORCE_EMAIL_VALIDATION = True
 
 SOCIAL_AUTH_EMAIL_FORM_URL = '/login-form/'
 SOCIAL_AUTH_EMAIL_FORM_HTML = 'login_form.html'
+EMAIL_VALIDATION_URL = '/'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/'
