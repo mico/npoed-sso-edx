@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="main">
+  <h1 align="center">Регистрация</h1>
+  <form class="form-horizontal" method="post" action="/complete/email">
+    <div class="container-fluid">
+      <div class="row-fluid">
+	<div class="span6 hero-unit">
+          <h2>Обязательные поля</h2>
+	  {% csrf_token %}
+	  {% for field in reg_form %}
+          <div class="control-group">
+	    {{ field.label_tag }}
+            <div class="controls">{{ field }}</div>
+	    {% if field.help_text %}<div class="clearfix">{{ field.help_text }}</div>{% endif %}
+	    {% if field.errors %}<div class="myerrors clearfix">{{ field.errors }}</div>{% endif %}
+	  </div>
+	  {% endfor %}
+	</div>
+      </div>
+      <p align="center">
+	<button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+      </p>
+    </div>
+  </form>
+</div>
+{% endblock %}
