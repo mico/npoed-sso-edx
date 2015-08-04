@@ -4,7 +4,7 @@ Legacy Email backend, docs at:
 """
 from social.backends.legacy import LegacyAuth
 from social.exceptions import AuthMissingParameter
-from psa.custom_django_storage import CustomCode
+from apps.profiler.custom_django_storage import CustomCode
 
 
 class EmailAuth(LegacyAuth):
