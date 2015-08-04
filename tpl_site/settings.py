@@ -149,6 +149,7 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.twitter.TwitterOAuth',
     'social.backends.mailru.MailruOAuth2',
     'social.backends.vk.VKOAuth2',
+    'social.backends.email.EmailAuth',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -159,12 +160,17 @@ SOCIAL_AUTH_CREATE_USERS = True
 SOCIAL_AUTH_FORCE_RANDOM_USERNAME = False
 SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 SOCIAL_AUTH_DEFAULT_USERNAME = 'socialauth_user'
-SOCIAL_AUTH_ENABLED_BACKENDS = ('facebook', 'google', )
 SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
-SOCIAL_AUTH_ASSOCIATE_BY_EMAIL = True
+
 SOCIAL_AUTH_ERROR_KEY = 'socialauth_error'
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = False
+
+SOCIAL_AUTH_ASSOCIATE_BY_EMAIL = True
+SOCIAL_AUTH_FORCE_EMAIL_VALIDATION = True
+
+SOCIAL_AUTH_EMAIL_FORM_URL = '/login-form/'
+SOCIAL_AUTH_EMAIL_FORM_HTML = 'login_form.html'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/'
