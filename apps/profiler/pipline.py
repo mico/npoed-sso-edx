@@ -15,12 +15,11 @@ from social.pipeline.partial import partial
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.shortcuts import redirect
+from django.core.mail import send_mail
 
 
 def redirect_if_no_email(backend, response, social, *args, **kwargs):
-    print dir(social), social.extra_data
     if not kwargs['details'].get('email'):
-        print '!!!!!!!!!!!!!!!'
         return redirect(reverse('social:complete', args=('email',)))
 
 
@@ -32,10 +31,11 @@ def send_validation(strategy, backend, code):
     url = (reverse('social:complete', args=(backend.name,)) +
            '?verification_code=' + code.code)
     url = strategy.request.build_absolute_uri(url)
+    print strategy, backend, code
     send_mail(
         'Validate your account',
         'Validate your account {0}'.format(url),
-        settings.EMAIL_FROM,
+        settings.FROM_EMAIL,
         [code.email],
         fail_silently=False
     )

@@ -141,7 +141,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.user.user_details'
 )
 
-SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'apps.profiler.pipline.val_fun'
+SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'apps.profiler.pipline.send_validation'
 
 AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.FacebookOAuth2',
@@ -164,7 +164,6 @@ SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 SOCIAL_AUTH_DEFAULT_USERNAME = 'socialauth_user'
 SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
-
 SOCIAL_AUTH_ERROR_KEY = 'socialauth_error'
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = False
 
@@ -173,7 +172,10 @@ SOCIAL_AUTH_FORCE_EMAIL_VALIDATION = True
 
 SOCIAL_AUTH_EMAIL_FORM_URL = '/login-form/'
 SOCIAL_AUTH_EMAIL_FORM_HTML = 'login_form.html'
-EMAIL_VALIDATION_URL = '/'
+SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/'
+
+SOCIAL_AUTH_STRATEGY = 'apps.profiler.custom_django_strategy.CustomDjangoStrategy'
+SOCIAL_AUTH_STORAGE = 'apps.profiler.custom_django_storage.CustomDjangoStorage'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/'
