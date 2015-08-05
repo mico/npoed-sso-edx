@@ -59,17 +59,20 @@ class EmailValidation(FormView):
             new_user = RegistrationProfile.objects.create_inactive_user(
                 new_user=request.user,
                 site=site,
-                send_email=self.SEND_ACTIVATION_EMAIL,
+                send_email=True,
                 request=request,
             )
             signals.user_registered.send(sender=self.__class__,
                                          user=new_user,
                                          request=request)
+            return redirect('/')
 
-        return JsonResponse({
-                'status': 'ok' if form.is_valid() else 'error',
-                'form': render_to_string('forms/login_form.html', {'form': form})
-                })
+        return self.get(request, *args, **kwargs)
+
+    # JsonResponse({
+    #             'status': 'ok' if form.is_valid() else 'error',
+    #             'form': render_to_string('forms/login_form.html', {'form': form})
+    #             })
 
 
 class UserPage(LoginRequiredMixin, DetailView):
