@@ -19,6 +19,7 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
+from django.contrib.sites.models import Site
 
 from registration.backends.default.views import RegistrationView, ActivationView
 from registration.models import RegistrationProfile
@@ -48,31 +49,20 @@ class EmailValidation(FormView):
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(data=request.POST)
+        user = request.user
+        user.email = request.POST.get("email", "")
+        user.is_active = False
+        user.save()
+
+        print user.email, user
         if form.is_valid():
-            user = request.user
-            user.email = form.cleaned_data.get("email")
-            user.is_active = False
-            user.save()
+            site = Site.objects.get_current()
+            registration_profile = RegistrationProfile.objects.create_profile(user)
+            registration_profile.send_activation_email(site, request)
 
-            site = get_site_model().objects.get_current()
-
-            new_user = RegistrationProfile.objects.create_inactive_user(
-                new_user=request.user,
-                site=site,
-                send_email=True,
-                request=request,
-            )
-            signals.user_registered.send(sender=self.__class__,
-                                         user=new_user,
-                                         request=request)
             return redirect('/')
 
         return self.get(request, *args, **kwargs)
-
-    # JsonResponse({
-    #             'status': 'ok' if form.is_valid() else 'error',
-    #             'form': render_to_string('forms/login_form.html', {'form': form})
-    #             })
 
 
 class UserPage(LoginRequiredMixin, DetailView):

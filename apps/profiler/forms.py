@@ -194,8 +194,8 @@ class EmailForm(forms.Form):
     def clean(self):
         cleaned_data = super(EmailForm, self).clean()
         try:
-            user = User.objects.get(username=cleaned_data.get("email"))
+            user = User.objects.get(email=cleaned_data.get("email"))
         except:
             raise forms.ValidationError("Invalid email")
-        if not user.is_active:
-            raise forms.ValidationError("This account is inactive.")
+        #if not user.is_active:
+        #    raise forms.ValidationError("This account is inactive.")
