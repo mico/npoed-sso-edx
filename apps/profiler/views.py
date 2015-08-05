@@ -41,7 +41,7 @@ class Login(FormView):
                 })
 
 
-class EmailValidatin(FormView):
+class EmailValidation(FormView):
 
     form_class = EmailForm
     template_name = 'login_form.html'

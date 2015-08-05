@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="main">
-  <form class="form-horizontal" method="post" action="/complete/email/">
+  <form class="form-horizontal" method="post" action="{% url 'email_form' %}">
     <div class="container-fluid">
       <div class="row-fluid">
 	<div class="span6 hero-unit">
