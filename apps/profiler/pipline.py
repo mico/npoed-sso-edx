@@ -65,6 +65,9 @@ def validated_user_details(strategy, backend, details, user=None, *args, **kwarg
     """
     social = kwargs.get('social')
     email = details.get('email')
+
+    print strategy, backend, details, user, args, kwargs
+
     if user and user.groups.filter(name='Temporary').exists():
         if social:
             logout(strategy.request)

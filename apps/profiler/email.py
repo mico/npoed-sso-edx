@@ -28,6 +28,5 @@ class EmailAuth(LegacyAuth):
                 self.data.update({'email': email})
             else:
                 raise AuthMissingParameter(self, self.ID_KEY)
-        self.data.update({'email': email})
         kwargs.update({'response': self.data, 'backend': self})
         return self.strategy.authenticate(*args, **kwargs)
