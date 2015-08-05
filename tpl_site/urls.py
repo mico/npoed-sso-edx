@@ -49,7 +49,7 @@ urlpatterns = patterns(
         TemplateView.as_view(template_name='-receiver.html')
     ),
     url(r'^login-form/$',
-        TemplateView.as_view(template_name='login_form.html')
+        TemplateView.as_view(template_name='login_form.html'), name='login_form'
     ),
 )
 

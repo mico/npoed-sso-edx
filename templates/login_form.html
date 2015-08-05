@@ -1,23 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="main">
-  <h1 align="center">Регистрация</h1>
   <form class="form-horizontal" method="post" action="/complete/email/">
     <div class="container-fluid">
       <div class="row-fluid">
 	<div class="span6 hero-unit">
-          <h2>Обязательные поля</h2>
 	  {% csrf_token %}
 	  <div class="span6 hero-unit">
-	    <input id="id_username" name="username" type="text">
 	    <input class="span12" id="id_email" name="email" placeholder="Email address" type="text">
-	    <input class="span12" id="id_password1" name="password1" placeholder="Password" type="password">
-	    <input id="id_password2" name="password2" type="text">
 	  </div>
 	</div>
       </div>
       <p align="center">
-	<button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+	<button type="submit" class="btn btn-primary">Validate Email</button>
       </p>
     </div>
   </form>
