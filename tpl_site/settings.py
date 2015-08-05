@@ -172,12 +172,12 @@ SOCIAL_AUTH_REDIRECT_IS_HTTPS = False
 SOCIAL_AUTH_ASSOCIATE_BY_EMAIL = True
 SOCIAL_AUTH_FORCE_EMAIL_VALIDATION = True
 
-SOCIAL_AUTH_EMAIL_FORM_URL = '/login-form/'
+SOCIAL_AUTH_EMAIL_FORM_URL = '/email_form/'
 SOCIAL_AUTH_EMAIL_FORM_HTML = 'login_form.html'
 SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/'
 
-SOCIAL_AUTH_STRATEGY = 'apps.profiler.custom_django_strategy.CustomDjangoStrategy'
-SOCIAL_AUTH_STORAGE = 'apps.profiler.custom_django_storage.CustomDjangoStorage'
+# SOCIAL_AUTH_STRATEGY = 'apps.profiler.custom_django_strategy.CustomDjangoStrategy'
+# SOCIAL_AUTH_STORAGE = 'apps.profiler.custom_django_storage.CustomDjangoStorage'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/'

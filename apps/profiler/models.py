@@ -53,6 +53,8 @@ class User(AbstractUser):
     university_group = models.CharField(max_length=150, blank=True, null=True)
     education = models.PositiveSmallIntegerField(
         default=0, choices=education_choice)
-
+    # tmp
+    tmp_email = models.EmailField(max_length=150, blank=True, null=True)
+    
     # def get_absolute_url(self):
     #     return reverse('user_page', args=(self.id, ))

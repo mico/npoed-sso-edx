@@ -4,7 +4,7 @@ Legacy Email backend, docs at:
 """
 from social.backends.legacy import LegacyAuth
 from social.exceptions import AuthMissingParameter
-from apps.profiler.custom_django_storage import CustomCode
+#from apps.profiler.custom_django_storage import CustomCode
 
 
 class EmailAuth(LegacyAuth):
@@ -21,12 +21,12 @@ class EmailAuth(LegacyAuth):
         print user, args, kwargs
 
         if self.ID_KEY not in self.data:
-            code = self.strategy.request.REQUEST.get('verification_code')
-            code_object = CustomCode.objects.filter(code=code).first()
-            if code_object:
-                email = code_object.email
-                self.data.update({'email': email})
-            else:
-                raise AuthMissingParameter(self, self.ID_KEY)
+            # code = self.strategy.request.REQUEST.get('verification_code')
+            # code_object = CustomCode.objects.filter(code=code).first()
+            # if code_object:
+            #     email = code_object.email
+            #     self.data.update({'email': email})
+            # else:
+            raise AuthMissingParameter(self, self.ID_KEY)
         kwargs.update({'response': self.data, 'backend': self})
         return self.strategy.authenticate(*args, **kwargs)
