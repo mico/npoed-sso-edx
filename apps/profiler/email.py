@@ -1,32 +1,13 @@
-"""
-Legacy Email backend, docs at:
-    http://psa.matiasaguirre.net/docs/backends/email.html
-"""
-from social.backends.legacy import LegacyAuth
-from social.exceptions import AuthMissingParameter
-#from apps.profiler.custom_django_storage import CustomCode
+from django.conf import settings
+from django.core.mail import send_mail
+from django.core.urlresolvers import reverse
 
 
-class EmailAuth(LegacyAuth):
-    name = 'email'
-    ID_KEY = 'email'
-    REQUIRES_EMAIL_VALIDATION = True
-    EXTRA_DATA = ['email']
-
-    def auth_complete(self, user=None, *args, **kwargs):
-        """
-        Completes loging process, must return user instance.
-        """
-
-        print user, args, kwargs
-
-        if self.ID_KEY not in self.data:
-            # code = self.strategy.request.REQUEST.get('verification_code')
-            # code_object = CustomCode.objects.filter(code=code).first()
-            # if code_object:
-            #     email = code_object.email
-            #     self.data.update({'email': email})
-            # else:
-            raise AuthMissingParameter(self, self.ID_KEY)
-        kwargs.update({'response': self.data, 'backend': self})
-        return self.strategy.authenticate(*args, **kwargs)
+def send_validation(strategy, backend, code):
+    url = '{0}?verification_code={1}'.format(
+        reverse('social:complete', args=(backend.name,)),
+        code.code
+    )
+    url = strategy.request.build_absolute_uri(url)
+    send_mail('Validate your account', 'Validate your account {0}'.format(url),
+              settings.EMAIL_FROM, [code.email], fail_silently=False)

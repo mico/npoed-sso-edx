@@ -83,7 +83,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'apps.profiler.middleware.EmailRequireMiddleware',
 )
 
 ROOT_URLCONF = 'tpl_site.urls'
@@ -133,17 +132,14 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.auth_allowed',
     'social.pipeline.social_auth.social_user',
     'social.pipeline.user.get_username',
-    # 'apps.profiler.pipline.redirect_if_no_email',
+    'apps.profiler.pipeline.require_email',
     'social.pipeline.mail.mail_validation',
     'social.pipeline.social_auth.associate_by_email',
     'social.pipeline.user.create_user',
-    #'apps.profiler.pipline.validated_user_details',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
     'social.pipeline.user.user_details'
 )
-
-SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'apps.profiler.pipline.send_validation'
 
 AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.FacebookOAuth2',
@@ -153,7 +149,8 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.twitter.TwitterOAuth',
     'social.backends.mailru.MailruOAuth2',
     'social.backends.vk.VKOAuth2',
-    'apps.profiler.email.EmailAuth',
+    'social.backends.email.EmailAuth',
+    'social.backends.username.UsernameAuth',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -172,12 +169,15 @@ SOCIAL_AUTH_REDIRECT_IS_HTTPS = False
 SOCIAL_AUTH_ASSOCIATE_BY_EMAIL = True
 SOCIAL_AUTH_FORCE_EMAIL_VALIDATION = True
 
-SOCIAL_AUTH_EMAIL_FORM_URL = '/email_form/'
-SOCIAL_AUTH_EMAIL_FORM_HTML = 'login_form.html'
-SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/'
+SOCIAL_AUTH_GOOGLE_OAUTH_SCOPE = [
+    'https://www.googleapis.com/auth/drive',
+    'https://www.googleapis.com/auth/userinfo.profile'
+]
 
-# SOCIAL_AUTH_STRATEGY = 'apps.profiler.custom_django_strategy.CustomDjangoStrategy'
-# SOCIAL_AUTH_STORAGE = 'apps.profiler.custom_django_storage.CustomDjangoStorage'
+SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'apps.profiler.email.send_validation'
+SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/email-sent/'
+SOCIAL_AUTH_EMAIL_FORM_HTML = 'email_signup.html'
+SOCIAL_AUTH_USERNAME_FORM_HTML = 'username_signup.html'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/'
@@ -192,6 +192,7 @@ EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = 'info@google.ru'
+EMAIL_FROM = DEFAULT_FROM_EMAIL
 
 try:
     from local_settings import *

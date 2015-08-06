@@ -34,7 +34,13 @@ urlpatterns = patterns(
     url(r'^accounts/password_changed/$',
         'django.contrib.auth.views.password_change_done',
         name="password_change_done"),
-    
+
+    url(r'^email-sent/', 'apps.profiler.views.validation_sent'),
+    url(r'^done/$', 'apps.profiler.views.done', name='done'),
+    url(r'^ajax-auth/(?P<backend>[^/]+)/$', 'apps.profiler.views.ajax_auth',
+        name='ajax-auth'),
+    url(r'^email/$', 'apps.profiler.views.require_email', name='require_email'),
+
 
     url(r'^login/', set_auth_cookie(login), name='login'),
     url(r'^login_auth/$', set_auth_cookie(Login.as_view()), name='login_auth'),
