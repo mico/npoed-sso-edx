@@ -41,47 +41,20 @@
           <div class="navbar-header">
             <a class="navbar-brand" href="{% url 'home' %}">Npoed</a>
           </div>
-          <ul class="nav navbar-nav nav-pills">
-            <li role="presentation" {% block active_profile %}{% endblock %}><a href="{% url 'profile' %}">Profile</a></li>
-            <li role="presentation"><a href="#">Link 4</a></li>
-            <li role="presentation" class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-		Dropdown <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-		<li role="presentation"><a href="#">Link 1</a></li>
-		<li role="presentation"><a href="#">Link 2</a></li>
-		<li role="presentation"><a href="#">Link 3</a></li>
-		<li role="presentation"><a href="#">Link 4</a></li>
-              </ul>
-            </li>
-          </ul>
           <div class="navbar-form navbar-right">
+	    {% if user.is_authenticated %}
             <ul class="nav navbar-nav nav-pills" style="margin: 0 50px 0 0;">
               <li role="presentation" class="dropdown">
-		{% if user.is_authenticated %}
-		<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
-                   style="padding:7px 15px 0">
-                  <img src="{% static 'images/vkontakte-256.png' %}" alt="..." class="img-circle" height="22" width="22" style="margin: 0 5px 0 0;">
-                  {{ user.first_name }}
-		</a>
-		<a href="{% url 'logout'%}" role="button"
-                   aria-haspopup="true"
-                   aria-expanded="false"
-                   style="padding:7px 15px 0">logout
-                  <img src="{% static 'images/vkontakte-256.png' %}" alt="..." class="img-circle" height="22" width="22" style="margin: 0 5px 0 0;">
-                  {{ user.first_name }}
-		</a>
-		{% endif %}
-		<ul class="dropdown-menu">
-                  <li role="presentation"><a href="#">Link 1</a></li>
-                  <li role="presentation"><a href="#">Link 2</a></li>
-                  <li role="presentation"><a href="#">Link 3</a></li>
-                  <li role="presentation"><a href="#">Link 4</a></li>
-		</ul>
+		<div>
+		  <a class="btn btn-primary" href="{% url 'logout' %}">
+		    <i class="fa fa-sign-out"></i>
+		    Logout
+		  </a>
+		</div>
               </li>
+              <li role="presentation" ><a href="{% url 'profile' %}">{{ user.username }}</a></li>
             </ul>
-	    {% if not user.is_authenticated %}
+	    {% else %}
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#register_modal">Register</button>
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#login_modal">Login</button>
 	    {% endif %}

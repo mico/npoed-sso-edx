@@ -7,36 +7,42 @@
         <h4 class="modal-title" id="gridSystemModalLabel">Register</h4>
       </div>
       <div class="modal-body">
-        <div class="container-fluid">
-          <form class="form-horizontal" method="post" action="{% url 'registration_register2' %}" id="registr">
-	    {% csrf_token %}
-	    <div id="reg_body">
-	      {{ reg_form }}
-	    </div>
+	<div class="buttons">
+	  <div class="social">
             <div class="row">
-              <div class="col-sm-3 text-right">
-                <p><strong>Login with</strong></p>
-              </div>
-              <div class="col-sm-9">
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">
-                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/facebook.png' %}" alt=""/>
-                </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">
-                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/twitter.png' %}" alt=""/>
-                </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">
-                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/google.jpg' %}" alt=""/>
-                </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'mailru-oauth2' %}?next={{ request.path }}">
-                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/mail.png' %}" alt=""/>
-                </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'vk-oauth2' %}?next={{ request.path }}">
-                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/vkontakte.png' %}" alt=""/>
-                </a>
-              </div>
+              <a class="col-md-2 btn btn-default" name="facebook" href="/login/facebook/">
+                <i class="fa fa-facebook"></i>Facebook
+              </a>
+              <a class="col-md-2 btn btn-default" name="google oauth2" href="/login/google-oauth2/">
+                <i class="fa fa-google"></i>Google+
+              </a>
+              <a class="col-md-2 btn btn-default" name="mailru oauth2" href="/login/mailru-oauth2/">
+                <i class="fa fa-mailru-oauth2"></i>Mailru
+              </a>
+              <a class="col-md-2 btn btn-default" name="twitter" href="/login/twitter/">
+                <i class="fa fa-twitter"></i>Twitter
+              </a>
+              <a class="col-md-2 btn btn-default" name="vk oauth2" href="/login/vk-oauth2/">
+                <i class="fa fa-vk"></i>VK
+              </a>
             </div>
-          </form>
-        </div>
+	  </div>
+	  <div class="legacy">
+            <form class="form-horizontal" method="post" action="{% url 'registration_register2' %}" id="registr">
+	      {% csrf_token %}
+	      <div id="reg_body">
+
+		<!-- <div class="form-group"> -->
+                <!--   <label class="control-label" for="password">Password:</label> -->
+                <!--   <input class="form-control" id="password" type="password" name="password" value="" /> -->
+		<!-- </div> -->
+
+		{{ reg_form }}
+
+	      </div>
+            </form>
+	  </div>
+	</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

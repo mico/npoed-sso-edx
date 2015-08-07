@@ -34,7 +34,7 @@ from registration.models import RegistrationProfile
 
 from apps.core.utils import LoginRequiredMixin
 from apps.core.decorators import render_to
-from .forms import UserForm, LoginForm, RegUserForm, EmailForm
+from .forms import UserForm, LoginForm, RegUserForm
 
 User = get_user_model()
 
