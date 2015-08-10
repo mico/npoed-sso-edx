@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from apps.permissions.tasks import get_edx_objects
+from apps.openedx_objects.tasks import get_edx_objects
 
 class Command(BaseCommand):
     help = 'Get objects from Open-EDX'

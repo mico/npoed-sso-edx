@@ -2,17 +2,24 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+<<<<<<< HEAD
 from django.conf import settings
+=======
+>>>>>>> e710d31812325397032f43bb3026799e5c8784d2
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
+<<<<<<< HEAD
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+=======
+>>>>>>> e710d31812325397032f43bb3026799e5c8784d2
     ]
 
     operations = [
         migrations.CreateModel(
+<<<<<<< HEAD
             name='EdxCourse',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -25,10 +32,21 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
+=======
+            name='Action',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('action_type', models.CharField(blank=True, max_length=50, null=True, choices=[(b'*', b'*'), (b'Read', b'Read'), (b'Update', b'Update'), (b'Manage(permissions)', b'Manage(permissions)'), (b'Delete', b'Delete'), (b'DownLoad', b'DownLoad'), (b'Archive', b'Archive'), (b'Create', b'Create'), (b'Publication', b'Publication')])),
+                ('target_type', models.CharField(blank=True, max_length=50, null=True, choices=[(b'Org', b'Org'), (b'Course', b'Course'), (b'CourseRun', b'CourseRun'), (b'Profile', b'Profile'), (b'Progress', b'Progress'), (b'Data', b'Data'), (b'VideoFragment', b'VideoFragment')])),
+                ('target_id', models.PositiveIntegerField(null=True, blank=True)),
+            ],
+            options={
+>>>>>>> e710d31812325397032f43bb3026799e5c8784d2
             },
             bases=(models.Model,),
         ),
         migrations.CreateModel(
+<<<<<<< HEAD
             name='EdxCourseEnrollment',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -100,4 +118,17 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(to='permissions.EdxCourseRun'),
             preserve_default=True,
         ),
+=======
+            name='Role',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=50)),
+                ('modules', models.CharField(max_length=50, null=True, blank=True)),
+                ('actions', models.ManyToManyField(to='permissions.Action', null=True, blank=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+>>>>>>> e710d31812325397032f43bb3026799e5c8784d2
     ]

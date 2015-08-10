@@ -8,7 +8,7 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('permissions', '0001_initial'),
+        ('openedx_objects', '0001_initial'),
     ]
 
     operations = [
@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='edxcourserun',
             name='course',
-            field=models.ForeignKey(default=None, to='permissions.EdxCourse'),
+            field=models.ForeignKey(default=None, to='openedx_objects.EdxCourse'),
             preserve_default=False,
         ),
         migrations.AlterField(
