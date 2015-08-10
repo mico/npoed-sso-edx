@@ -1,0 +1,56 @@
+@import "variables";
+
+.global-header {
+  line-height: 1.2;
+  background: $global-background-color-dark;
+  .container {
+    position: relative;
+    padding-top: 170px;
+    color: $global-text-color-light;
+  }
+  .logo {
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+    margin-bottom: 25px;
+    text-indent: 100%;
+    overflow: hidden;
+    background-color: #404040;
+    border: 1px solid $global-border-color-light;
+  }
+  .header-title {
+    font-size: 36px;
+    font-weight: bold;
+  }
+  .header-subtitle {
+    font-size: 17px;
+  }
+  .btn {
+    margin-top: 35px;
+  }
+
+  .header-partners {
+    display: table;
+    width: 100%;
+    margin: 150px 0 20px;
+    padding: 0;
+    border-collapse: separate;
+    border-spacing: 20px;
+    li {
+      display: table-cell;
+      width: (100% / 8);
+      text-align: center;
+      border: 1px solid $global-border-color-light;
+    }
+    a {
+      display: block;
+      padding: 10px;
+      color: $global-background-color-light;
+      background-color: $global-background-color-dark;
+      &:hover {
+        color: $global-background-color-dark;
+        background-color: $global-background-color-light;
+      }
+    }
+  }
+}

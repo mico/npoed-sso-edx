@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="main">
+  <form class="form-horizontal" method="post" action="{% url 'email_form' %}">
+    <div class="container-fluid">
+      <div class="row-fluid">
+	<div class="span6 hero-unit">
+	  {% csrf_token %}
+	  <div class="span6 hero-unit">
+	    {{ form }}
+	    <!-- <input class="span12" id="id_email" name="email" placeholder="Email address" type="text"> -->
+	  </div>
+	</div>
+      </div>
+      <p align="center">
+	<button type="submit" class="btn btn-primary">Validate Email</button>
+      </p>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,4 +1,5 @@
 Django==1.7.8
+Pillow==2.9.0
 PyJWT==1.0.1
 argparse==1.2.1
 django-braces==1.8.0

@@ -1,4 +1,4 @@
-Регистрация на сайте, promremsklad.com.
+Регистрация на сайте, {{ site }}.
 Для активации вашего аккаунта необходимо перейти по ссылке:
-http://promremsklad.com/accounts/activate/{{ activation_key }}/
+http://{{ site }}/accounts/activate/{{ activation_key }}/
 Спасибо!
