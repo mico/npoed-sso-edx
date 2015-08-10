@@ -11,14 +11,14 @@ __author__ = 'dorosh'
 __date__ = '07.08.2015'
 
 from django.contrib import admin
-from apps.permissions.models import Role, Action
+from apps.permissions.models import Role, Permission
 
 
 @admin.register(Role)
 class RoleAdmin(admin.ModelAdmin):
-    fields = ('name', 'modules', 'actions', )
+    fields = ('name', 'modules', 'permissions', )
 
 
-@admin.register(Action)
-class ActionAdmin(admin.ModelAdmin):
+@admin.register(Permission)
+class PermissionAdmin(admin.ModelAdmin):
     fields = ('action_type', 'target_type', 'target_id',)

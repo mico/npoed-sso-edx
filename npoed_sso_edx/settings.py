@@ -1,5 +1,5 @@
 """
-Django settings for tpl_site project.
+Django settings for npoed_sso_edx project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -86,9 +86,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'tpl_site.urls'
+ROOT_URLCONF = 'npoed_sso_edx.urls'
 
-WSGI_APPLICATION = 'tpl_site.wsgi.application'
+WSGI_APPLICATION = 'npoed_sso_edx.wsgi.application'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,  "static_col")

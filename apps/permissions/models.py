@@ -11,9 +11,12 @@ __author__ = 'dorosh'
 __date__ = '07.08.2015'
 
 from django.db import models
+from django.contrib.contenttypes.models import ContentType
+
+from provider.oauth2.models import Client
 
 
-class Action(models.Model):
+class Permission(models.Model):
     '''
     Model of actions for objects from another modules.
     '''
@@ -29,6 +32,7 @@ class Action(models.Model):
         ('Create', 'Create', ),
         ('Publication', 'Publication', ),
     )
+    fk_models = None
     obj_choices = (
         ('Org', 'Org', ),
         ('Course', 'Course', ),
@@ -42,8 +46,9 @@ class Action(models.Model):
     action_type = models.CharField(
         max_length=50, choices=action_choices, blank=True, null=True
     )
-    target_type = models.CharField(
-        max_length=50, choices=obj_choices, blank=True, null=True
+    target_type = models.ForeignKey(
+        ContentType, limit_choices_to=fk_models,  related_name='content_types',
+        blank=True, null=True
     )
     target_id = models.PositiveIntegerField(
         blank=True, null=True
@@ -59,8 +64,8 @@ class Role(models.Model):
     '''
 
     name = models.CharField(max_length=50)
-    actions = models.ManyToManyField('Action', blank=True, null=True)
-    modules = models.CharField(max_length=50, blank=True, null=True)
+    permissions = models.ManyToManyField('Permission', blank=True, null=True)
+    modules = models.ForeignKey(Client, blank=True, null=True)
 
     def __unicode__(self):
         return self.name
