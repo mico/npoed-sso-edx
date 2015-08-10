@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <title>Открытое образование - Главная страница</title>
     <link href="css/base.css" rel="stylesheet">
-    <link href="css/sidebar.css" rel="stylesheet">
+    <!-- <link href="css/sidebar.css" rel="stylesheet"> -->
     <link href="css/homepage.css" rel="stylesheet">
 
   </head>
@@ -23,225 +23,162 @@
           <a href="#" class="logo" alt="Перейти на главную">Главная</a>
           <div class="header-title">Открытое образование</div>
           <div class="header-subtitle">курсы ведущих вузов России для каждого без ограничений</div>
-          <a href="#catalog" class="btn btn-default">Перейти в каталог</a>
-          <ul class="header-partners">
-            <li><a href="#" target="_blank">ВШЭ</a></li>
-            <li><a href="#" target="_blank">МГУ</a></li>
-            <li><a href="#" target="_blank">МИСиС</a></li>
-            <li><a href="#" target="_blank">МФТИ</a></li>
-            <li><a href="#" target="_blank">ИТМО</a></li>
-            <li><a href="#" target="_blank">СПбГУ</a></li>
-            <li><a href="#" target="_blank">СПбПГУ</a></li>
-            <li><a href="#" target="_blank">УрФУ</a></li>
-          </ul>
+          <form action="/search" method="GET" name="search" class="search-form js-search-form">
+            <div class="search-field">
+              <i class="fa fa-search"></i>
+              <input type="text" name="f.search" class="search-input" placeholder="Какой курс вы хотите пройти?">
+              <button name="search-submit" class="btn btn-default">Искать в каталоге</button>
+            </div>
+          </form>
         </div>
       </header>
 
       <!-- Page content -->
       <div class="content" id="content">
-        <div class="container">
 
-          <form action="/search" method="GET" name="search" class="search-form js-search-form">
-            <div class="search-field">
-              <i class="fa fa-search"></i>
-              <input type="text" name="f.search" class="search-input" title="Текст подсказки" placeholder="Найти курс">
-            </div>
-          </form>
-
-          <!--
-            ВИД КАРТОЧКИ:
-            =============
-            Количество дней до конца записи
-              Первый вид значка - курс скоро начинается, текстом указано количество дней до старта
-              Второй вид значка - скоро начнется набор, текст отсутствует
-              Для будущих курсов значок на превью карточек не размещается
-            Изображение курса
-              Загружается одна картинка, происходит автоматический кроп в зависимости от фигуры
-            Логотип ВУЗа
-              Может обрезаться в другую фигуру или не обрезаться совсем, к кругу не привязываемся
-            Название курса
-            Даты начала и окончания курса
-            Статус курса
-              Указание дней до старта
-              Указание дней, в течение которых курс идет
-              Указание, что курс уже закончился
-          -->
-          <ul class="courses-list">
-            <li class="course-wide-placeholder">
-              <div class="course-card course-layout1">
-                <img src="img/course-image.jpg" alt="" class="course-image">
-                <div class="course-days-left"><span>5 дней</span> до конца записи</div>
-                <div class="course-content">
-                  <img src="img/logo-mgu.png" alt="logo" class="course-logo">
-                  <div class="course-title">Электричество и магнетизм. Часть 1 (Electricity and Magnetism. Part 1)</div>
-                  <div class="course-date">7 - 30 августа</div>
-                  <div class="course-status">Старт через 7 дней</div>
-                </div>
+        <div class="container-fluid courses-infoblock">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-4">
+                <img src="img/course-image2.png" alt="">
+                <h2>Высшее образование для всех</h2>
+                <p>Доступность качественного высшего образования для всех граждан РФ без формальных (сдача ЕГЭ), территориальных и финансовых ограничений. Возможность освоить содержание программ бакалавриата, а будущем магистратуры каждому желающему.</p>
               </div>
-            </li>
-            <li>
-              <div class="course-card course-layout2">
-                <img src="img/course-image2.jpg" alt="" class="course-image">
-                <div class="course-days-left"><span>5 дней</span> до конца записи</div>
-                <div class="course-content">
-                  <img src="img/logo-mgu.png" alt="logo" class="course-logo">
-                  <div class="course-title">Сбор и сортировка данных</div>
-                  <div class="course-date">7 - 30 августа</div>
-                  <div class="course-status">Старт через 7 дней</div>
-                </div>
+              <div class="col-sm-4">
+                <img src="img/course-image2.png" alt="">
+                <h2>Возможность зачесть курс в своем университете</h2>
+                <p>Новый элемент системы российского образования - открытые онлайн курсы может перезачесть любой университет. Реальная практика, расширяет границы образования для каждого студента.</p>
               </div>
-            </li>
-            <li>
-              <div class="course-card course-layout2">
-                <img src="img/course-image.jpg" alt="" class="course-image">
-                <div class="course-days-left"><span>5 дней</span> до конца записи</div>
-                <div class="course-content">
-                  <img src="img/logo-mgu.png" alt="logo" class="course-logo">
-                  <div class="course-title">Моделирование биологических молекул на GPU</div>
-                  <div class="course-date">7 - 30 августа</div>
-                  <div class="course-status">Старт через 7 дней</div>
-                </div>
+              <div class="col-sm-4">
+                <img src="img/course-image2.png" alt="">
+                <h2>Полный набор курсов от ведущих университетов</h2>
+                <p>Мы ведем системную работу по созданию курсов для базовой части всех направлений подготовки, обеспечивая удобное и выгодное для любого университета встраивание курса в свои образовательные программы.</p>
               </div>
-            </li>
-            <li>
-              <div class="course-card course-layout2">
-                <img src="img/course-image2.jpg" alt="" class="course-image">
-                <div class="course-days-left"><span>5 дней</span> до конца записи</div>
-                <div class="course-content">
-                  <img src="img/logo-mgu.png" alt="logo" class="course-logo">
-                  <div class="course-title">Сбор и сортировка данных</div>
-                  <div class="course-date">7 - 30 августа</div>
-                  <div class="course-status">Старт через 7 дней</div>
-                </div>
-              </div>
-            </li>
-            <li>
-              <div class="course-card course-layout2">
-                <img src="img/course-image.jpg" alt="" class="course-image">
-                <div class="course-days-left"><span>5 дней</span> до конца записи</div>
-                <div class="course-content">
-                  <img src="img/logo-mgu.png" alt="logo" class="course-logo">
-                  <div class="course-title">Моделирование биологических молекул на GPU</div>
-                  <div class="course-date">7 - 30 августа</div>
-                  <div class="course-status">Старт через 7 дней</div>
-                </div>
-              </div>
-            </li>
-            <li class="course-wide-placeholder">
-              <div class="course-card course-layout1">
-                <img src="img/course-image2.jpg" alt="" class="course-image">
-                <div class="course-days-left"><span>5 дней</span> до конца записи</div>
-                <div class="course-content">
-                  <img src="img/logo-mgu.png" alt="logo" class="course-logo">
-                  <div class="course-title">Электричество и магнетизм. Часть 1 (Electricity and Magnetism. Part 1)</div>
-                  <div class="course-date">7 - 30 августа</div>
-                  <div class="course-status">Старт через 7 дней</div>
-                </div>
-              </div>
-            </li>
-          </ul>
-
-          <a href="#" class="see-all-courses">Смотреть все курсы</a>
-
-          <div class="container-fluid course-infoblock">
-            <div class="col-sm-6 course-infoblock-image">
-              <img src="img/course-image1.png" alt="">
-            </div>
-            <div class="col-sm-6 course-infoblock-content">
-              <h2>Возможность получить знания в той области, которая вам интересна</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor.</p>
-              <a href="#catalog" class="btn btn-default">50 категорий в каталоге</a>
             </div>
           </div>
-          <div class="container-fluid course-infoblock">
-            <div class="col-sm-6 course-infoblock-content">
-              <h2>Возможность зачесть курс в своем университете</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor.</p>
-              <a href="#catalog" class="btn btn-default">Курсы по вашей  специализации</a>
-            </div>
-            <div class="col-sm-6 course-infoblock-image">
-              <img src="img/course-image2.png" alt="">
-            </div>
-          </div>
-
-          <ul class="courses-list">
-            <li class="course-wide-placeholder">
-              <div class="course-card course-layout1">
-                <img src="img/course-image.jpg" alt="" class="course-image">
-                <div class="course-days-left"><span>5 дней</span> до конца записи</div>
-                <div class="course-content">
-                  <img src="img/logo-mgu.png" alt="logo" class="course-logo">
-                  <div class="course-title">Электричество и магнетизм. Часть 1 (Electricity and Magnetism. Part 1)</div>
-                  <div class="course-date">7 - 30 августа</div>
-                  <div class="course-status">Старт через 7 дней</div>
-                </div>
-              </div>
-            </li>
-            <li>
-              <div class="course-card course-layout2">
-                <img src="img/course-image2.jpg" alt="" class="course-image">
-                <div class="course-days-left"><span>5 дней</span> до конца записи</div>
-                <div class="course-content">
-                  <img src="img/logo-mgu.png" alt="logo" class="course-logo">
-                  <div class="course-title">Сбор и сортировка данных</div>
-                  <div class="course-date">7 - 30 августа</div>
-                  <div class="course-status">Старт через 7 дней</div>
-                </div>
-              </div>
-            </li>
-            <li>
-              <div class="course-card course-layout2">
-                <img src="img/course-image.jpg" alt="" class="course-image">
-                <div class="course-days-left"><span>5 дней</span> до конца записи</div>
-                <div class="course-content">
-                  <img src="img/logo-mgu.png" alt="logo" class="course-logo">
-                  <div class="course-title">Моделирование биологических молекул на GPU</div>
-                  <div class="course-date">7 - 30 августа</div>
-                  <div class="course-status">Старт через 7 дней</div>
-                </div>
-              </div>
-            </li>
-            <li>
-              <div class="course-card course-layout2">
-                <img src="img/course-image2.jpg" alt="" class="course-image">
-                <div class="course-days-left"><span>5 дней</span> до конца записи</div>
-                <div class="course-content">
-                  <img src="img/logo-mgu.png" alt="logo" class="course-logo">
-                  <div class="course-title">Сбор и сортировка данных</div>
-                  <div class="course-date">7 - 30 августа</div>
-                  <div class="course-status">Старт через 7 дней</div>
-                </div>
-              </div>
-            </li>
-            <li>
-              <div class="course-card course-layout2">
-                <img src="img/course-image.jpg" alt="" class="course-image">
-                <div class="course-days-left"><span>5 дней</span> до конца записи</div>
-                <div class="course-content">
-                  <img src="img/logo-mgu.png" alt="logo" class="course-logo">
-                  <div class="course-title">Моделирование биологических молекул на GPU</div>
-                  <div class="course-date">7 - 30 августа</div>
-                  <div class="course-status">Старт через 7 дней</div>
-                </div>
-              </div>
-            </li>
-            <li class="course-wide-placeholder">
-              <div class="course-card course-layout1">
-                <img src="img/course-image2.jpg" alt="" class="course-image">
-                <div class="course-days-left"><span>5 дней</span> до конца записи</div>
-                <div class="course-content">
-                  <img src="img/logo-mgu.png" alt="logo" class="course-logo">
-                  <div class="course-title">Электричество и магнетизм. Часть 1 (Electricity and Magnetism. Part 1)</div>
-                  <div class="course-date">7 - 30 августа</div>
-                  <div class="course-status">Старт через 7 дней</div>
-                </div>
-              </div>
-            </li>
-          </ul>
-
-          <a href="#" class="see-all-courses">Смотреть все курсы</a>
-
         </div>
+
+        <div class="container-fluid courses-recommended">
+          <div class="container">
+
+            <div class="total-recommended">Всего  <a href="#">32 курса в каталоге</a></div>
+
+            <h2>Рекомендованые курсы</h2>
+
+            <!--
+              ВИД КАРТОЧКИ:
+              =============
+              Количество дней до конца записи
+                Первый вид значка - курс скоро начинается, текстом указано количество дней до старта
+                Второй вид значка - скоро начнется набор, текст отсутствует
+                Для будущих курсов значок на превью карточек не размещается
+              Изображение курса
+                Загружается одна картинка, происходит автоматический кроп в зависимости от фигуры
+              Логотип ВУЗа
+                Может обрезаться в другую фигуру или не обрезаться совсем, к кругу не привязываемся
+              Название курса
+              Даты начала и окончания курса
+              Статус курса
+                Указание дней до старта
+                Указание дней, в течение которых курс идет
+                Указание, что курс уже закончился
+            -->
+            <ul class="courses-list">
+              <li class="course-wide-placeholder">
+                <div class="course-card course-layout1">
+                  <img src="img/course-image.jpg" alt="" class="course-image">
+                  <div class="course-days-left"><span>5 дней</span> до конца записи</div>
+                  <div class="course-content">
+                    <img src="img/logo-mgu.png" alt="logo" class="course-logo">
+                    <div class="course-title">Электричество и магнетизм. Часть 1 (Electricity and Magnetism. Part 1)</div>
+                    <div class="course-date">7 - 30 августа</div>
+                    <div class="course-status">Старт через 7 дней</div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="course-card course-layout2">
+                  <img src="img/course-image2.jpg" alt="" class="course-image">
+                  <div class="course-days-left"><span>5 дней</span> до конца записи</div>
+                  <div class="course-content">
+                    <img src="img/logo-mgu.png" alt="logo" class="course-logo">
+                    <div class="course-title">Сбор и сортировка данных</div>
+                    <div class="course-date">7 - 30 августа</div>
+                    <div class="course-status">Старт через 7 дней</div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="course-card course-layout2">
+                  <img src="img/course-image.jpg" alt="" class="course-image">
+                  <div class="course-days-left"><span>5 дней</span> до конца записи</div>
+                  <div class="course-content">
+                    <img src="img/logo-mgu.png" alt="logo" class="course-logo">
+                    <div class="course-title">Моделирование биологических молекул на GPU</div>
+                    <div class="course-date">7 - 30 августа</div>
+                    <div class="course-status">Старт через 7 дней</div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="course-card course-layout2">
+                  <img src="img/course-image2.jpg" alt="" class="course-image">
+                  <div class="course-days-left"><span>5 дней</span> до конца записи</div>
+                  <div class="course-content">
+                    <img src="img/logo-mgu.png" alt="logo" class="course-logo">
+                    <div class="course-title">Сбор и сортировка данных</div>
+                    <div class="course-date">7 - 30 августа</div>
+                    <div class="course-status">Старт через 7 дней</div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="course-card course-layout2">
+                  <img src="img/course-image.jpg" alt="" class="course-image">
+                  <div class="course-days-left"><span>5 дней</span> до конца записи</div>
+                  <div class="course-content">
+                    <img src="img/logo-mgu.png" alt="logo" class="course-logo">
+                    <div class="course-title">Моделирование биологических молекул на GPU</div>
+                    <div class="course-date">7 - 30 августа</div>
+                    <div class="course-status">Старт через 7 дней</div>
+                  </div>
+                </div>
+              </li>
+              <li class="course-wide-placeholder">
+                <div class="course-card course-layout1">
+                  <img src="img/course-image2.jpg" alt="" class="course-image">
+                  <div class="course-days-left"><span>5 дней</span> до конца записи</div>
+                  <div class="course-content">
+                    <img src="img/logo-mgu.png" alt="logo" class="course-logo">
+                    <div class="course-title">Электричество и магнетизм. Часть 1 (Electricity and Magnetism. Part 1)</div>
+                    <div class="course-date">7 - 30 августа</div>
+                    <div class="course-status">Старт через 7 дней</div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+
+            <a href="#" class="see-all-courses">Смотреть все курсы</a>
+
+          </div>
+        </div>
+
+        <div class="container-fluid co-founders">
+          <div class="container">
+            <h2>Вузы-основатели</h2>
+            <ul>
+              <li><a href="#" target="_blank" title="Название вуза"><img src="img/logo-univ1.png" alt="Название вуза"></a></li>
+              <li><a href="#" target="_blank" title="Название вуза"><img src="img/logo-univ1.png" alt="Название вуза"></a></li>
+              <li><a href="#" target="_blank" title="Название вуза"><img src="img/logo-univ1.png" alt="Название вуза"></a></li>
+              <li><a href="#" target="_blank" title="Название вуза"><img src="img/logo-univ1.png" alt="Название вуза"></a></li>
+              <li><a href="#" target="_blank" title="Название вуза"><img src="img/logo-univ1.png" alt="Название вуза"></a></li>
+              <li><a href="#" target="_blank" title="Название вуза"><img src="img/logo-univ1.png" alt="Название вуза"></a></li>
+              <li><a href="#" target="_blank" title="Название вуза"><img src="img/logo-univ1.png" alt="Название вуза"></a></li>
+              <li><a href="#" target="_blank" title="Название вуза"><img src="img/logo-univ1.png" alt="Название вуза"></a></li>
+            </ul>
+          </div>
+        </div>
+
       </div>
 
       <!-- Global page footer -->
@@ -276,16 +213,16 @@
 
     </div>
 
-    <div class="sidebar">
+<!--     <div class="sidebar">
       <a href="#" class="logo" alt="Перейти на главную">Главная</a>
       <ul class="sidebar-links">
         <li><a href="#" class="link-my-courses">Мои курсы</a></li>
         <li><a href="#" class="link-catalog">Каталог</a></li>
-        <!-- <li><a href="#" class="link-login">Войти</a></li> -->
+        <li><a href="#" class="link-login">Войти</a></li>
         <li><a href="#" class="link-profile">Профиль</a></li>
       </ul>
     </div>
-
+ -->
     <script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="js/functions.js"></script>
 

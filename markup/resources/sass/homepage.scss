@@ -6,26 +6,6 @@
     background: url("../img/header-bg.png") no-repeat right center;
   }
 }
-.search-form {
-  width: 100%;
-  position: relative;
-  margin: 20px 0;
-  padding: 10px 0;
-  border-bottom: 1px solid $global-border-color-dark;
-  .fa {
-    position: absolute;
-    top: 13px;
-    font-size: 35px;
-  }
-  .search-input {
-    display: block;
-    width: 100%;
-    padding: 10px 0 10px 50px;
-    font-size: 16px;
-    border: 0;
-    background-color: transparent;
-  }
-}
 
 .courses-list {
   display: -webkit-flex;
@@ -48,6 +28,48 @@
       .course-logo {
         left: 55px;
       }
+    }
+  }
+}
+
+.courses-infoblock {
+  margin-bottom: 30px;
+  padding-top: 20px;
+  padding-bottom: 50px;
+  background-color: $global-content-background;
+  border-bottom: 1px solid #000000;
+  img {
+    max-height: 150px;
+    width: auto;
+  }
+}
+
+.courses-recommended {
+  h2 {
+    margin-top: 0;
+  }
+  .total-recommended {
+    float: right;
+  }
+}
+
+.co-founders {
+  background-color: $global-content-background;
+  ul {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 50px;
+  }
+  li {
+    float: left;
+    width: 25%;
+    a {
+      display: block;
+      margin: 0 5px 10px 5px;
+      text-align: center;
+    }
+    img {
+      width: 100%;
     }
   }
 }

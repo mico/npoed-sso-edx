@@ -137,24 +137,14 @@ label {
   margin: 15px 0;
   padding: 15px;
   text-align: center;
-  color: #333333;
+  color: $global-text-color-dark;
+  background-color: #ffffff;
   border: 1px solid $global-border-color-light;
   &:hover {
-    color: #000000;
-    background-color: #ffffff;
+    color: $global-text-color-black;
+    background-color: $global-background-color-light;
   }
 }
-
-.course-infoblock {
-  margin-bottom: 30px;
-  padding-top: 20px;
-  padding-bottom: 50px;
-  border-bottom: 1px solid #000000;
-  .course-infoblock-image {
-    text-align: center;
-  }
-}
-
 
 .list-of-links {
   li {
