@@ -10,25 +10,25 @@
 	<div class="buttons">
 	  <div class="social">
             <div class="row">
-              <a class="col-md-2 btn btn-default" name="facebook" href="/login/facebook/">
+              <a class="col-md-2 btn btn-default" name="facebook" href="{% url 'social:begin' 'facebook' %}?{{ request.META.QUERY_STRING }}">
                 <i class="fa fa-facebook"></i>Facebook
               </a>
-              <a class="col-md-2 btn btn-default" name="google oauth2" href="/login/google-oauth2/">
+              <a class="col-md-2 btn btn-default" name="google oauth2" href="{% url 'social:begin' 'google-oauth2' %}?{{ request.META.QUERY_STRING }}">
                 <i class="fa fa-google"></i>Google+
               </a>
-              <a class="col-md-2 btn btn-default" name="mailru oauth2" href="/login/mailru-oauth2/">
+              <a class="col-md-2 btn btn-default" name="mailru oauth2" href="{% url 'social:begin' 'mailru-oauth2' %}?{{ request.META.QUERY_STRING }}">
                 <i class="fa fa-mailru-oauth2"></i>Mailru
               </a>
-              <a class="col-md-2 btn btn-default" name="twitter" href="/login/twitter/">
+              <a class="col-md-2 btn btn-default" name="twitter" href="{% url 'social:begin' 'twitter' %}?{{ request.META.QUERY_STRING }}">
                 <i class="fa fa-twitter"></i>Twitter
               </a>
-              <a class="col-md-2 btn btn-default" name="vk oauth2" href="/login/vk-oauth2/">
+              <a class="col-md-2 btn btn-default" name="vk oauth2" href="{% url 'social:begin' 'vk-oauth2' %}?{{ request.META.QUERY_STRING }}">
                 <i class="fa fa-vk"></i>VK
               </a>
             </div>
 	  </div>
 	  <div class="legacy">
-            <form class="form-horizontal" method="post" action="{% url 'registration_register2' %}" id="registr">
+            <form class="form-horizontal" method="post" action="{% url 'registration_register2' %}?{{ request.META.QUERY_STRING }}" id="registr">
 	      {% csrf_token %}
 	      <div id="reg_body">
 

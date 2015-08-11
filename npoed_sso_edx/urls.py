@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
-from django.contrib import admin
+from django.contrib.admin import site as admin_site
 from django.contrib.auth.views import login, logout
 from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
@@ -9,11 +9,20 @@ from apps.core.views import AccessTokenDetailView
 from apps.core.decorators import set_auth_cookie, external_redirect
 from apps.profiler.views import CustomActivationView, Login
 
+from social.utils import setting_name
+
+
+extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
+
 
 urlpatterns = patterns(
-    '', url(r'^admin/', include(admin.site.urls)),
+    '',
+    url(r'^admin/login/$', set_auth_cookie(admin_site.login), name='admin:login'),
+    url(r'^admin/', include(admin_site.urls)),
     url(r'^', include('apps.core.urls')),
     url(r'^', include('apps.profiler.urls')),
+    url(r'^complete/(?P<backend>[^/]+){0}$'.format(extra),
+        set_auth_cookie(complete), name='social:complete'),
     url('', include('social.apps.django_app.urls', namespace='social')),
 
     url(r'^accounts/activate/(?P<activation_key>\w+)/$',
@@ -57,6 +66,7 @@ urlpatterns = patterns(
     url(r'^login-form/$',
         TemplateView.as_view(template_name='login_form.html'), name='login_form'
     ),
+    url(r'', include('apps.openedx_objects.urls', namespace='api-edx')),
 )
 
 
