@@ -72,6 +72,7 @@ INSTALLED_APPS = (
     'apps.core',
     'apps.profiler',
     'apps.permissions',
+    'apps.openedx_objects',
 )
 
 OAUTH_OIDC_ISSUER = "https:///oauth2"
