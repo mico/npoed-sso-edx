@@ -110,34 +110,13 @@ class SubscribeRadio(forms.RadioSelect):
 
 class UserForm(forms.ModelForm):
 
-    first_name = forms.CharField(
-        label='', required=False, widget=forms.TextInput(
-            attrs={"class": "span8", "placeholder": "Name"}))
-    last_name = forms.CharField(
-        label='', required=False, widget=forms.TextInput(
-            attrs={"class": "span8", "placeholder": "Last Name"}))
-    country = forms.CharField(
-        label='', required=False, widget=forms.HiddenInput(
-            attrs={"class": "span8", "placeholder": "Country"}))
-    city = forms.CharField(
-        label='', required=False, widget=forms.TextInput(
-            attrs={"class": "span8", "placeholder": "City"}))
-    username = forms.CharField(
-        label='', widget=TextInput(attrs={
-                "class": "span6", "placeholder": "9ineID"}))
-    date_of_birth = forms.DateField(
-        label='', required=False, widget=DateInput())
-    gender = forms.IntegerField(
-        label='', required=False,
-        widget=SexRadio(choices=[[1, 'Male'], [2, 'Female']]))
-    subscribe = forms.IntegerField(
-        label='', required=False,
-        widget=SubscribeRadio(choices=[[1, 'Yes'], [2, 'No']]))
-
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'country', 'city', 'username',
-                  'date_of_birth', 'gender', 'subscribe']
+        fields = [
+            'email', 'username', 'first_name', 'last_name', 'role', 'education',
+            'university_group', 'university', 'post_address', 'city', 'country',
+            'phone', 'time_zone', 'icon_profile', 'date_of_birth', 'gender',
+            'second_name']
 
 
 class RegUserForm(RegistrationFormUniqueEmail):#(forms.ModelForm):

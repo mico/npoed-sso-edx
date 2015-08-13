@@ -9,7 +9,7 @@
       <div class="modal-body">
         <div class="container-fluid">
 
-          <form class="form-horizontal" method="post" action="{% url 'login' %}" id="login_auth">
+          <form class="form-horizontal" method="post" action="{% url 'login' %}?{{ request.META.QUERY_STRING }}" id="login_auth">
 	    {% csrf_token %}
 	    <div id="auth_form">
 	      {{ login_form }}
@@ -19,19 +19,19 @@
                 <p><strong>Login with</strong></p>
               </div>
               <div class="col-sm-9">
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">
+                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'facebook' %}?{{ request.META.QUERY_STRING }}">
                   <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/facebook.png' %}" alt=""/>
                 </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">
+                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'twitter' %}?{{ request.META.QUERY_STRING }}">
                   <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/twitter.png' %}" alt=""/>
                 </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">
+                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'google-oauth2' %}?{{ request.META.QUERY_STRING }}">
                   <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/google.jpg' %}" alt=""/>
                 </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'mailru-oauth2' %}?next={{ request.path }}">
+                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'mailru-oauth2' %}?{{ request.META.QUERY_STRING }}">
                   <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/mail.png' %}" alt=""/>
                 </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'vk-oauth2' %}?next={{ request.path }}">
+                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'vk-oauth2' %}?{{ request.META.QUERY_STRING }}">
                   <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/vkontakte.png' %}" alt=""/>
                 </a>
               </div>
@@ -42,8 +42,6 @@
                   <label> <input type="checkbox"> Remember me </label>
                 </div>
 		<a href="/accounts/password/reset/">Forgot password</a>
-		/
-		<a href="{% url 'password_change' %}">Change password</a>
               </div>
             </div>
           </form>

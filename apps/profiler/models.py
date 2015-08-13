@@ -16,6 +16,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
 
+from apps.permissions.models import Role
+
 
 class User(AbstractUser):
     '''
@@ -35,7 +37,7 @@ class User(AbstractUser):
                         [9, u'Другое'],
                         [0, u'Не указан']]
 
-    # email = models.CharField(max_length=50, unique=True)
+    # extra userinfo
     second_name = models.CharField(max_length=50, blank=True, null=True)
     gender = models.PositiveSmallIntegerField(blank=True, null=True,
                                               choices=sex_choice)
@@ -53,12 +55,5 @@ class User(AbstractUser):
     university_group = models.CharField(max_length=150, blank=True, null=True)
     education = models.PositiveSmallIntegerField(
         default=0, choices=education_choice)
-    
-    # def get_absolute_url(self):
-    #     return reverse('user_page', args=(self.id, ))
-
-    class Meta:
-
-        permissions = (
-            ("change_user_gender", "Can change the gender of user"),
-        )
+    # permissions
+    role = models.ManyToManyField(Role, blank=True, null=True)

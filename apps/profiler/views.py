@@ -14,7 +14,7 @@ import json
 
 from django.shortcuts import redirect
 from django.conf import settings
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, UpdateView
 from django.views.generic import View, ListView, TemplateView, DetailView
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.contrib.auth import authenticate, login, get_user_model, logout as auth_logout
@@ -34,7 +34,7 @@ from registration.models import RegistrationProfile
 
 from apps.core.utils import LoginRequiredMixin
 from apps.core.decorators import render_to
-from .forms import UserForm, LoginForm, RegUserForm
+from apps.profiler.forms import UserForm, LoginForm, RegUserForm
 
 User = get_user_model()
 
@@ -59,11 +59,15 @@ class Login(FormView):
                 })
 
 
-class UserPage(LoginRequiredMixin, DetailView):
+class Profile(UpdateView):
 
-    context_object_name = 'person'
-    template_name = 'public_profile.html'
-    queryset = User.objects.all()
+    template_name = 'profile.html'
+    form_class = UserForm
+    success_url = '/profile/'
+    model = User
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 class MyRegistrationView(RegistrationView):
