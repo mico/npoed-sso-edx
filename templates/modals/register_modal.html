@@ -33,7 +33,7 @@
             </div>
 	  </div>
 	  <div class="legacy">
-            <form class="form-horizontal" method="post" action="{% url 'registration_register2' %}" id="registr">
+            <form class="form-horizontal" method="post" action="{% url 'registration_register2' %}?{{ request.META.QUERY_STRING }}" id="registr">
 	      {% csrf_token %}
 	      <div id="reg_body">
 		{{ reg_form }}

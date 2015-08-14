@@ -8,15 +8,17 @@ class EdxOrgAdmin(admin.ModelAdmin):
 
 
 class EdxCourseAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name', 'course_id', 'org', 'start',
+                     'is_published', 'is_archived']
 
 
 class EdxCourseRunAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name', 'course', 'is_published', 'is_archived']
 
 
 class EdxCourseEnrollmentAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['user', 'course', 'mode', 'is_active',
+                    'is_published', 'is_archived']
 
 
 admin.site.register(EdxOrg, EdxOrgAdmin)

@@ -39,6 +39,14 @@ ALLOWED_HOSTS = ['*']
 #    'PAGE_SIZE': 10,
 #}
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+         'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+    'PAGE_SIZE': 10,
+}
+
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",
@@ -63,6 +71,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     # utils apps
     'rest_framework',
+    'rest_framework.authtoken',
     'provider',
     'provider.oauth2',
     'oauth2_provider',
