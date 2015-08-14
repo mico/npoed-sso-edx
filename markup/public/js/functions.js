@@ -17,4 +17,8 @@ $( document ).ready(function() {
     $(".course-content-header").sticky({topSpacing:0});
   };
 
+  $(".editable").click(function(event) {
+    $(this).addClass('js-state-edit');
+  });
+
 });

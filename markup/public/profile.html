@@ -37,7 +37,7 @@
               <div class="field-label">Логин</div>
               <div class="field-content">konstantin999</div>
             </div>
-            <div class="field field-name editable js-state-edit">
+            <div class="field field-name editable"> <!-- toggle class js-state-edit -->
               <div class="field-label">ФИО</div>
               <div class="field-content">Иванов Иван Иванович</div>
               <div class="field-content-edit">
@@ -46,7 +46,15 @@
                 <input type="text" name="patronymic" value="Иванович">
               </div>
             </div>
-            <div class="field field-birthdate editable js-state-edit">
+            <div class="field field-sex editable">
+              <div class="field-label">Пол</div>
+              <div class="field-content">Мужской</div>
+              <div class="field-content-edit">
+                <label><input type="radio" name="user-sex" value="male"> Мужской</label>
+                <label><input type="radio" name="user-sex" value="female"> Женский</label>
+              </div>
+            </div>
+            <div class="field field-birthdate editable">
               <div class="field-label">Дата рождения</div>
               <div class="field-content">18.03.1980</div>
               <div class="field-content-edit">
@@ -56,14 +64,37 @@
             <div class="field field-region editable">
               <div class="field-label">Регион проживания</div>
               <div class="field-content">Россия, Костромская обл., Кострома</div>
+              <div class="field-content-edit">
+                <select name="country">
+                  <option value="ru">Россия</option>
+                  <option value="ua">Украина</option>
+                </select>
+                <select name="region">
+                  <option value="1">Костромская обл.</option>
+                  <option value="2">Ивановская обл.</option>
+                </select>
+                <select name="city">
+                  <option value="1">Город 1</option>
+                  <option value="2">Город 2</option>
+                </select>
+              </div>
             </div>
             <div class="field field-timezone editable">
               <div class="field-label">Часовой пояс</div>
               <div class="field-content">Москва UTC+4</div>
+              <div class="field-content-edit">
+                <select name="timezone">
+                  <option value="1">GMT</option>
+                  <option value="2">GMT+1</option>
+                  <option value="3">GMT+2</option>
+                </select>
+              </div>
             </div>
             <div class="field field-about editable">
               <div class="field-label">О себе</div>
               <div class="field-content">Закончил школу с золотой медалью. Очень люблю радиоэлектронику и все, что с ней связано. Увлекаюсь теннисом.</div>
+              <div class="field-content-edit">
+                <textarea name="about">Закончил школу с золотой медалью. Очень люблю радиоэлектронику и все, что с ней связано. Увлекаюсь теннисом.</textarea>
             </div>
           </div>
 
