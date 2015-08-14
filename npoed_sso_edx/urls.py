@@ -10,7 +10,8 @@ from social.apps.django_app.views import complete
 
 from apps.core.views import AccessTokenDetailView
 from apps.core.decorators import set_auth_cookie, external_redirect
-from apps.profiler.views import CustomActivationView, Login, MyRegistrationView
+from apps.profiler.views import (CustomActivationView, Login,
+                                 MyRegistrationView, Profile)
 
 from social.utils import setting_name
 
