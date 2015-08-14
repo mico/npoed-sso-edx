@@ -18,7 +18,7 @@ class EdxOrg(BaseObjectModel):
 
 
 class EdxCourse(BaseObjectModel):
-    name = models.CharField(max_length=128, unique=True)
+    name = models.CharField(max_length=128)
     course_id = models.CharField(max_length=255, unique=True)
     start = models.DateTimeField()
     end = models.DateTimeField(null=True)

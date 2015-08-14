@@ -2,11 +2,11 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from .models import EdxCourse, EdxOrg, EdxCourseRun, EdxCourseEnrollment
+from .utils import datetime_parser
 from apps.profiler.models import User
 
 import requests
 import json
-import re
 
 
 _uoc_course = EdxCourse.objects.update_or_create
@@ -28,7 +28,7 @@ def get_edx_objects():
     while True:
         r.cookies['authenticated'] = '1'
         r = requests.get(url, cookies=r.cookies, params=params)
-        data = json.loads(r.text, object_hook=_datetime_parser)
+        data = json.loads(r.text, object_hook=datetime_parser)
 
         for course in data.get('results', []):
             if course['org'] not in orgs:
@@ -37,11 +37,11 @@ def get_edx_objects():
                 if created:
                     print 'Organisation "%s" is created' % course['org']
 
+            course['org'] = org_obj
+            course_id = course.pop('id')
             course_obj, created = _uoc_course(
-                course_id=course['id'],
-                name=course['name'],
-                start=course['start'],
-                org=org_obj
+                course_id=course_id,
+                defaults=course
             )
 
             if created:
@@ -49,11 +49,11 @@ def get_edx_objects():
 
             if course_obj.id not in courses:
                 courses.append(course_obj.id)
-                enrl_params['course'] = course['id']
+                enrl_params['course'] = course_id
                 r.cookies['authenticated'] = '1'
                 r = requests.get(settings.EDX_ENROLLMENTS_API,
                                  cookies=r.cookies, params=enrl_params)
-                result = json.loads(r.text, object_hook=_datetime_parser)
+                result = json.loads(r.text, object_hook=datetime_parser)
                 enrollments.extend(add_enrollments(result, course_obj))
 
             run_obj, created = _uoc_run(name=course['run'], course=course_obj)
@@ -81,9 +81,11 @@ def add_enrollments(result, course_obj):
         else:
             enrollment_obj, created = _uoc_enrollment(
                 user=user,
-                mode=enrollment['mode'],
-                is_active=enrollment['is_active'],
-                course=course_obj
+                course=course_obj,
+                defaults={
+                    'mode': enrollment['mode'],
+                    'is_active': enrollment['is_active'],
+                }
             )
             enrollments.append(enrollment_obj.id)
             if created:
@@ -115,13 +117,3 @@ def login():
 
     print 'Log in error'
     exit()
-
-def _datetime_parser(dct):
-    for k, v in dct.items():
-        if (isinstance(v, basestring)
-            and re.search("\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", v)):
-            try:
-                dct[k] = datetime.datetime.strptime(v, '%Y-%m-%dT%H:%M:%SZ')
-            except ValueError:
-                pass
-    return dct

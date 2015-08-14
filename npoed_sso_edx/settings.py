@@ -39,6 +39,14 @@ ALLOWED_HOSTS = ['*']
 #    'PAGE_SIZE': 10,
 #}
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+         'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+    'PAGE_SIZE': 10,
+}
+
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",
@@ -63,6 +71,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     # utils apps
     'rest_framework',
+    'rest_framework.authtoken',
     'provider',
     'provider.oauth2',
     'oauth2_provider',
@@ -157,11 +166,12 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'fields': 'email,last_name,first_name,name,id'}
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'last_name', 'email']
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_CREATE_USERS = True
 SOCIAL_AUTH_FORCE_RANDOM_USERNAME = False
-SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+SOCIAL_AUTH_SLUGIFY_USERNAMES = True
 SOCIAL_AUTH_DEFAULT_USERNAME = 'socialauth_user'
 SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
