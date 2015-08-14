@@ -31,6 +31,11 @@ from provider.oauth2.models import Client, AccessToken, Grant
 from .forms import CreateUserForm
 from apps.profiler.forms import RegUserForm, LoginForm
 from apps.core.utils import LoginRequiredMixin
+from apps.permissions.models import Role
+from apps.openedx_objects.models import (
+    EdxOrg, EdxCourse, EdxCourseRun, EdxCourseEnrollment
+)
+
 
 User = get_user_model()
 url = 'http://rnoep.raccoongang.com/auth/complete/sso_npoed-oauth2/'
@@ -102,9 +107,38 @@ class AccessTokenDetailView(AccessTokenDetailView):
                 'email': access_token.user.email,
                 'firstname': access_token.user.first_name,
                 'lastname': access_token.user.last_name,
+                'permissions': [],
                 'scope': access_token.get_scope_display(),
                 'expires': access_token.expires.isoformat()
             }
+            role = access_token.user.role
+
+            for item in role.iterator():
+                role_name = '/'.join([item.name, item.modules.name])
+                permissions = item.permissions
+                orgs = list(permissions.filter(
+                    target_type__name=EdxOrg._meta.verbose_name
+                ).values('name', 'target_type__name', 'action_type'))
+                courses = list(permissions.filter(
+                    target_type__name=EdxCourse._meta.verbose_name
+                ).values('course_id', 'target_type__name', 'action_type'))
+                runs = list(permissions.filter(
+                    target_type__name=EdxCourseRun._meta.verbose_name
+                ).values(
+                    'course__course_id', 'target_type__name', 'action_type'
+                ))
+                enrollments = list(permissions.filter(
+                    target_type__name=EdxCourseEnrollment._meta.verbose_name
+                ).values(
+                    'course__course_id', 'target_type__name', 'action_type'
+                ))
+                content['permissions'][role_name] = {
+                    EdxOrg._meta.verbose_name: orgs,
+                    EdxCourse._meta.verbose_name: courses,
+                    EdxCourseRun._meta.verbose_name: runs,
+                    EdxCourseEnrollment._meta.verbose_name: enrollments,
+                }
+
             return HttpResponse(json.dumps(content), content_type=JSON_CONTENT_TYPE)
         except ObjectDoesNotExist:
             return HttpResponseBadRequest(json.dumps({'error': 'invalid_token'}),

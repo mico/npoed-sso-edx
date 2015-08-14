@@ -6,5 +6,34 @@ from django.contrib.auth.admin import UserAdmin
 @admin.register(get_user_model())
 class CustomUserAdmin(UserAdmin):
 
-    fieldsets = UserAdmin.fieldsets + ((None, {
-                'fields': ('date_of_birth', 'gender', )}, ), )
+    fieldsets = UserAdmin.fieldsets + (
+        ('extra userinfo',
+         {'fields': (
+                    'second_name',
+                    'date_of_birth',
+                    'gender',
+                    'icon_profile',
+                    )
+         }, ),
+        ('location',
+         {'fields': (
+                    'time_zone',
+                    'phone',
+                    'country',
+                    'city',
+                    'post_address',
+                    )
+         }, ),
+        ('education',
+         {'fields': (
+                    'university',
+                    'university_group',
+                    'education',
+                    )
+         }, ),
+        ('permissions',
+         {'fields': (
+                    'role',
+                    )
+         }, ),
+    )

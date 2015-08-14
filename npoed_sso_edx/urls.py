@@ -5,6 +5,9 @@ from django.contrib.auth.views import login, logout
 from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
 
+from social.utils import setting_name
+from social.apps.django_app.views import complete
+
 from apps.core.views import AccessTokenDetailView
 from apps.core.decorators import set_auth_cookie, external_redirect
 from apps.profiler.views import CustomActivationView, Login
@@ -55,6 +58,9 @@ urlpatterns = patterns(
     url(r'^login_auth/$', set_auth_cookie(Login.as_view()), name='login_auth'),
     url(r'^logout/', external_redirect(set_auth_cookie(logout)),
         {'next_page': '/'}, name='logout'),
+    url(r'^register/$', MyRegistrationView.as_view(),
+        name='registration_register2'),
+    url(r'profile/$', Profile.as_view(), name='profile'),
 
     url('^oauth2/access_token/(?P<token>[\w]+)/$',
         csrf_exempt(AccessTokenDetailView.as_view()),

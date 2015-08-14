@@ -32,22 +32,13 @@ class Permission(models.Model):
         ('Create', 'Create', ),
         ('Publication', 'Publication', ),
     )
-    fk_models = None
-    obj_choices = (
-        ('Org', 'Org', ),
-        ('Course', 'Course', ),
-        ('CourseRun', 'CourseRun', ),
-        ('Profile', 'Profile', ),
-        ('Progress', 'Progress', ),
-        ('Data', 'Data', ),
-        ('VideoFragment', 'VideoFragment', ),
-    )
 
     action_type = models.CharField(
         max_length=50, choices=action_choices, blank=True, null=True
     )
     target_type = models.ForeignKey(
-        ContentType, limit_choices_to=fk_models,  related_name='content_types',
+        ContentType, limit_choices_to={'app_label': u'openedx_objects'},
+        related_name='content_types',
         blank=True, null=True
     )
     target_id = models.PositiveIntegerField(
