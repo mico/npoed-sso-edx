@@ -13,10 +13,15 @@ _uoc_course = EdxCourse.objects.update_or_create
 _uoc_org = EdxOrg.objects.update_or_create
 _uoc_run = EdxCourseRun.objects.update_or_create
 _uoc_enrollment = EdxCourseEnrollment.objects.update_or_create
+_SESSION = requests.Session()
 
 
 def get_edx_objects():
-    r = login()
+    is_login = login()
+    if not is_login:
+        print 'Log in error'
+        return None
+
     url = settings.EDX_COURSES_API
     params = {'format': 'json'}
     enrl_params = params
@@ -26,8 +31,7 @@ def get_edx_objects():
     runs = []
 
     while True:
-        r.cookies['authenticated'] = '1'
-        r = requests.get(url, cookies=r.cookies, params=params)
+        r = _SESSION.get(url, params=params)
         data = json.loads(r.text, object_hook=datetime_parser)
 
         for course in data.get('results', []):
@@ -37,11 +41,15 @@ def get_edx_objects():
                 if created:
                     print 'Organisation "%s" is created' % course['org']
 
-            course['org'] = org_obj
             course_id = course.pop('id')
             course_obj, created = _uoc_course(
                 course_id=course_id,
-                defaults=course
+                defaults={
+                    'name': course['name'],
+                    'start': course['start'],
+                    'end': course['end'],
+                    'org': org_obj
+                }
             )
 
             if created:
@@ -50,9 +58,7 @@ def get_edx_objects():
             if course_obj.id not in courses:
                 courses.append(course_obj.id)
                 enrl_params['course'] = course_id
-                r.cookies['authenticated'] = '1'
-                r = requests.get(settings.EDX_ENROLLMENTS_API,
-                                 cookies=r.cookies, params=enrl_params)
+                r = _SESSION.get(settings.EDX_ENROLLMENTS_API, params=enrl_params)
                 result = json.loads(r.text, object_hook=datetime_parser)
                 enrollments.extend(add_enrollments(result, course_obj))
 
@@ -96,7 +102,7 @@ def add_enrollments(result, course_obj):
 
 
 def login():
-    r = requests.get(settings.EDX_API_LOGIN_URL,
+    r = _SESSION.get(settings.EDX_API_LOGIN_URL,
                      params={'auth_entry': 'login', 'next': '/'})
 
     post_login_data = {
@@ -110,10 +116,8 @@ def login():
     querystring = '?'.join(r.url.split('?')[1:])
     full_login_url = '%s%s?%s' % (domain, login_url, querystring)
     cookies = r.cookies
-    r = requests.post(full_login_url, data=post_login_data, cookies=cookies)
-    if r.ok and domain not in r.url:
-        r.cookies['authenticated'] = '1'
-        return r
+    r = _SESSION.post(full_login_url, data=post_login_data)
+    if not r.ok or domain in r.url:
+        return False
 
-    print 'Log in error'
-    exit()
+    return True
