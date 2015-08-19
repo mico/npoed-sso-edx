@@ -32,7 +32,7 @@ from provider.oauth2.models import Client, AccessToken, Grant
 from .forms import CreateUserForm
 from apps.profiler.forms import RegUserForm, LoginForm
 from apps.core.utils import LoginRequiredMixin
-from apps.permissions.models import Role
+from apps.permissions.models import Role, Permission
 from apps.openedx_objects.models import (
     EdxOrg, EdxCourse, EdxCourseRun, EdxCourseEnrollment
 )
@@ -112,37 +112,33 @@ class AccessTokenDetailView(AccessTokenDetailView_origin):
                 'expires': access_token.expires.isoformat()
             }
 
-            for item in access_token.user.role.iterator():
-                role_name = '/'.join([item.name, item.modules.name])
-                permissions_obj = {}
-
-                for permission in item.permissions.iterator():
-                    try:
-                        if permission.target_type is None:
-                            name = '*'
-                            target_name = '*'
-                        elif permission.id:
-                            obj = permission.target_type.model_class().objects.get(pk=permission.id)
-                            name = obj.name
-                            target_name = permission.target_type.name
-                        else:
-                            name = '*'
-                    except ObjectDoesNotExist:
-                        pass
+            roles_ids = access_token.user.role.values_list('id', flat=True)
+            permissions_obj = {}
+            for permission in Permission.objects.filter(role__in=list(roles_ids)).distinct():
+                try:
+                    if permission.target_type is not None:
+                        obj = permission.get_object()
+                        name = obj.name
+                        target_name = permission.target_type.name
                     else:
-                        key = '{}/{}'.format(target_name, name)
-                        obj_dict = permissions_obj.get(key)
-                        if obj_dict:
-                            obj_dict['obj_perm'].append(permission.action_type)
-                            obj_dict['obj_perm'] = set(obj_dict['obj_perm'])
-                        else:
-                            permissions_obj[key] = {
-                                'obj_type': target_name,
-                                'obj_id': name,
-                                'obj_perm': [permission.action_type],
-                                }
+                        name = '*'
+                        target_name = '*'
+                except ObjectDoesNotExist:
+                    pass
+                else:
+                    key = '{}/{}'.format(target_name, name)
+                    obj_dict = permissions_obj.get(key)
+                    if obj_dict:
+                        obj_dict['obj_perm'].append(permission.action_type)
+                        obj_dict['obj_perm'] = list(set(obj_dict['obj_perm']))
+                    else:
+                        permissions_obj[key] = {
+                            'obj_type': target_name,
+                            'obj_id': name,
+                            'obj_perm': [permission.action_type],
+                        }
 
-                content['permissions'] += permissions_obj.values()
+            content['permissions'] += permissions_obj.values()
 
             return HttpResponse(json.dumps(content), content_type=JSON_CONTENT_TYPE)
         except ObjectDoesNotExist:
