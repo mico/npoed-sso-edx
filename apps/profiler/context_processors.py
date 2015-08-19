@@ -16,13 +16,11 @@ from social.backends.google import GooglePlusAuth
 from social.backends.utils import load_backends
 
 from apps.profiler.forms import RegUserForm, LoginForm
+from registration.forms import RegistrationFormUniqueEmail
 
 
 def forms(request):
     return {
-        'reg_form': render_to_string(
-            'forms/form.html', {'form': RegUserForm()}
-        ),
         'login_form': render_to_string(
             'forms/form.html', {'form': LoginForm()}
         ),

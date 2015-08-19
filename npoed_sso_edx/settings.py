@@ -165,7 +165,7 @@ AUTHENTICATION_BACKENDS = (
 
 SOCIAL_AUTH_PROTECTED_USER_FIELDS = ['first_name', 'last_name']
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
-SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'last_name', 'email']
+SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'last_name', 'email', 'gender', ]
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'fields': 'email,last_name,first_name,name,id'}
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_CREATE_USERS = True

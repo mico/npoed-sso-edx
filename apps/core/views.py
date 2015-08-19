@@ -111,33 +111,80 @@ class AccessTokenDetailView(AccessTokenDetailView):
                 'scope': access_token.get_scope_display(),
                 'expires': access_token.expires.isoformat()
             }
-            role = access_token.user.role
 
-            for item in role.iterator():
+            for item in access_token.user.role.iterator():
                 role_name = '/'.join([item.name, item.modules.name])
+                permissions_list = []
                 permissions = item.permissions
-                orgs = list(permissions.filter(
+
+                permissions.values('target_type__name', 'action_type', '')
+
+                # permissions pare for orgonisations
+                orgs = permissions.filter(
                     target_type__name=EdxOrg._meta.verbose_name
-                ).values('name', 'target_type__name', 'action_type'))
-                courses = list(permissions.filter(
+                )
+                for org in orgs:
+                    if not org.target_id:
+                        org_courses = EdxCourse.objects.all()
+                    else:
+                        org_courses = EdxCourse.objects.filter(
+                            org_id=org.target_id
+                        )
+                    org_courses = map(
+                        lambda a: [a, org.action_type],
+                        org_courses.values_list('course_id', flat=True)
+                    )
+                    permissions_list += org_courses
+
+                # permissions pare for courses
+                courses = permissions.filter(
                     target_type__name=EdxCourse._meta.verbose_name
-                ).values('course_id', 'target_type__name', 'action_type'))
-                runs = list(permissions.filter(
+                )
+                for course in courses:
+                    if not course.target_id:
+                        course_courses = EdxCourse.objects.all()
+                    else:
+                        course_courses = EdxCourse.objects.filter(
+                            id=course.target_id)
+                    course_courses = map(
+                        lambda a: [a, course.action_type],
+                        course_courses.values_list('course_id', flat=True)
+                    )
+                    permissions_list += course_courses
+
+                # permissions pare for course runs
+                runs = permissions.filter(
                     target_type__name=EdxCourseRun._meta.verbose_name
-                ).values(
-                    'course__course_id', 'target_type__name', 'action_type'
-                ))
-                enrollments = list(permissions.filter(
+                )
+                for run in runs:
+                    if not run.target_id:
+                        run_courses = EdxCourseRun.objects.all()
+                    else:
+                        run_courses = EdxCourseRun.objects.filter(
+                            id=run.target_id)
+                    run_courses = map(
+                        lambda a: [a, run.action_type],
+                        run_courses.values_list('course_id', flat=True)
+                    )
+                    permissions_list += run_courses
+
+                # permissions pare for course enrollments
+                enrollments = permissions.filter(
                     target_type__name=EdxCourseEnrollment._meta.verbose_name
-                ).values(
-                    'course__course_id', 'target_type__name', 'action_type'
-                ))
-                content['permissions'][role_name] = {
-                    EdxOrg._meta.verbose_name: orgs,
-                    EdxCourse._meta.verbose_name: courses,
-                    EdxCourseRun._meta.verbose_name: runs,
-                    EdxCourseEnrollment._meta.verbose_name: enrollments,
-                }
+                )
+                for enrollment in enrollments:
+                    if not enrollment.target_id:
+                        enrollment_courses = EdxCourseEnrollment.objects.all()
+                    else:
+                        enrollment_courses = EdxCourseEnrollment.objects.filter(
+                            id=run.target_id)
+                    enrollment_courses = map(
+                        lambda a: [a, enrollment.action_type],
+                        enrollment_courses.values_list('course_id', flat=True)
+                    )
+                    permissions_list += enrollment_courses
+
+                content['permissions'].append({role_name: permissions_list})
 
             return HttpResponse(json.dumps(content), content_type=JSON_CONTENT_TYPE)
         except ObjectDoesNotExist:

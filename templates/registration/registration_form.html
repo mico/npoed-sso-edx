@@ -1,80 +1,49 @@
 {% extends "base.html" %}
-{% block extra_js %}
-<script type="text/javascript">
-  $(document).ready(function(){ $("label:not(.checkbox)").addClass("control-label") });
-</script>
-{% endblock extra_js %}
+{% load static from staticfiles %}
 {% block content %}
-
-<ul class="breadcrumb">
-  <li><a href="{% url 'index' %}">Главная</a></li>
-  <li class="active"> Регистрация</li>
-</ul>
-
-<div class="main">
-  <h1 align="center">Регистрация</h1>
-  <form class="form-horizontal" method="post">
-    <div class="container-fluid">
-      <div class="row-fluid">
-	<div class="span6 hero-unit">
-          <h2>Обязательные поля</h2>
-	  {% csrf_token %}
-	  {% for field in form %}
-          <div class="control-group">
-	    {{ field.label_tag }}
-            <div class="controls">{{ field }}</div>
-	    {% if field.help_text %}<div class="clearfix">{{ field.help_text }}</div>{% endif %}
-	    {% if field.errors %}<div class="myerrors clearfix">{{ field.errors }}</div>{% endif %}
-	  </div>
-	  {% endfor %}
-	</div>
-	<div class="span6">
-          <h2>НЕ обязательные поля, но их заполнение позволит Вам получать СКИДКИ</h2>
-          <div class="control-group">
-            <label class="control-label" for="inputName">ФИО</label>
-            <div class="controls">
-              <input type="text" id="inputName" placeholder="ФИО" name="fio" value="">
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="inputCompany">Название предприятия</label>
-            <div class="controls">
-              <input type="text" id="inputCompany" placeholder="Название предприятия" name="company" value="">
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="inputCode">Код УДРПОУ предприятия</label>
-            <div class="controls">
-              <input type="text" id="inputCode" placeholder="Код УДРПОУ предприятия" name="code" value="">
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="inputPost">Должность</label>
-            <div class="controls">
-              <input type="text" id="inputPost" placeholder="Должность" name="position" value="">
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="inputPhone">Телефон</label>
-            <div class="controls">
-              <input type="text" id="inputPhone" placeholder="Телефон" name="phone" value="">
-            </div>
-          </div>
-          <div class="control-group">
-            <div class="controls">
-              <label class="checkbox">
-                <input type="checkbox"> Я согласен на обработку моих персональных данных 
-              </label>
-            </div>
-          </div>
-	</div> <!-- /.span6 -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="gridSystemModalLabel">Register</h4>
       </div>
-      <p align="center">
-	<button type="submit" class="btn btn-primary">Зарегистрироваться</button>
-      </p>
+      <div class="modal-body">
+	<div class="buttons">
+	  <div class="social">
+            <div class="row">
+              <div class="col-sm-3 text-right">
+                <p><strong>Register with</strong></p>
+              </div>
+              <div class="col-sm-9">
+                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'facebook' %}?{{ request.META.QUERY_STRING }}">
+                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/facebook.png' %}" alt=""/>
+                </a>
+                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'twitter' %}?{{ request.META.QUERY_STRING }}">
+                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/twitter.png' %}" alt=""/>
+                </a>
+                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'google-oauth2' %}?{{ request.META.QUERY_STRING }}">
+                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/google.jpg' %}" alt=""/>
+                </a>
+                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'mailru-oauth2' %}?{{ request.META.QUERY_STRING }}">
+                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/mail.png' %}" alt=""/>
+                </a>
+                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'vk-oauth2' %}?{{ request.META.QUERY_STRING }}">
+                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/vkontakte.png' %}" alt=""/>
+                </a>
+              </div>
+            </div>
+	  </div>
+	  <div class="legacy">
+            <form class="form-horizontal" method="post" action="{% url 'registration_register2' %}?{{ request.META.QUERY_STRING }}" id="registr">
+	      {% csrf_token %}
+	      <div id="reg_body">
+		{{ form }}
+	      </div>
+	      <div class="modal-footer">
+		<input type="submit" class="btn btn-success" value="Register" >
+	      </div>
+            </form>
+	  </div>
+	</div>
+      </div>
     </div>
-  </form>
-</div>
+
 {% endblock %}
-
-
