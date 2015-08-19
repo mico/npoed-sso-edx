@@ -17,7 +17,9 @@ from django.conf import settings
 from django.views.generic.edit import FormView, UpdateView
 from django.views.generic import View, ListView, TemplateView, DetailView
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
-from django.contrib.auth import authenticate, login, get_user_model, logout as auth_logout
+from django.contrib.auth import (
+    authenticate, login, get_user_model, logout as auth_logout
+)
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
@@ -29,7 +31,9 @@ from social.backends.google import GooglePlusAuth
 from social.backends.utils import load_backends
 from social.apps.django_app.utils import psa
 
-from registration.backends.default.views import RegistrationView, ActivationView
+from registration.backends.default.views import (
+    ActivationView, RegistrationView as RW
+)
 from registration.models import RegistrationProfile
 
 from apps.core.utils import LoginRequiredMixin
@@ -70,16 +74,13 @@ class Profile(UpdateView):
         return self.request.user
 
 
-class MyRegistrationView(RegistrationView):
+class RegistrationView(RW):
 
     form_class = RegUserForm
 
     def get_success_url(self, request=None, user=None):
         # We need to be able to use the request and the new user when
         # constructing success_url.
-        username = request.POST.get('reg-username', '')
-        password = request.POST.get('reg-password1', '')
-        login(request, authenticate(username=username, password=password))
         return ('home', (), {})
 
 

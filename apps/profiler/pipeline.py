@@ -22,6 +22,7 @@ def require_email(strategy, details, user=None, is_new=False, *args, **kwargs):
         email = strategy.request_data().get('email')
         if email:
             details['email'] = email
+            details['validation'] = True
         else:
             return redirect('require_email')
 

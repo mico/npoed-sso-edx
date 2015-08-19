@@ -13,11 +13,9 @@ __date__ = '15.03.2015'
 from django import forms
 from django.utils.safestring import mark_safe
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user_model
 
 from registration.forms import RegistrationFormUniqueEmail
-
-# from .models import User
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
@@ -121,14 +119,10 @@ class UserForm(forms.ModelForm):
 
 class RegUserForm(RegistrationFormUniqueEmail):#(forms.ModelForm):
 
-    email = forms.EmailField(
-        label='', widget=forms.TextInput(
-            attrs={"class": "span12", "placeholder": "Email address"}))
-    password1 = forms.CharField(
-        label='', widget=forms.PasswordInput(attrs={
-                "class": "span12", "placeholder": "Password"}))
-    password2 = forms.CharField(label='', widget=forms.HiddenInput())
-    username = forms.CharField(label='', widget=forms.HiddenInput())
+    email = forms.EmailField(label='email')
+    password1 = forms.CharField(label='password1')
+    password2 = forms.CharField(label='password2')
+    username = forms.CharField(label='username')
 
     def __init__(self, *args, **kwargs):
         kwargs['prefix'] = 'reg'

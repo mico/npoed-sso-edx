@@ -54,9 +54,6 @@
               </li>
               <li role="presentation" ><a href="{% url 'profile' %}">{{ user.username }}</a></li>
             </ul>
-	    {% else %}
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#register_modal">Register</button>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#login_modal">Login</button>
 	    {% endif %}
           </div>
 	</div>
@@ -75,8 +72,6 @@
     {% endblock footer %}
   </footer>
   {% block modals %}
-    {% include 'modals/login_modal.html' %}
-    {% include 'modals/register_modal.html' %}
   {% endblock modals %}
   {% block js %}
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
