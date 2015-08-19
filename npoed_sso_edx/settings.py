@@ -205,6 +205,8 @@ EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = 'info@google.ru'
 EMAIL_FROM = DEFAULT_FROM_EMAIL
 
+EDX_CRETEUSER_URL = 'http://rnoep.raccoongang.com/auth/complete/sso_npoed-oauth2/'
+
 try:
     from local_settings import *
 except ImportError:

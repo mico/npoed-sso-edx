@@ -24,8 +24,9 @@ from django.views.generic import TemplateView
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
+from djaango.conf import settings
 
-from provider.oauth2.views import AccessTokenDetailView
+from provider.oauth2.views import AccessTokenDetailView as AccessTokenDetailView_origin
 from provider.oauth2.models import Client, AccessToken, Grant
 
 from .forms import CreateUserForm
@@ -38,7 +39,6 @@ from apps.openedx_objects.models import (
 
 
 User = get_user_model()
-url = 'http://rnoep.raccoongang.com/auth/complete/sso_npoed-oauth2/'
 
 
 class Index(TemplateView):
@@ -81,7 +81,7 @@ class Home(LoginRequiredMixin, FormView):
             grant = Grant.objects.create(
                 user=user,
                 client=client[0],
-                redirect_uri=url,
+                redirect_uri=settings.EDX_CRETEUSER_URL,
                 scope=2
             )
             params = urllib.urlencode(
@@ -90,11 +90,11 @@ class Home(LoginRequiredMixin, FormView):
                     'code': grant.code
                 }
             )
-            r = requests.get('%s?%s' % (url, params, ))
+            r = requests.get('%s?%s' % (settings.EDX_CRETEUSER_URL, params, ))
         return redirect(self.success_url)
 
 
-class AccessTokenDetailView(AccessTokenDetailView):
+class AccessTokenDetailView(AccessTokenDetailView_origin):
 
     def get(self, request, *args, **kwargs):
         JSON_CONTENT_TYPE = 'application/json'
@@ -114,77 +114,35 @@ class AccessTokenDetailView(AccessTokenDetailView):
 
             for item in access_token.user.role.iterator():
                 role_name = '/'.join([item.name, item.modules.name])
-                permissions_list = []
-                permissions = item.permissions
+                permissions_obj = {}
 
-                permissions.values('target_type__name', 'action_type', '')
-
-                # permissions pare for orgonisations
-                orgs = permissions.filter(
-                    target_type__name=EdxOrg._meta.verbose_name
-                )
-                for org in orgs:
-                    if not org.target_id:
-                        org_courses = EdxCourse.objects.all()
+                for permission in item.permissions.iterator():
+                    try:
+                        if permission.target_type is None:
+                            name = '*'
+                            target_name = '*'
+                        elif permission.id:
+                            obj = permission.target_type.model_class().objects.get(pk=permission.id)
+                            name = obj.name
+                            target_name = permission.target_type.name
+                        else:
+                            name = '*'
+                    except ObjectDoesNotExist:
+                        pass
                     else:
-                        org_courses = EdxCourse.objects.filter(
-                            org_id=org.target_id
-                        )
-                    org_courses = map(
-                        lambda a: [a, org.action_type],
-                        org_courses.values_list('course_id', flat=True)
-                    )
-                    permissions_list += org_courses
+                        key = '{}/{}'.format(target_name, name)
+                        obj_dict = permissions_obj.get(key)
+                        if obj_dict:
+                            obj_dict['obj_perm'].append(permission.action_type)
+                            obj_dict['obj_perm'] = set(obj_dict['obj_perm'])
+                        else:
+                            permissions_obj[key] = {
+                                'obj_type': target_name,
+                                'obj_id': name,
+                                'obj_perm': [permission.action_type],
+                                }
 
-                # permissions pare for courses
-                courses = permissions.filter(
-                    target_type__name=EdxCourse._meta.verbose_name
-                )
-                for course in courses:
-                    if not course.target_id:
-                        course_courses = EdxCourse.objects.all()
-                    else:
-                        course_courses = EdxCourse.objects.filter(
-                            id=course.target_id)
-                    course_courses = map(
-                        lambda a: [a, course.action_type],
-                        course_courses.values_list('course_id', flat=True)
-                    )
-                    permissions_list += course_courses
-
-                # permissions pare for course runs
-                runs = permissions.filter(
-                    target_type__name=EdxCourseRun._meta.verbose_name
-                )
-                for run in runs:
-                    if not run.target_id:
-                        run_courses = EdxCourseRun.objects.all()
-                    else:
-                        run_courses = EdxCourseRun.objects.filter(
-                            id=run.target_id)
-                    run_courses = map(
-                        lambda a: [a, run.action_type],
-                        run_courses.values_list('course_id', flat=True)
-                    )
-                    permissions_list += run_courses
-
-                # permissions pare for course enrollments
-                enrollments = permissions.filter(
-                    target_type__name=EdxCourseEnrollment._meta.verbose_name
-                )
-                for enrollment in enrollments:
-                    if not enrollment.target_id:
-                        enrollment_courses = EdxCourseEnrollment.objects.all()
-                    else:
-                        enrollment_courses = EdxCourseEnrollment.objects.filter(
-                            id=run.target_id)
-                    enrollment_courses = map(
-                        lambda a: [a, enrollment.action_type],
-                        enrollment_courses.values_list('course_id', flat=True)
-                    )
-                    permissions_list += enrollment_courses
-
-                content['permissions'].append({role_name: permissions_list})
+                content['permissions'] += permissions_obj.values()
 
             return HttpResponse(json.dumps(content), content_type=JSON_CONTENT_TYPE)
         except ObjectDoesNotExist:
