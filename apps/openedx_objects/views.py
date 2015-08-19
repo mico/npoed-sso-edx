@@ -79,7 +79,7 @@ def enrollment(request):
 
 
 @receiver(api_course_create)
-def _update_course_permissions(sender, obj, request **kwargs):
+def _update_course_permissions(sender, obj, request, **kwargs):
     org_content_type = ContentType.objects.get_for_model(EdxOrg)
     course_content_type = ContentType.objects.get_for_model(EdxCourse)
 
