@@ -13,7 +13,11 @@ __all__ = ['LoginRequiredMixin']
 
 import re
 
+from unidecode import unidecode
+
 from django.contrib.auth.decorators import login_required
+
+from social.utils import slugify as psa_slugify
 
 
 url_regex = re.compile(r"""(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>\[\]]+|\(([^\s()<>\[\]]+|(\([^\s()<>\[\]]+\)))*\))+(?:\(([^\s()<>\[\]]+|(\([^\s()<>\[\]]+\)))*\)|[^\s`!(){};:'".,<>?\[\]]))""")
@@ -24,3 +28,7 @@ class LoginRequiredMixin(object):
     def as_view(cls, **initkwargs):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
         return login_required(view)
+
+
+def slugify(string):
+    return psa_slugify(unidecode(string))

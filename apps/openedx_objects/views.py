@@ -1,12 +1,21 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
+from django.contrib.contenttypes.models import ContentType
+from django.dispatch import receiver
+from django.db.models import Q
 
 from rest_framework.decorators import api_view
+from provider.oauth2.models import Grant, Client
 
-from .models import EdxCourse, EdxCourseRun, EdxOrg, EdxCourseEnrollment
+from apps.profiler.models import User
+from .models import EdxCourse, EdxOrg, EdxCourseRun, EdxCourseEnrollment
+from .signals import api_course_create
 
 import json
+import string
+import random
+import requests
 
 User = get_user_model()
 
@@ -19,17 +28,21 @@ def course(request):
     org_name = data.pop('org', None)
     course_id = data.pop('course_id', None)
 
-    org, org_created = EdxOrg.objects.update_or_create(name=org_name)
-    data['org'] = org
+    org_obj, org_created = EdxOrg.objects.update_or_create(name=org_name)
+    data['org'] = org_obj
 
-    course, course_created = EdxCourse.objects.update_or_create(course_id=course_id,
+    course_obj, course_created = EdxCourse.objects.update_or_create(course_id=course_id,
                                                                 defaults=data)
 
-    run, run_created = EdxCourseRun.objects.update_or_create(name=run_name,
-                                                             course=course)
+    run_obj, run_created = EdxCourseRun.objects.update_or_create(name=run_name,
+                                                             course=course_obj)
 
     if course_created:
+        if not org_created:
+            api_course_create.send(course_obj, request)
         message = 'Course is created!'
+    elif run_created:
+        api_course_create.send(run_obj, request)
 
     return HttpResponse(json.dumps({'message': message, 'status': 'SUCCESS'}),
                         content_type="application/json")
@@ -42,12 +55,15 @@ def enrollment(request):
         message = 'Course enrollment is updated!'
         username = data.pop('user')
         course_id = data.pop('course_id')
+        course_run = data.pop('course_run')
         data['is_active'] = (data['is_active'] == 'True')
         user = get_object_or_404(User, username=username)
-        course = get_object_or_404(EdxCourse, course_id=course_id)
+        course_run = get_object_or_404(EdxCourse,
+                                       course__course__course_id=course_id,
+                                       course__name=course_run)
         enrollment, created = EdxCourseEnrollment.objects.update_or_create(
             user=user,
-            course=course,
+            course_run=course_run,
             defaults=data
         )
         if created:
@@ -58,8 +74,55 @@ def enrollment(request):
     elif request.method == 'DELETE':
         username = data.get('user')
         course_id = data.get('course_id')
+        course_run = data.pop('course_run')
 
         EdxCourseEnrollment.objects.filter(user__username=username,
-                                           course__course_id=course_id).delete()
+                            course_run__name=course_run,
+                            course_run__course__course_id=course_id).delete()
         return HttpResponse(json.dumps({'message': 'CourseEnrollment is deleted',
                          'status': 'SUCCESS'}), content_type="application/json")
+
+
+@receiver(api_course_create)
+def _update_course_permissions(sender, obj, request, **kwargs):
+    org_content_type = ContentType.objects.get_for_model(EdxOrg)
+    course_content_type = ContentType.objects.get_for_model(EdxCourse)
+
+    if isinstance(obj, EdxCourse):
+        users = User.objects.prefetch_related().filter(
+            role__permissions__target_id=obj.org_id,
+            role__permissions__target_type=org_content_type
+        ).distinct()
+    else:
+        users = User.objects.prefetch_related().filter(
+            Q(
+                role__permissions__target_id=obj.course.org_id,
+                role__permissions__target_type=org_content_type
+            )|
+            Q(
+                role__permissions__target_id=obj.course_id,
+                role__permissions__target_type=course_content_type
+            )
+        ).distinct()
+    _update_roles(users)
+
+
+def _update_roles(users):
+    client = Client.objects.filter(url__contains=request.META['REMOTE_HOST'])
+
+    for user in users.iterator():
+        role = user.role.first()
+        if client:
+            grant = Grant.objects.create(
+                user=user,
+                client=client[0],
+                redirect_uri=client[0].redirect_uri,
+                scope=2
+            )
+
+            params = urllib.urlencode({
+                'state': ''.join(random.sample(string.ascii_letters, 32)),
+                'code': grant.code
+            })
+
+            r = requests.get('%s?%s' % (url, params, ))

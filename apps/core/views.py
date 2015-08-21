@@ -24,7 +24,7 @@ from django.views.generic import TemplateView
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
-from djaango.conf import settings
+from django.conf import settings
 
 from provider.oauth2.views import AccessTokenDetailView as AccessTokenDetailView_origin
 from provider.oauth2.models import Client, AccessToken, Grant
