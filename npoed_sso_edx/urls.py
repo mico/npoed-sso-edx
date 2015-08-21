@@ -15,6 +15,8 @@ from apps.profiler.views import (
 )
 
 from social.utils import setting_name
+from functools import update_wrapper
+
 
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
