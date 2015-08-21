@@ -48,7 +48,7 @@ class Permission(models.Model):
 
     def __unicode__(self):
         target_type = '*' if not self.target_type else self.target_type.name
-        return '%s/%s/%s' % (target_type, self.action_type, self.target_id or '*', )
+        return '%s/%s/%s' % (self.action_type, target_type, self.target_id or '*', )
 
     def get_object(self):
         return self.target_type.model_class().objects.get(pk=self.target_id)
