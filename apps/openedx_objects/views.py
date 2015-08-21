@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from provider.oauth2.models import Grant, Client
 
 from apps.profiler.models import User
-from .models import EdxCourse, EdxOrg
+from .models import EdxCourse, EdxOrg, EdxCourseRun, EdxCourseEnrollment
 from .signals import api_course_create
 
 import json
@@ -55,12 +55,15 @@ def enrollment(request):
         message = 'Course enrollment is updated!'
         username = data.pop('user')
         course_id = data.pop('course_id')
+        course_run = data.pop('course_run')
         data['is_active'] = (data['is_active'] == 'True')
         user = get_object_or_404(User, username=username)
-        course = get_object_or_404(EdxCourse, course_id=course_id)
+        course_run = get_object_or_404(EdxCourse,
+                                       course__course__course_id=course_id,
+                                       course__name=course_run)
         enrollment, created = EdxCourseEnrollment.objects.update_or_create(
             user=user,
-            course=course,
+            course_run=course_run,
             defaults=data
         )
         if created:
@@ -71,9 +74,11 @@ def enrollment(request):
     elif request.method == 'DELETE':
         username = data.get('user')
         course_id = data.get('course_id')
+        course_run = data.pop('course_run')
 
         EdxCourseEnrollment.objects.filter(user__username=username,
-                                           course__course_id=course_id).delete()
+                            course_run__name=course_run,
+                            course_run__course__course_id=course_id).delete()
         return HttpResponse(json.dumps({'message': 'CourseEnrollment is deleted',
                          'status': 'SUCCESS'}), content_type="application/json")
 
@@ -99,8 +104,12 @@ def _update_course_permissions(sender, obj, request, **kwargs):
                 role__permissions__target_type=course_content_type
             )
         ).distinct()
+    _update_roles(users)
 
+
+def _update_roles(users):
     client = Client.objects.filter(url__contains=request.META['REMOTE_HOST'])
+
     for user in users.iterator():
         role = user.role.first()
         if client:

@@ -43,11 +43,11 @@ class EdxCourseEnrollment(BaseObjectModel):
     name = models.CharField(max_length=128, blank=True)
     mode = models.CharField(default="honor", max_length=100)
     is_active = models.BooleanField(default=True)
-    course = models.ForeignKey(EdxCourse)
+    course_run = models.ForeignKey(EdxCourseRun)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
 
     class Meta:
-        unique_together = (('user', 'course'),)
+        unique_together = (('user', 'course_run'),)
 
     def __unicode__(self):
         return U'%s enrollment of course %s' % (self.user, self.course)

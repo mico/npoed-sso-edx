@@ -17,7 +17,7 @@ class EdxCourseRunAdmin(admin.ModelAdmin):
 
 
 class EdxCourseEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ['user', 'course', 'mode', 'is_active',
+    list_display = ['user', 'course_run', 'mode', 'is_active',
                     'is_published', 'is_archived']
 
 
