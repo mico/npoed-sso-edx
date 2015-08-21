@@ -99,7 +99,7 @@ def add_enrollments(result, run_obj):
             enrollments.append(enrollment_obj.id)
             if created:
                 print 'Enrollment "%s - %s" is created' % (enrollment['user'],
-                                                            course_obj)
+                                                            run_obj)
 
     return enrollments
 
