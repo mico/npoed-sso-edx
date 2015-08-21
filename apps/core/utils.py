@@ -31,4 +31,5 @@ class LoginRequiredMixin(object):
 
 
 def slugify(string):
+    string = isinstance(string, unicode) and string or string.decode('utf-8')
     return psa_slugify(unidecode(string))
