@@ -31,6 +31,7 @@ class Permission(models.Model):
         ('Archive', 'Archive', ),
         ('Create', 'Create', ),
         ('Publication', 'Publication', ),
+        ('Enroll', 'Enroll', ),
     )
 
     action_type = models.CharField(
@@ -47,6 +48,9 @@ class Permission(models.Model):
 
     def __unicode__(self):
         return self.action_type
+
+    def get_object(self):
+        return self.target_type.model_class().objects.get(pk=self.target_id)
 
 
 class Role(models.Model):
