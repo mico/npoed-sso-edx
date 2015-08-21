@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='edxcourseenrollment',
             name='course_run',
-            field=models.ForeignKey(default=None, to='openedx_objects.EdxCourseRun'),
+            field=models.ForeignKey(default=1, to='openedx_objects.EdxCourseRun'),
             preserve_default=False,
         ),
     ]

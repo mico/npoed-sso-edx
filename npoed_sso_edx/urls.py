@@ -20,9 +20,17 @@ from social.utils import setting_name
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
 
+def wrap_admin(view, cacheable=False):
+    def wrapper(*args, **kwargs):
+        return admin_site.admin_view(view, cacheable)(*args, **kwargs)
+    wrapper.admin_site = admin_site
+    return update_wrapper(wrapper, view)
+
+
 urlpatterns = patterns(
     '',
     url(r'^admin/login/$', set_auth_cookie(admin_site.login), name='admin:login'),
+    url(r'^admin/logout/$', set_auth_cookie(wrap_admin(admin_site.logout)), name='logout'),
     url(r'^admin/', include(admin_site.urls)),
 
     url(r'^', include('apps.core.urls')),
@@ -34,7 +42,7 @@ urlpatterns = patterns(
 
     url(r'^accounts/activate/(?P<activation_key>\w+)/$',
         CustomActivationView.as_view(), name='registration_activate'),
-    url(r'^register/$', RegistrationView.as_view(),
+    url(r'^register/$', set_auth_cookie(RegistrationView.as_view()),
         name='registration_register2'),
 
     url(r'^accounts/', include('registration.backends.default.urls')),
