@@ -16,6 +16,7 @@ import json
 import string
 import random
 import requests
+from functools import update_wrapper
 
 User = get_user_model()
 
@@ -58,9 +59,9 @@ def enrollment(request):
         course_run = data.pop('course_run')
         data['is_active'] = (data['is_active'] == 'True')
         user = get_object_or_404(User, username=username)
-        course_run = get_object_or_404(EdxCourse,
-                                       course__course__course_id=course_id,
-                                       course__name=course_run)
+        course_run = get_object_or_404(EdxCourseRun,
+                                       course__course_id=course_id,
+                                       name=course_run)
         enrollment, created = EdxCourseEnrollment.objects.update_or_create(
             user=user,
             course_run=course_run,
