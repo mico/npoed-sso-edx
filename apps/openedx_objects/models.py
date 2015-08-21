@@ -50,4 +50,4 @@ class EdxCourseEnrollment(BaseObjectModel):
         unique_together = (('user', 'course_run'),)
 
     def __unicode__(self):
-        return U'%s enrollment of course %s' % (self.user, self.course)
+        return U'%s enrollment of course %s' % (self.user, self.course_run)
