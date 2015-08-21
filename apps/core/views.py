@@ -76,7 +76,7 @@ class Home(LoginRequiredMixin, FormView):
         except ObjectDoesNotExist:
             return redirect(self.success_url)
 
-        client = Client.objects.filter(redirect_uri=url)
+        client = Client.objects.filter(redirect_uri=settings.EDX_CRETEUSER_URL)
         if client:
             grant = Grant.objects.create(
                 user=user,
@@ -118,7 +118,13 @@ class AccessTokenDetailView(AccessTokenDetailView_origin):
                 try:
                     if permission.target_type is not None:
                         obj = permission.get_object()
-                        name = obj.name
+                        if permission.target_type.name == EdxCourseRun._meta.verbose_naame:
+                            obj = permission.target_type.model_class().objects.get(
+                                pk=permission.target_id
+                            )
+                            name = obj.course.course_id
+                        else:
+                            name = obj.name
                         target_name = permission.target_type.name
                     else:
                         name = '*'

@@ -31,6 +31,7 @@ class Permission(models.Model):
         ('Archive', 'Archive', ),
         ('Create', 'Create', ),
         ('Publication', 'Publication', ),
+        ('Enroll', 'Enroll', ),
     )
 
     action_type = models.CharField(
