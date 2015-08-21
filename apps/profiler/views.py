@@ -63,7 +63,7 @@ class Login(FormView):
                 })
 
 
-class Profile(UpdateView):
+class Profile(LoginRequiredMixin, UpdateView):
 
     template_name = 'profile.html'
     form_class = UserForm
