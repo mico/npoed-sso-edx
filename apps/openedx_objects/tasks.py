@@ -57,15 +57,18 @@ def get_edx_objects():
 
             if course_obj.id not in courses:
                 courses.append(course_obj.id)
-                enrl_params['course'] = course_id
+
+            run_obj, run_created = _uoc_run(name=course['run'], course=course_obj)
+
+            if run_created:
+                print 'Course run "%s" is created' % course['run']
+
+            if run_obj.id not in runs:
+                runs.append(run_obj.id)
+                enrl_params['course_run'] = course_id
                 r = _SESSION.get(settings.EDX_ENROLLMENTS_API, params=enrl_params)
                 result = json.loads(r.text, object_hook=datetime_parser)
-                enrollments.extend(add_enrollments(result, course_obj))
-
-            run_obj, created = _uoc_run(name=course['run'], course=course_obj)
-            run_obj.id not in runs and runs.append(run_obj.id)
-            if created:
-                print 'Course run "%s" is created' % course['run']
+                enrollments.extend(add_enrollments(result, run_obj))
 
         url = data.get('next')
         if url is None:
@@ -77,7 +80,7 @@ def get_edx_objects():
     EdxOrg.objects.exclude(id__in=orgs).delete()
 
 
-def add_enrollments(result, course_obj):
+def add_enrollments(result, run_obj):
     enrollments = []
     for enrollment in result:
         try:
@@ -87,7 +90,7 @@ def add_enrollments(result, course_obj):
         else:
             enrollment_obj, created = _uoc_enrollment(
                 user=user,
-                course=course_obj,
+                course_run=run_obj,
                 defaults={
                     'mode': enrollment['mode'],
                     'is_active': enrollment['is_active'],
