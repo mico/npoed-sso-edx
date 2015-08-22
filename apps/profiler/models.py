@@ -86,9 +86,6 @@ class RegistrationProfile(BaseRegistrationProfile):
             'redirect_url': urllib.pathname2url(request.GET.get('next', '')),
         })
 
-        if extra_context:
-            ctx_dict.update(extra_context)
-
         subject = (getattr(settings, 'REGISTRATION_EMAIL_SUBJECT_PREFIX', '') +
                    render_to_string(
                        'registration/activation_email_subject.txt', ctx_dict))
