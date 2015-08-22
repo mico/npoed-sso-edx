@@ -87,7 +87,8 @@ class RegistrationView(RW):
 class CustomActivationView(ActivationView):
 
     def get_success_url(self, request, user):
-        return reverse('index')
+        next = request.GET.get('next')
+        return ('home', (), {}, ) if next is None else next
 
 
 @login_required
