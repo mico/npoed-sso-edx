@@ -23,8 +23,7 @@ from django.contrib.auth import (
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
-from django.contrib.sites.models import Site
-from django.contrib.sites.models import RequestSite
+from django.contrib.sites.models import Site, RequestSite
 from django.contrib.auth.decorators import login_required
 
 from social.backends.oauth import BaseOAuth1, BaseOAuth2
@@ -35,13 +34,13 @@ from social.apps.django_app.utils import psa
 from registration.backends.default.views import (
     ActivationView, RegistrationView as RW
 )
-from registration.models import RegistrationProfile
 from registration import signals
 from registration.users import UserModel
 
 from apps.core.utils import LoginRequiredMixin
 from apps.core.decorators import render_to
 from apps.profiler.forms import UserForm, LoginForm, RegUserForm
+from apps.profiler.models import RegistrationProfile
 
 User = get_user_model()
 
