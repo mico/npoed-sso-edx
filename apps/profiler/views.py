@@ -24,6 +24,7 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
+from django.contrib.sites.models import RequestSite
 from django.contrib.auth.decorators import login_required
 
 from social.backends.oauth import BaseOAuth1, BaseOAuth2
@@ -35,6 +36,8 @@ from registration.backends.default.views import (
     ActivationView, RegistrationView as RW
 )
 from registration.models import RegistrationProfile
+from registration import signals
+from registration.users import UserModel
 
 from apps.core.utils import LoginRequiredMixin
 from apps.core.decorators import render_to
@@ -82,6 +85,22 @@ class RegistrationView(RW):
         # We need to be able to use the request and the new user when
         # constructing success_url.
         return ('home', (), {})
+
+    def register(self, request, **cleaned_data):
+        username, email, password = cleaned_data['username'], cleaned_data['email'], cleaned_data['password1']
+        if Site._meta.installed:
+            site = Site.objects.get_current()
+        else:
+            site = RequestSite(request)
+        new_user = RegistrationProfile.objects.create_inactive_user(
+            username, email, password, site,
+            send_email=self.SEND_ACTIVATION_EMAIL,
+            request=request,
+        )
+        signals.user_registered.send(sender=self.__class__,
+                                     user=new_user,
+                                     request=request)
+        return new_user
 
 
 class CustomActivationView(ActivationView):
