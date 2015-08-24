@@ -14,6 +14,9 @@ _uoc_org = EdxOrg.objects.update_or_create
 _uoc_run = EdxCourseRun.objects.update_or_create
 _uoc_enrollment = EdxCourseEnrollment.objects.update_or_create
 _SESSION = requests.Session()
+#_SESSION.headers.update({'X-Edx-Api-Key': settings.EDX_API_TOKEN})
+_ENRL_SESSION = requests.Session()
+_ENRL_SESSION.headers.update({'X-Edx-Api-Key': settings.EDX_API_TOKEN})
 
 
 def get_edx_objects():
@@ -66,7 +69,7 @@ def get_edx_objects():
             if run_obj.id not in runs:
                 runs.append(run_obj.id)
                 enrl_params['course_run'] = course_id
-                r = _SESSION.get(settings.EDX_ENROLLMENTS_API, params=enrl_params)
+                r = _ENRL_SESSION.get(settings.EDX_ENROLLMENTS_API, params=enrl_params)
                 result = json.loads(r.text, object_hook=datetime_parser)
                 enrollments.extend(add_enrollments(result, run_obj))
 
@@ -83,6 +86,8 @@ def get_edx_objects():
 def add_enrollments(result, run_obj):
     enrollments = []
     for enrollment in result:
+        if run_obj.course.course_id != enrollment['course_details']['course_id']:
+            continue
         try:
             user = User.objects.get(username=enrollment['user'])
         except User.DoesNotExist:
