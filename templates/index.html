@@ -42,7 +42,7 @@
                   <label> <input type="checkbox"> Remember me </label>
                 </div>
 		<a href="/accounts/password/reset/">Forgot password</a> / 
-		<a href="{% url 'registration_register2' %}">Registration</a>
+		<a href="{% url 'registration_register2' %}?{{ request.META.QUERY_STRING }}">Registration</a>
               </div>
             </div>
           </form>

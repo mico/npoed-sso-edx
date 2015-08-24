@@ -118,7 +118,7 @@ class AccessTokenDetailView(AccessTokenDetailView_origin):
                 try:
                     if permission.target_type is not None:
                         obj = permission.get_object()
-                        if permission.target_type.name == EdxCourseRun._meta.verbose_naame:
+                        if permission.target_type.name == EdxCourseRun._meta.verbose_name:
                             obj = permission.target_type.model_class().objects.get(
                                 pk=permission.target_id
                             )

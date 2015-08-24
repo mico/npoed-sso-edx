@@ -43,7 +43,8 @@ urlpatterns = patterns(
     url('', include('social.apps.django_app.urls', namespace='social')),
 
     url(r'^accounts/activate/(?P<activation_key>\w+)/$',
-        CustomActivationView.as_view(), name='registration_activate'),
+        set_auth_cookie(CustomActivationView.as_view()),
+        name='registration_activate'),
     url(r'^register/$', set_auth_cookie(RegistrationView.as_view()),
         name='registration_register2'),
 
