@@ -47,8 +47,15 @@ class Index(TemplateView):
     success_url = '/'
 
     def get(self, request, *args, **kwargs):
+
+        get_next = request.GET.get('next', '')
         if request.user.is_authenticated():
             return redirect(reverse('home'))
+        elif get_next.split('auth_entry=')[-1] == 'register':
+            return redirect('{}?next={}'.format(
+                    reverse('registration_register2'),
+                    urllib.pathname2url(get_next)
+                    ))
         return super(Index, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
