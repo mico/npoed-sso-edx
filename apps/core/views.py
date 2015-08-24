@@ -47,8 +47,15 @@ class Index(TemplateView):
     success_url = '/'
 
     def get(self, request, *args, **kwargs):
+
+        get_next = request.GET.get('next', '')
         if request.user.is_authenticated():
             return redirect(reverse('home'))
+        elif get_next.split('auth_entry=')[-1] == 'register':
+            return redirect('{}?next={}'.format(
+                    reverse('registration_register2'),
+                    urllib.pathname2url(get_next.split('auth_entry=')[0])
+                    ))
         return super(Index, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -132,7 +139,7 @@ class AccessTokenDetailView(AccessTokenDetailView_origin):
                 except ObjectDoesNotExist:
                     pass
                 else:
-                    key = '{}/{}'.format(target_name, name)
+                    key = u'{}/{}'.format(target_name, name)
                     obj_dict = permissions_obj.get(key)
                     if obj_dict:
                         obj_dict['obj_perm'].append(permission.action_type)
