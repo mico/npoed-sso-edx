@@ -36,13 +36,78 @@ from registration.backends.default.views import (
 )
 from registration import signals
 from registration.users import UserModel
+from rest_framework import viewsets, permissions
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from apps.core.utils import LoginRequiredMixin
 from apps.core.decorators import render_to
 from apps.profiler.forms import UserForm, LoginForm, RegUserForm
 from apps.profiler.models import RegistrationProfile
+from apps.permissions.models import Role, Permission
+from apps.openedx_objects.models import (
+    EdxOrg, EdxCourse, EdxCourseRun, EdxCourseEnrollment
+)
 
 User = get_user_model()
+
+
+class UserView(APIView):
+    """
+    A simple ViewSet for listing or retrieving users.
+    """
+
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get(self, request):
+        content = {}
+        user = request.user
+        permissions_obj = {}
+        try:
+            content = {
+                'user_id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'firstname': user.first_name,
+                'lastname': user.last_name,
+                'permissions': [],
+            }
+            for permission in Permission.objects.filter(role__user=user).distinct():
+                try:
+                    if permission.target_type is not None:
+                        obj = permission.get_object()
+                        if permission.target_type.name == EdxCourseRun._meta.verbose_name:
+                            obj = permission.target_type.model_class().objects.get(
+                                pk=permission.target_id
+                            )
+                            name = obj.course.course_id
+                        else:
+                            name = obj.name
+                        target_name = permission.target_type.name
+                    else:
+                        name = '*'
+                        target_name = '*'
+                except EdxCourse.DoesNotExist:
+                    pass
+                else:
+                    key = u'{}/{}'.format(target_name, name)
+                    obj_dict = permissions_obj.get(key)
+                    if obj_dict:
+                        obj_dict['obj_perm'].append(permission.action_type)
+                        obj_dict['obj_perm'] = list(set(obj_dict['obj_perm']))
+                    else:
+                        permissions_obj[key] = {
+                            'obj_type': target_name,
+                            'obj_id': name,
+                            'obj_perm': [permission.action_type],
+                        }
+
+            content['permissions'] += permissions_obj.values()
+        except EdxCourse.DoesNotExist:
+            pass
+        except Exception as e :
+            print e
+        return Response(content)
 
 
 def context(**extra):
