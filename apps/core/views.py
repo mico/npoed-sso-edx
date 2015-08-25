@@ -41,7 +41,7 @@ from apps.openedx_objects.models import (
 User = get_user_model()
 
 
-def _push_to_edx(user):
+def _push_to_edx(user, success_url):
     client = Client.objects.filter(redirect_uri=settings.EDX_CRETEUSER_URL)
     if client:
         grant = Grant.objects.create(
@@ -57,7 +57,7 @@ def _push_to_edx(user):
             }
         )
         r = requests.get('%s?%s' % (settings.EDX_CRETEUSER_URL, params, ))
-    return redirect(self.success_url)
+    return redirect(success_url)
 
 
 class Index(TemplateView):
@@ -100,7 +100,7 @@ class Home(LoginRequiredMixin, FormView):
             user = User.objects.get(email=form.cleaned_data['email'])
         except ObjectDoesNotExist:
             return redirect(self.success_url)
-        return _push_to_edx(user)
+        return _push_to_edx(user, self.success_url)
 
 
 class EdxPush(LoginRequiredMixin, View):
@@ -113,4 +113,4 @@ class EdxPush(LoginRequiredMixin, View):
             user = User.objects.get(id=kwargs['pk'])
         except ObjectDoesNotExist:
             return redirect(self.success_url)
-        return _push_to_edx(user)
+        return _push_to_edx(user, self.success_url)
