@@ -50,16 +50,20 @@ class Permission(models.Model):
         target_type = '*' if not self.target_type else self.target_type.name
         return '%s/%s/%s' % (self.action_type, target_type, self.target_id or '*', )
 
-    def get_object(self):
-        return self.target_type.model_class().objects.get(pk=self.target_id)
+    def get_object(self, default=None):
+        cls = self.target_type.model_class()
 
+        try:
+            return cls.objects.get(pk=self.target_id)
+        except cls.DoesNotExist:
+            return default
 
 class Role(models.Model):
     '''
     Model of roles for sharing permissions to sso.
     '''
 
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     permissions = models.ManyToManyField('Permission', blank=True, null=True)
     modules = models.ForeignKey(Client, blank=True, null=True)
 
