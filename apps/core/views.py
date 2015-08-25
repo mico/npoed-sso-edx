@@ -20,7 +20,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django.contrib.auth import get_user_model
 from django.views.generic.edit import FormView
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
