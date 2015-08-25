@@ -41,6 +41,25 @@ from apps.openedx_objects.models import (
 User = get_user_model()
 
 
+def _push_to_edx(user):
+    client = Client.objects.filter(redirect_uri=settings.EDX_CRETEUSER_URL)
+    if client:
+        grant = Grant.objects.create(
+            user=user,
+            client=client[0],
+            redirect_uri=settings.EDX_CRETEUSER_URL,
+            scope=2
+        )
+        params = urllib.urlencode(
+            {
+                'state': ''.join(random.sample(string.ascii_letters, 32)),
+                'code': grant.code
+            }
+        )
+        r = requests.get('%s?%s' % (settings.EDX_CRETEUSER_URL, params, ))
+    return redirect(self.success_url)
+
+
 class Index(TemplateView):
 
     template_name = 'index.html'
@@ -76,26 +95,22 @@ class Home(LoginRequiredMixin, FormView):
         form = self.form_class(request.POST)
         if not form.is_valid():
             return super(Home, self).get(request, *args, **kwargs)
-
         form.save()
         try:
             user = User.objects.get(email=form.cleaned_data['email'])
         except ObjectDoesNotExist:
             return redirect(self.success_url)
+        return _push_to_edx(user)
 
-        client = Client.objects.filter(redirect_uri=settings.EDX_CRETEUSER_URL)
-        if client:
-            grant = Grant.objects.create(
-                user=user,
-                client=client[0],
-                redirect_uri=settings.EDX_CRETEUSER_URL,
-                scope=2
-            )
-            params = urllib.urlencode(
-                {
-                    'state': ''.join(random.sample(string.ascii_letters, 32)),
-                    'code': grant.code
-                }
-            )
-            r = requests.get('%s?%s' % (settings.EDX_CRETEUSER_URL, params, ))
-        return redirect(self.success_url)
+
+class EdxPush(LoginRequiredMixin, View):
+
+    success_url = '/profile/'
+
+    def get(self, request, *args, **kwargs):
+        print args, kwargs
+        try:
+            user = User.objects.get(id=kwargs['pk'])
+        except ObjectDoesNotExist:
+            return redirect(self.success_url)
+        return _push_to_edx(user)
