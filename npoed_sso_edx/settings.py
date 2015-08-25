@@ -23,25 +23,15 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-#SESSION_COOKIE_DOMAIN = ".rnoep.raccoongang.com"
 AUTH_SESSION_COOKIE_DOMAIN = ".rnoep.raccoongang.com"
 
 AUTH_USER_MODEL = 'profiler.User'
 
 ALLOWED_HOSTS = ['*']
 
-#REST_FRAMEWORK = {
-#    'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework.authentication.OAuth2Authentication',
-#         'rest_framework.authentication.SessionAuthentication'
-#    ),
-#    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
-#    'PAGE_SIZE': 10,
-#}
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_oauth.authentication.OAuth2Authentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
     'PAGE_SIZE': 10,

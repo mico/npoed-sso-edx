@@ -20,7 +20,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django.contrib.auth import get_user_model
 from django.views.generic.edit import FormView
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
@@ -39,6 +39,25 @@ from apps.openedx_objects.models import (
 
 
 User = get_user_model()
+
+
+def _push_to_edx(user, success_url):
+    client = Client.objects.filter(redirect_uri=settings.EDX_CRETEUSER_URL)
+    if client:
+        grant = Grant.objects.create(
+            user=user,
+            client=client[0],
+            redirect_uri=settings.EDX_CRETEUSER_URL,
+            scope=2
+        )
+        params = urllib.urlencode(
+            {
+                'state': ''.join(random.sample(string.ascii_letters, 32)),
+                'code': grant.code
+            }
+        )
+        r = requests.get('%s?%s' % (settings.EDX_CRETEUSER_URL, params, ))
+    return redirect(success_url)
 
 
 class Index(TemplateView):
@@ -76,84 +95,22 @@ class Home(LoginRequiredMixin, FormView):
         form = self.form_class(request.POST)
         if not form.is_valid():
             return super(Home, self).get(request, *args, **kwargs)
-
         form.save()
         try:
             user = User.objects.get(email=form.cleaned_data['email'])
         except ObjectDoesNotExist:
             return redirect(self.success_url)
-
-        client = Client.objects.filter(redirect_uri=settings.EDX_CRETEUSER_URL)
-        if client:
-            grant = Grant.objects.create(
-                user=user,
-                client=client[0],
-                redirect_uri=settings.EDX_CRETEUSER_URL,
-                scope=2
-            )
-            params = urllib.urlencode(
-                {
-                    'state': ''.join(random.sample(string.ascii_letters, 32)),
-                    'code': grant.code
-                }
-            )
-            r = requests.get('%s?%s' % (settings.EDX_CRETEUSER_URL, params, ))
-        return redirect(self.success_url)
+        return _push_to_edx(user, self.success_url)
 
 
-class AccessTokenDetailView(AccessTokenDetailView_origin):
+class EdxPush(LoginRequiredMixin, View):
+
+    success_url = '/profile/'
 
     def get(self, request, *args, **kwargs):
-        JSON_CONTENT_TYPE = 'application/json'
-
+        print args, kwargs
         try:
-            access_token = AccessToken.objects.get_token(kwargs['token'])
-            content = {
-                'user_id': access_token.user.id,
-                'username': access_token.user.username,
-                'email': access_token.user.email,
-                'firstname': access_token.user.first_name,
-                'lastname': access_token.user.last_name,
-                'permissions': [],
-                'scope': access_token.get_scope_display(),
-                'expires': access_token.expires.isoformat()
-            }
-
-            roles_ids = access_token.user.role.values_list('id', flat=True)
-            permissions_obj = {}
-            for permission in Permission.objects.filter(role__in=list(roles_ids)).distinct():
-                try:
-                    if permission.target_type is not None:
-                        obj = permission.get_object()
-                        if permission.target_type.name == EdxCourseRun._meta.verbose_name:
-                            obj = permission.target_type.model_class().objects.get(
-                                pk=permission.target_id
-                            )
-                            name = obj.course.course_id
-                        else:
-                            name = obj.name
-                        target_name = permission.target_type.name
-                    else:
-                        name = '*'
-                        target_name = '*'
-                except ObjectDoesNotExist:
-                    pass
-                else:
-                    key = u'{}/{}'.format(target_name, name)
-                    obj_dict = permissions_obj.get(key)
-                    if obj_dict:
-                        obj_dict['obj_perm'].append(permission.action_type)
-                        obj_dict['obj_perm'] = list(set(obj_dict['obj_perm']))
-                    else:
-                        permissions_obj[key] = {
-                            'obj_type': target_name,
-                            'obj_id': name,
-                            'obj_perm': [permission.action_type],
-                        }
-
-            content['permissions'] += permissions_obj.values()
-
-            return HttpResponse(json.dumps(content), content_type=JSON_CONTENT_TYPE)
+            user = User.objects.get(id=kwargs['pk'])
         except ObjectDoesNotExist:
-            return HttpResponseBadRequest(json.dumps({'error': 'invalid_token'}),
-                                          content_type=JSON_CONTENT_TYPE)
+            return redirect(self.success_url)
+        return _push_to_edx(user, self.success_url)
