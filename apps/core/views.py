@@ -50,13 +50,9 @@ def _push_to_edx(user, success_url):
             redirect_uri=settings.EDX_CRETEUSER_URL,
             scope=2
         )
-        params = urllib.urlencode(
-            {
-                'state': ''.join(random.sample(string.ascii_letters, 32)),
-                'code': grant.code
-            }
-        )
-        r = requests.get('%s?%s' % (settings.EDX_CRETEUSER_URL, params, ))
+        params = {'state': ''.join(random.sample(string.ascii_letters, 32)),
+                  'code': grant.code}
+        r = requests.get(settings.EDX_CRETEUSER_URL, params)
     return redirect(success_url)
 
 
