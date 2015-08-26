@@ -3,12 +3,10 @@ from django.conf.urls import patterns, include, url
 from django.contrib.admin import site as admin_site
 from django.contrib.auth.views import login, logout
 from django.views.generic import TemplateView
-from django.views.decorators.csrf import csrf_exempt
 
 from social.utils import setting_name
 from social.apps.django_app.views import complete
 
-from apps.core.views import AccessTokenDetailView
 from apps.core.decorators import set_auth_cookie, external_redirect
 from apps.profiler.views import (
     CustomActivationView, Login, RegistrationView, Profile
@@ -78,9 +76,6 @@ urlpatterns = patterns(
         {'next_page': '/'}, name='logout'),
     url(r'profile/$', Profile.as_view(), name='profile'),
 
-    url('^oauth2/access_token/(?P<token>[\w]+)/$',
-        csrf_exempt(AccessTokenDetailView.as_view()),
-        name='access_token_detail'),
     url(r'^oauth2/', include('oauth2_provider.urls', namespace = 'oauth2')),
     url(r'^/receiver.html$',
         TemplateView.as_view(template_name='-receiver.html')

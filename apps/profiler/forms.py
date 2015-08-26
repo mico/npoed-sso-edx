@@ -14,6 +14,7 @@ from django import forms
 from django.utils.safestring import mark_safe
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import get_user_model
+from django.core import validators
 
 from registration.forms import RegistrationFormUniqueEmail
 
@@ -53,7 +54,6 @@ class CustomTextInput(forms.TextInput):
     '''
 
     def render(self, name, value, attrs=None):
-        print name, value, attrs
         #<input class="span12" id="id_username" maxlength="254" name="username" placeholder="9ineID / Email address" type="text">
         # output = ''
         # output_item = '''
@@ -117,12 +117,17 @@ class UserForm(forms.ModelForm):
             'second_name']
 
 
-class RegUserForm(RegistrationFormUniqueEmail):#(forms.ModelForm):
+class RegUserForm(RegistrationFormUniqueEmail):
 
     email = forms.EmailField(label='email')
-    password1 = forms.CharField(label='password1')
-    password2 = forms.CharField(label='password2')
-    username = forms.CharField(label='username')
+    password1 = forms.CharField(label='password1', widget=forms.PasswordInput())
+    password2 = forms.CharField(label='password2', widget=forms.PasswordInput())
+    username = forms.CharField(
+        label='username', validators=[
+            validators.RegexValidator('^[-a-zA-Z0-9_]+$'),
+            validators.MinLengthValidator(3)
+        ]
+    )
 
     def __init__(self, *args, **kwargs):
         kwargs['prefix'] = 'reg'
