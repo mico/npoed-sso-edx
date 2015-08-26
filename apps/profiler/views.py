@@ -35,8 +35,7 @@ from registration.backends.default.views import (
     ActivationView, RegistrationView as RW
 )
 from registration import signals
-from registration.users import UserModel
-from rest_framework import viewsets, permissions
+from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -52,12 +51,14 @@ from apps.openedx_objects.models import (
 User = get_user_model()
 
 
-class UserView(APIView):
+class UserProfileAPI(APIView):
     """
-    A simple ViewSet for listing or retrieving users.
+    A simple ViewAPI for get user and permissions from open-edx.
+    This api call when social-auth through oauth2 from edx asked 
+    extra fields user-sso.
     """
 
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
         content = {}
@@ -81,6 +82,11 @@ class UserView(APIView):
                                 pk=permission.target_id
                             )
                             name = obj.course.course_id
+                        elif permission.target_type.name == EdxCourse._meta.verbose_name:
+                            obj = permission.target_type.model_class().objects.get(
+                                pk=permission.target_id
+                            )
+                            name = obj.course_id
                         else:
                             name = obj.name
                         target_name = permission.target_type.name
