@@ -25,6 +25,7 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site, RequestSite
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 
 from social.backends.oauth import BaseOAuth1, BaseOAuth2
 from social.backends.google import GooglePlusAuth
@@ -61,58 +62,53 @@ class UserProfileAPI(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        content = {}
         user = request.user
         permissions_obj = {}
-        try:
-            content = {
-                'user_id': user.id,
-                'username': user.username,
-                'email': user.email,
-                'firstname': user.first_name,
-                'lastname': user.last_name,
-                'permissions': [],
-            }
-            for permission in Permission.objects.filter(role__user=user).distinct():
+        content = {
+            'user_id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'firstname': user.first_name,
+            'lastname': user.last_name,
+            'permissions': [],
+        }
+        for permission in Permission.objects.filter(role__user=user).distinct():
+            if permission.target_type is not None:
                 try:
-                    if permission.target_type is not None:
-                        obj = permission.get_object()
-                        if permission.target_type.name == EdxCourseRun._meta.verbose_name:
-                            obj = permission.target_type.model_class().objects.get(
-                                pk=permission.target_id
-                            )
-                            name = obj.course.course_id
-                        elif permission.target_type.name == EdxCourse._meta.verbose_name:
-                            obj = permission.target_type.model_class().objects.get(
-                                pk=permission.target_id
-                            )
-                            name = obj.course_id
-                        else:
-                            name = obj.name
-                        target_name = permission.target_type.name
+                    obj = permission.get_object()
+                    if permission.target_type.name == EdxCourseRun._meta.verbose_name:
+                        obj = permission.target_type.model_class().objects.get(
+                            pk=permission.target_id
+                        )
+                        name = obj.course.course_id
+                    elif permission.target_type.name == EdxCourse._meta.verbose_name:
+                        obj = permission.target_type.model_class().objects.get(
+                            pk=permission.target_id
+                        )
+                        name = obj.course_id
                     else:
-                        name = '*'
-                        target_name = '*'
-                except EdxCourse.DoesNotExist:
-                    pass
-                else:
-                    key = u'{}/{}'.format(target_name, name)
-                    obj_dict = permissions_obj.get(key)
-                    if obj_dict:
-                        obj_dict['obj_perm'].append(permission.action_type)
-                        obj_dict['obj_perm'] = list(set(obj_dict['obj_perm']))
-                    else:
-                        permissions_obj[key] = {
-                            'obj_type': target_name,
-                            'obj_id': name,
-                            'obj_perm': [permission.action_type],
-                        }
+                        name = obj.name
+                except ObjectDoesNotExist:
+                    if permission.target_id:
+                        continue
+                    name = '*'
+                target_name = permission.target_type.name
+            else:
+                name = '*'
+                target_name = '*'
 
-            content['permissions'] += permissions_obj.values()
-        except EdxCourse.DoesNotExist:
-            pass
-        except Exception as e :
-            print e
+            key = u'{}/{}'.format(target_name, name)
+            obj_dict = permissions_obj.get(key)
+            if obj_dict:
+                obj_dict['obj_perm'].append(permission.action_type)
+                obj_dict['obj_perm'] = list(set(obj_dict['obj_perm']))
+            else:
+                permissions_obj[key] = {
+                    'obj_type': target_name,
+                    'obj_id': name,
+                    'obj_perm': [permission.action_type],
+                }
+        content['permissions'] += permissions_obj.values()
         return Response(content)
 
 

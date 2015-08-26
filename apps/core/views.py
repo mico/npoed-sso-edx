@@ -108,7 +108,6 @@ class EdxPush(LoginRequiredMixin, View):
     success_url = '/profile/'
 
     def get(self, request, *args, **kwargs):
-        print args, kwargs
         try:
             user = User.objects.get(id=kwargs['pk'])
         except ObjectDoesNotExist:
