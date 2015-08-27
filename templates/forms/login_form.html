@@ -1,7 +1,4 @@
-{% if form.non_field_errors %}
-{{ form.non_field_errors }}
-{% endif %}
-{% for field in form %}
-{{ field }}
-{% if field.errors %}<div class="myerrors clearfix">{{ field.errors }}</div>{% endif %}
-{% endfor %}
+<lable>Имя пользователя</lable>
+{% if form.username.errors %}<div class="myerrors clearfix">{{ form.username.errors }}</div>{% endif %}{{ form.username }}
+<label>Пароль</label>
+{% if form.password.errors %}<div class="myerrors clearfix">{{ form.password.errors }}</div>{% endif %}{{ form.password }}

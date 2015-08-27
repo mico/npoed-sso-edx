@@ -34,43 +34,79 @@
   {% endblock head %}
 </head>
 <body style="background-color: #dedede;">
-  {% block header %}
-    <nav class="navbar-inverse">
-      <div class="container">
-	<div class="container-fluid">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="{% url 'home' %}">Npoed</a>
-          </div>
-          <div class="navbar-form navbar-right">
-	    {% if user.is_authenticated %}
-            <ul class="nav navbar-nav nav-pills" style="margin: 0 50px 0 0;">
-              <li role="presentation" class="dropdown">
-		<div>
-		  <a class="btn btn-primary" href="{% url 'logout' %}">
-		    <i class="fa fa-sign-out"></i>
-		    Logout
-		  </a>
-		</div>
-              </li>
-              <li role="presentation" ><a href="{% url 'profile' %}">{{ user.username }}</a></li>
-            </ul>
-	    {% endif %}
-          </div>
-	</div>
-      </div>
-    </nav>
-  {% endblock header %}
+{% block header %}
+ <header class="global-header">
+   <div class="container">
+     <div class="top-bar row">
+       <div class="menu col-md-1 col"><a href="#/"><span aria-hidden="true" class="icon menu-icon"></span></a></div>
+       <div class="col-md-2"><a id="logo" href="/"><img alt="" src="http://dev01.metod.ru:8080/static/img/logo-light.png"></a></div>
+       <div class="catalog-link col-md-6 col"><a href="http://dev01.metod.ru:8080/course/"><span aria-hidden="true" class="icon catalog-icon"></span>Каталог курсов</a></div>
+       <div class="version col-md-2 text-right col">
+         <span id="sb_login" class="l-btn" style="">
+           <span class="icon login-icon"></span><a href="http://dev01.metod.ru:8080/login/npoedsso/?next=/course/">Вход</a>
+         </span>
+       </div>
+     </div>
+   </div>
+ </header>
+{% endblock header %}
   <div class="container custom_container">
     {% block content %}
     {% endblock content %}
   </div>
-  <footer class="panel-footer">
-    {% block footer %}
-    <div class="container">
-      <p>© Company 2014</p>
+{% block footer %}
+<footer>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-5 side left-side">
+        <a href="/" class="pull-left"><img src="http://dev01.metod.ru:8080/static/img/logo-small.png" alt="" class="logo-small"></a>
+        <ul class="list-unstyled">
+          <li><a href="">Каталог курсов</a></li>
+          <li><a href="">Направления подготовки</a></li>
+        </ul>
+      </div>
+      <div class="col-md-7 side right-side">
+        <div class="row">
+          <div class="col-md-5">
+            <ul class="list-unstyled narrow">
+              <li><a href="http://dev01.metod.ru:8080/about/">О платформе</a></li>
+              <li><a href="/faq/">Вопрос-ответ</a></li>
+              <li><a href="#">Для преподавателей </a></li>
+              <li><a href="#">Партнерам</a></li>
+            </ul>
+          </div>
+          <div class="col-md-7">
+            <ul class="list-unstyled wide">
+              <li><a href="#">Условия предоставления услуг</a></li>
+              <li><a href="#">Политика конфиденциальности</a></li>
+              <li><a href="#">Правила использования</a></li>
+              <li><a href="#">Версия для&nbsp;слабовидящих</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-    {% endblock footer %}
-  </footer>
+    <div class="row copyright">
+      <div class="col-md-5">
+        © 2015 Открытое образование
+        <ul class="list-inline">
+          <li>
+            <a href="#"><img src="http://dev01.metod.ru:8080/static/img/social/fb.png" alt=""></a>
+            <a href="#"><img src="http://dev01.metod.ru:8080/static/img/social/vk.png" alt=""></a>
+            <a href="#"><img src="http://dev01.metod.ru:8080/static/img/social/ok.png" alt=""></a>
+            <a href="#"><img src="http://dev01.metod.ru:8080/static/img/social/inst.png" alt=""></a>
+            <a href="#"><img src="http://dev01.metod.ru:8080/static/img/social/tw.png" alt=""></a>
+            <a href="#"><img src="http://dev01.metod.ru:8080/static/img/social/you.png" alt=""></a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-7">
+        <div class="warning"><span class="label label-primary">12+</span>Ресурс может содержать материалы для лиц старше 12 лет</div>
+      </div>
+    </div>
+  </div>
+</footer>
+{% endblock footer %}
   {% block modals %}
   {% endblock modals %}
   {% block js %}

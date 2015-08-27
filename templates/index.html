@@ -1,217 +1,193 @@
 {% extends 'base.html' %}
 {% load  backend_utils %}
 {% load static from staticfiles %}
+
+{% block extra_css %}
+<link href="http://dev01.metod.ru:8080/static/css/style.css" rel="stylesheet" type="text/css" />
+<link href="{% static 'css/edx-theme.css' %}" rel="stylesheet" type="text/css" />
+{% endblock extra_css %}
 {% block content %}
+<div class="content-wrapper">
+  <div class="auth-wrapper">
 
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="gridSystemModalLabel">Login</h4>
+    <div class="auth-section">
+      <h2><span>Войти</span></h2>
+      <form class="form-horizontal" method="post"
+          action="{% url 'login' %}?{{ request.META.QUERY_STRING }}"
+          id="login_auth">
+        {% csrf_token %}
+        <div id="auth_form">
+          {{ login_form }}
+        </div>
+          <a href="/accounts/password/reset/">Забыли пароль?</a>
+  <!--       <div class="row">
+          <div class="col-sm-3 text-right">
+            <p><strong>Login with</strong></p>
+          </div>
+          <div class="col-sm-9">
+            <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'facebook' %}?{{ request.META.QUERY_STRING }}">
+              <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/facebook.png' %}" alt=""/>
+            </a>
+            <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'twitter' %}?{{ request.META.QUERY_STRING }}">
+              <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/twitter.png' %}" alt=""/>
+            </a>
+            <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'google-oauth2' %}?{{ request.META.QUERY_STRING }}">
+              <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/google.jpg' %}" alt=""/>
+            </a>
+            <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'mailru-oauth2' %}?{{ request.META.QUERY_STRING }}">
+              <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/mail.png' %}" alt=""/>
+            </a>
+            <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'vk-oauth2' %}?{{ request.META.QUERY_STRING }}">
+              <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/vkontakte.png' %}" alt=""/>
+            </a>
+          </div>
+        </div>
+        <div class="form-group" style="margin-top: 20px;">
+          <div class="col-sm-offset-3 col-sm-9">
+            <div class="checkbox">
+              <label> <input type="checkbox"> Remember me </label>
+            </div>
+            <a href="/accounts/password/reset/">Forgot password</a> /
+            <a href="{% url 'registration_register2' %}?{{ request.META.QUERY_STRING }}">Registration</a>
+          </div>
+        </div> -->
+        <button type="button" class="btn btn-primary btn-submit" id="auth_form_sub" >Войти</button>
+      </form>
+    </div>
+
+    <div class="auth-section reg-social-networks">
+      <h2><span>или войдите с помощью</span></h2>
+      <ul>
+        <li class="reg-btn reg-btn-fb"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'facebook' %}?{{ request.META.QUERY_STRING }}"><i class="fa fa-facebook"></i> Facebook</a></li>
+        <li class="reg-btn reg-btn-vk"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'vk' %}?{{ request.META.QUERY_STRING }}"><i class="fa fa-vk"></i> Vkontakte</a></li>
+        <li class="reg-btn reg-btn-tw"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'twitter' %}?{{ request.META.QUERY_STRING }}"><i class="fa fa-twitter"></i> Twitter</a></li>
+        <li class="reg-btn reg-btn-gg"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'google-oauth2' %}?{{ request.META.QUERY_STRING }}"><i class="fa fa-google"></i> Google</a></li>
+        <li class="reg-btn reg-btn-ma"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'mailru' %}?{{ request.META.QUERY_STRING }}"><span class="icon-mailru"></span> Mail.ru</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="to_registration-wrapper">
+    <div class="login-section">
+      <h2><span>Впервые на платформе?</span></h2>
+      <a class="btn btn-primary btn-submit to_register" href="/register">Создать аккаунт</a>
+    </div>
+  </div>
+
+
+<!--
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title" id="gridSystemModalLabel">Login</h4>
+    </div>
+    <div class="modal-body">
+      <div class="container-fluid">
+        <form class="form-horizontal" method="post" action="{% url 'login' %}?{{ request.META.QUERY_STRING }}" id="login_auth">
+          {% csrf_token %}
+          <div id="auth_form">
+            {{ login_form }}
+          </div>
+          <div class="row">
+            <div class="col-sm-3 text-right">
+              <p><strong>Login with</strong></p>
+            </div>
+            <div class="col-sm-9">
+              <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'facebook' %}?{{ request.META.QUERY_STRING }}">
+                <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/facebook.png' %}" alt=""/>
+              </a>
+              <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'twitter' %}?{{ request.META.QUERY_STRING }}">
+                <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/twitter.png' %}" alt=""/>
+              </a>
+              <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'google-oauth2' %}?{{ request.META.QUERY_STRING }}">
+                <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/google.jpg' %}" alt=""/>
+              </a>
+              <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'mailru-oauth2' %}?{{ request.META.QUERY_STRING }}">
+                <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/mail.png' %}" alt=""/>
+              </a>
+              <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'vk-oauth2' %}?{{ request.META.QUERY_STRING }}">
+                <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/vkontakte.png' %}" alt=""/>
+              </a>
+            </div>
+          </div>
+          <div class="form-group" style="margin-top: 20px;">
+            <div class="col-sm-offset-3 col-sm-9">
+              <div class="checkbox">
+                <label> <input type="checkbox"> Remember me </label>
+              </div>
+              <a href="/accounts/password/reset/">Forgot password</a> /
+              <a href="{% url 'registration_register2' %}?{{ request.META.QUERY_STRING }}">Registration</a>
+            </div>
+          </div>
       </div>
-      <div class="modal-body">
-        <div class="container-fluid">
-          <form class="form-horizontal" method="post" action="{% url 'login' %}?{{ request.META.QUERY_STRING }}" id="login_auth">
-	    {% csrf_token %}
-	    <div id="auth_form">
-	      {{ login_form }}
-	    </div>
-            <div class="row">
-              <div class="col-sm-3 text-right">
-                <p><strong>Login with</strong></p>
-              </div>
-              <div class="col-sm-9">
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'facebook' %}?{{ request.META.QUERY_STRING }}">
-                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/facebook.png' %}" alt=""/>
-                </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'twitter' %}?{{ request.META.QUERY_STRING }}">
-                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/twitter.png' %}" alt=""/>
-                </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'google-oauth2' %}?{{ request.META.QUERY_STRING }}">
-                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/google.jpg' %}" alt=""/>
-                </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'mailru-oauth2' %}?{{ request.META.QUERY_STRING }}">
-                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/mail.png' %}" alt=""/>
-                </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'vk-oauth2' %}?{{ request.META.QUERY_STRING }}">
-                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/vkontakte.png' %}" alt=""/>
-                </a>
-              </div>
-            </div>
-            <div class="form-group" style="margin-top: 20px;">
-              <div class="col-sm-offset-3 col-sm-9">
-                <div class="checkbox">
-                  <label> <input type="checkbox"> Remember me </label>
-                </div>
-		<a href="/accounts/password/reset/">Forgot password</a> / 
-		<a href="{% url 'registration_register2' %}?{{ request.META.QUERY_STRING }}">Registration</a>
-              </div>
-            </div>
-          </form>
-        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" id="auth_form_sub" >Log in</button>
+    </div>
+  </div>
+ -->
+<!--   <div class="buttons">
+    {% if user.is_authenticated %}
+      <div class="user-details">
+        You are logged in as <code>{{ user.username }}</code>!
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="auth_form_sub" >Log in</button>
-      </div>
-    </div>
+    {% endif %}
+  </div>
+ -->
 
-    <div class="buttons">
-      {% if user.is_authenticated %}
-        <div class="user-details">
-          You are logged in as <code>{{ user.username }}</code>!
-        </div>
-      {% endif %}
-    </div>
-
-    <div id="username-modal" class="modal fade">
-      <form action="{% url "social:complete" "username" %}" method="post" role="form">{% csrf_token %}
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Email Authentication</h4>
-            </div>
-            <div class="modal-body">
-              <div class="form-group">
-                <label class="control-label" for="username">Username:</label>
-                <input class="form-control" id="username" type="text" name="username" value="" />
-              </div>
-              <div class="form-group">
-                <label class="control-label" for="password">Password:</label>
-                <input class="form-control" id="password" type="password" name="password" value="" />
-              </div>
-              <div class="form-group">
-                <label class="control-label" for="fullname">Full name:</label>
-                <input class="form-control" id="fullname" type="text" name="fullname" value="" />
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Login</button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-
-    <div id="email-modal" class="modal fade">
-      <form action="{% url "social:complete" "email" %}" method="post" role="form">{% csrf_token %}
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Email Authentication</h4>
-            </div>
-
-            <div class="modal-body">
-              <div class="form-group">
-                <label class="control-label" for="email">Email address:</label>
-                <input class="form-control" id="email" type="email" name="email" value="" />
-              </div>
-
-              <div class="form-group">
-                <label class="control-label" for="password">Password:</label>
-                <input class="form-control" id="password" type="password" name="password" value="" />
-              </div>
-
-              <div class="form-group">
-                <label class="control-label" for="fullname">Full name:</label>
-                <input class="form-control" id="fullname" type="text" name="fullname" value="" />
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Login</button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-
-    <div id="livejournal-modal" class="modal fade">
-      <form action="{% url "social:begin" "livejournal" %}" method="post" role="form">{% csrf_token %}
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">LiveJournal OpenId Authentication</h4>
-            </div>
-
-            <div class="modal-body">
-              <div class="form-group">
-                <label class="control-label" for="openid_lj_identifier">LiveJournal ID:</label>
-                <input class="form-control" id="openid_lj_identifier" type="text" value="" name="openid_lj_user" />
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Login</button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-
-    <div id="openid-modal" class="modal fade">
-      <form action="{% url "social:begin" backend="openid" %}" method="post" role="form">{% csrf_token %}
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Generic OpenId Authentication</h4>
-            </div>
-
-            <div class="modal-body">
-              <div class="form-group">
-                <label class="control-label" for="openid_identifier">OpenId Provider:</label>
-                <input class="form-control" id="openid_identifier" type="text" value="" name="openid_identifier" />
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Login</button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-
-    <div id="ajax-login-modal" class="modal fade">
+  <div id="username-modal" class="modal fade">
+    <form action="{% url "social:complete" "username" %}" method="post" role="form">{% csrf_token %}
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">Ajax Authentication by AccessToken</h4>
+            <h4 class="modal-title">Email Authentication</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="control-label" for="username">Username:</label>
+              <input class="form-control" id="username" type="text" name="username" value="" />
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="password">Password:</label>
+              <input class="form-control" id="password" type="password" name="password" value="" />
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="fullname">Full name:</label>
+              <input class="form-control" id="fullname" type="text" name="fullname" value="" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Login</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div id="email-modal" class="modal fade">
+    <form action="{% url "social:complete" "email" %}" method="post" role="form">{% csrf_token %}
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Email Authentication</h4>
           </div>
 
           <div class="modal-body">
-            <form action="#" method="post" class="form-horizontal" role="form">{% csrf_token %}
-              <div class="form-group">
-                <label class="control-label" for="backend">Backend:</label>
-                <select class="form-control" name="backend">
-                  <option value=""></option>
-                  {% for name, backend in available_backends|oauth_backends %}
-                    <option value="{{ name }}">{{ backend|backend_name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
+            <div class="form-group">
+              <label class="control-label" for="email">Email address:</label>
+              <input class="form-control" id="email" type="email" name="email" value="" />
+            </div>
 
-              <div class="form-group">
-                <label class="control-label" for="access_token">Access token:</label>
-                <input class="form-control" id="access_token" name="access_token" type="text" value="" placeholder="OAuth1 or OAuth2 access token">
-              </div>
+            <div class="form-group">
+              <label class="control-label" for="password">Password:</label>
+              <input class="form-control" id="password" type="password" name="password" value="" />
+            </div>
 
-              <div class="form-group">
-                <label class="control-label" for="access_token_secret">Access token secret:</label>
-                <input class="form-control" id="access_token_secret" name="access_token_secret" type="text" value="" placeholder="OAuth1 access token secret">
-              </div>
-            </form>
-
-            <div class="login-result" style="display: none;">
-              <p><strong>User Id:</strong><span class="user-id"></span></p>
-              <p><strong>Username:</strong><span class="user-username"></span></p>
-              <p>This page will be reloaded in 10s and the user should be logged in.</p>
+            <div class="form-group">
+              <label class="control-label" for="fullname">Full name:</label>
+              <input class="form-control" id="fullname" type="text" name="fullname" value="" />
             </div>
           </div>
 
@@ -221,97 +197,196 @@
           </div>
         </div>
       </div>
-    </div>
+    </form>
+  </div>
 
-    <div id="persona-modal" class="modal fade">
-      <form action="{% url "social:complete" backend="persona" %}" method="post">{% csrf_token %}
+  <div id="livejournal-modal" class="modal fade">
+    <form action="{% url "social:begin" "livejournal" %}" method="post" role="form">{% csrf_token %}
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">LiveJournal OpenId Authentication</h4>
+          </div>
+
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="control-label" for="openid_lj_identifier">LiveJournal ID:</label>
+              <input class="form-control" id="openid_lj_identifier" type="text" value="" name="openid_lj_user" />
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Login</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div id="openid-modal" class="modal fade">
+    <form action="{% url "social:begin" backend="openid" %}" method="post" role="form">{% csrf_token %}
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Generic OpenId Authentication</h4>
+          </div>
+
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="control-label" for="openid_identifier">OpenId Provider:</label>
+              <input class="form-control" id="openid_identifier" type="text" value="" name="openid_identifier" />
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Login</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div id="ajax-login-modal" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Ajax Authentication by AccessToken</h4>
+        </div>
+
+        <div class="modal-body">
+          <form action="#" method="post" class="form-horizontal" role="form">{% csrf_token %}
+            <div class="form-group">
+              <label class="control-label" for="backend">Backend:</label>
+              <select class="form-control" name="backend">
+                <option value=""></option>
+                {% for name, backend in available_backends|oauth_backends %}
+                  <option value="{{ name }}">{{ backend|backend_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label" for="access_token">Access token:</label>
+              <input class="form-control" id="access_token" name="access_token" type="text" value="" placeholder="OAuth1 or OAuth2 access token">
+            </div>
+
+            <div class="form-group">
+              <label class="control-label" for="access_token_secret">Access token secret:</label>
+              <input class="form-control" id="access_token_secret" name="access_token_secret" type="text" value="" placeholder="OAuth1 access token secret">
+            </div>
+          </form>
+
+          <div class="login-result" style="display: none;">
+            <p><strong>User Id:</strong><span class="user-id"></span></p>
+            <p><strong>Username:</strong><span class="user-username"></span></p>
+            <p>This page will be reloaded in 10s and the user should be logged in.</p>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="persona-modal" class="modal fade">
+    <form action="{% url "social:complete" backend="persona" %}" method="post">{% csrf_token %}
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Mozilla Persona Authentication</h4>
+          </div>
+
+          <div class="modal-body">
+            <p>Login with Mozilla Persona by clicking the <code>Login</code> button below.</p>
+            <input type="hidden" name="assertion" value="" />
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Login</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  {% if backend %}
+    <div id="email-required-modal" class="modal fade">
+      <form action="{% url "social:complete" backend=backend %}" method="post" role="form">{% csrf_token %}
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Mozilla Persona Authentication</h4>
+              <h4 class="modal-title">Email required</h4>
             </div>
 
             <div class="modal-body">
-              <p>Login with Mozilla Persona by clicking the <code>Login</code> button below.</p>
-              <input type="hidden" name="assertion" value="" />
+              <p>An email address is required.</p>
+              <div class="form-group">
+                <label class="control-label" for="email">Email address:</label>
+                <input class="form-control" id="email" type="email" name="email" value="" />
+              </div>
             </div>
 
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Login</button>
+              <button type="button" class="btn btn-primary">Continue</button>
             </div>
           </div>
         </div>
       </form>
     </div>
+  {% endif %}
 
-    {% if backend %}
-      <div id="email-required-modal" class="modal fade">
-        <form action="{% url "social:complete" backend=backend %}" method="post" role="form">{% csrf_token %}
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Email required</h4>
-              </div>
+  <div id="validation-sent-modal" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Email Validation Sent</h4>
+        </div>
 
-              <div class="modal-body">
-                <p>An email address is required.</p>
-                <div class="form-group">
-                  <label class="control-label" for="email">Email address:</label>
-                  <input class="form-control" id="email" type="email" name="email" value="" />
-                </div>
-              </div>
+        <div class="modal-body">
+          <p>An email validation was sent{% if email %} to <code>{{ email }}</code>{% endif %}.</p>
+          <p>Click the link sent to finish the authentication process.</p>
+        </div>
 
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Continue</button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    {% endif %}
-
-    <div id="validation-sent-modal" class="modal fade">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">Email Validation Sent</h4>
-          </div>
-
-          <div class="modal-body">
-            <p>An email validation was sent{% if email %} to <code>{{ email }}</code>{% endif %}.</p>
-            <p>Click the link sent to finish the authentication process.</p>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
+  </div>
 
-    {% if plus_id %}
-    <form id="google-plus" method="post" action="{% url "social:complete" backend="google-plus" %}">{% csrf_token %}
-      <input id="at" type="hidden" name="access_token" value="" />
-      <input id="code" type="hidden" name="code" value="" />
+  {% if plus_id %}
+  <form id="google-plus" method="post" action="{% url "social:complete" backend="google-plus" %}">{% csrf_token %}
+    <input id="at" type="hidden" name="access_token" value="" />
+    <input id="code" type="hidden" name="code" value="" />
 
-      <div id="signinButton">
-        <span class="g-signin" data-scope="{{ plus_scope }}"
-                               data-clientid="{{ plus_id }}"
-                               data-redirecturi="postmessage"
-                               data-accesstype="offline"
-                               data-cookiepolicy="single_host_origin"
-                               data-callback="signInCallback">
-        </span>
-      </div>
-    </form>
-    {% endif %}
+    <div id="signinButton">
+      <span class="g-signin" data-scope="{{ plus_scope }}"
+                             data-clientid="{{ plus_id }}"
+                             data-redirecturi="postmessage"
+                             data-accesstype="offline"
+                             data-cookiepolicy="single_host_origin"
+                             data-callback="signInCallback">
+      </span>
+    </div>
+  </form>
+  {% endif %}
 
+</div>
 {% endblock %}
+
 {% block extra_js %}
   <script src="{% static 'js/custom_js/index.js' %}"></script>
 {% endblock extra_js %}
