@@ -13,6 +13,9 @@ class BaseObjectModel(models.Model):
 class EdxOrg(BaseObjectModel):
     name = models.CharField(max_length=128, unique=True)
 
+    class Meta:
+        verbose_name = 'edxorg'
+
     def __unicode__(self):
         return self.name
 
@@ -24,6 +27,9 @@ class EdxCourse(BaseObjectModel):
     end = models.DateTimeField(null=True)
     org = models.ForeignKey(EdxOrg)
 
+    class Meta:
+        verbose_name = 'edxcourse'
+
     def __unicode__(self):
         return self.name or self.course_id
 
@@ -34,6 +40,7 @@ class EdxCourseRun(BaseObjectModel):
 
     class Meta:
         unique_together = (('name', 'course'),)
+        verbose_name = 'edxcourserun'
 
     def __unicode__(self):
         return self.name
@@ -48,6 +55,7 @@ class EdxCourseEnrollment(BaseObjectModel):
 
     class Meta:
         unique_together = (('user', 'course_run'),)
+        verbose_name = 'edxcourseenrollment'
 
     def __unicode__(self):
         return U'%s enrollment of course %s' % (self.user, self.course_run)

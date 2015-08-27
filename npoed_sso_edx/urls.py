@@ -84,6 +84,7 @@ urlpatterns = patterns(
         TemplateView.as_view(template_name='login_form.html'), name='login_form'
     ),
     url(r'', include('apps.openedx_objects.urls', namespace='api-edx')),
+    url(r'', include('apps.permissions.urls', namespace='api-permissions'))
 )
 
 
