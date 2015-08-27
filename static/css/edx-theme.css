@@ -72,6 +72,12 @@ body {
 .global-header {
   position: relative;
 }
+.firstDocumentHeading {
+  margin: 0 0 0.7em;
+  padding: 0;
+  font-size: 2.1em;
+  font-weight: normal;
+}
 .modal-content {
   margin-top: 25px;
   margin-bottom: 25px;
@@ -245,4 +251,82 @@ body {
 }
 .reg-btn-fb .fa {
   background-color: #3b5998;
+}
+
+/* Profile page */
+
+.section-profile {}
+.profile-nav {
+  display: block;
+  margin: 0 0 15px;
+  padding: 0;
+  list-style-type: none;
+  font-size: 1.2em;
+}
+.profile-nav li {
+  display: inline-block;
+  margin: 0 3em 0 0;
+  padding: 0;
+}
+.profile-nav li a {
+  text-decoration: underline;
+}
+.form-profile {
+  display: block;
+  margin: 0 0 50px;
+  padding: 0 15px;
+  background-color: #f8f8f8;
+  border-radius: 5px;
+}
+.form-profile table {
+  display: block;
+  width: 100%;
+}
+.form-profile table br {
+  display: none;
+}
+.form-profile table tbody,
+.form-profile table tr,
+.form-profile table th,
+.form-profile table td {
+  display: block;
+}
+.form-profile table th label {
+  margin: 15px 0 3px;
+  font-weight: normal;
+  font-size: 0.9em;
+}
+.form-profile table input[type="text"],
+.form-profile table input[type="email"],
+.form-profile table input[type="password"] {
+  display: block;
+  width: 100%;
+  margin: 0 0 7px;
+  padding: 10px;
+  color: #999;
+  background-color: #fff;
+  border: 0;
+  border-radius: 3px;
+          box-shadow: 0 2px 1px rgba(0,0,0,0.1);
+     -moz-box-shadow: 0 2px 1px rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 2px 1px rgba(0,0,0,0.1);
+}
+.form-profile table select {
+  width: 100%;
+}
+.form-profile .helptext {
+  display: block;
+  padding: 0 10px;
+  font-size: 12px;
+  color: #999;
+}
+.footer-buttons {
+  margin: 25px 0 0 0;
+  padding: 25px 0;
+  text-align: center;
+  border-top: 1px solid #ccc;
+}
+.footer-buttons .btn {
+  padding: 5px 50px;
+  font-size: 1.2em;
 }

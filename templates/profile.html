@@ -1,33 +1,60 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
 {% load backend_utils %}
+
+{% block extra_css %}
+  <link href="http://dev01.metod.ru:8080/static/css/style.css" rel="stylesheet" type="text/css" />
+  <link href="{% static 'css/edx-theme.css' %}" rel="stylesheet" type="text/css" />
+{% endblock extra_css %}
+
+{% block bodyclass %}section-profile{% endblock %}
+
 {% block content %}
-{% if user.is_authenticated %}
-<p><a href="{% url 'password_change' %}">Change password</a> / <a href="{% url 'edx-push' pk=user.id %}">Push to edx</a></p>
-<form method="post">
-  {% csrf_token %}
-  <table>
-  {{ form.as_table }}
-  </table>
-  <input type="submit" value="Change">
-</form>
+<div class="content-wrapper">
 
-<div class="col-sm-2">
-  <h4>Связать аккаунты:</h4>
-  {% for sublist in available_backends|social_backends %}
-  {% for name, backend in sublist %}
-  {% associated backend %}
-  {% if association %}
-  <form method="POST" action="{% url 'social:disconnect_individual' backend=association.provider association_id=association.id %}?next={{ request.path }}">
-    {% csrf_token %}
-    <input type="submit" value="disconnect {{ name }}">
-  </form>
+  <h1 class="firstDocumentHeading">Профиль</h1>
+
+  {% if user.is_authenticated %}
+
+    <ul class="profile-nav">
+      <li>Мои данные</li>
+      <li><a href="{% url 'password_change' %}">Сменить пароль</a></li>
+      <!-- <li><a href="{% url 'edx-push' pk=user.id %}">Push to edx</a></li> -->
+    </ul>
+
+    <form method="post" class="form-profile">
+      {% csrf_token %}
+      <table>
+        {{ form.as_table }}
+      </table>
+      <div class="footer-buttons">
+        <button class="btn btn-primary" type="submit">Сохранить изменения</button>
+      </div>
+    </form>
+
+<!--
+    <div class="col-sm-2">
+      <h4>Связать аккаунты:</h4>
+      {% for sublist in available_backends|social_backends %}
+        {% for name, backend in sublist %}
+          {% associated backend %}
+          {% if association %}
+            <form method="POST" action="{% url 'social:disconnect_individual' backend=association.provider association_id=association.id %}?next={{ request.path }}">
+              {% csrf_token %}
+              <input type="submit" value="disconnect {{ name }}">
+            </form>
+          {% else %}
+            <p><a class="custom_img-thumbnail_link" href="{% url 'social:begin' backend=name %}?next={{ request.path }}">connect {{ name }}</a></p>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div> -->
+
   {% else %}
-  <p><a class="custom_img-thumbnail_link" href="{% url 'social:begin' backend=name %}?next={{ request.path }}">connect {{ name }}</a></p>
-  {% endif %}
-  {% endfor %}
-  {% endfor %}
-</div>
 
-{% endif %}
+    <p>Вы должны быть авторизованы для просмотра вашего профиля.</p>
+
+  {% endif %}
+
+</div>
 {% endblock content %}
