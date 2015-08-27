@@ -10,7 +10,7 @@ class EdxCourseEnrollmentAdmin(admin.ModelAdmin):
 
 class EdxCourseEnrollInline(admin.TabularInline):
     model = EdxCourseEnrollment
-
+    extra = 0
 
 class EdxCourseRunAdmin(admin.ModelAdmin):
     list_display = ['name', 'course', 'is_published', 'is_archived']
@@ -19,7 +19,7 @@ class EdxCourseRunAdmin(admin.ModelAdmin):
 
 class EdxCourseRunInline(admin.TabularInline):
     model = EdxCourseRun
-
+    extra = 0
 
 class EdxCourseAdmin(admin.ModelAdmin):
     list_display = ['name', 'course_id', 'org', 'start',
@@ -29,7 +29,7 @@ class EdxCourseAdmin(admin.ModelAdmin):
 
 class EdxCourseInline(admin.TabularInline):
     model = EdxCourse
-
+    extra = 0
 
 class EdxOrgAdmin(admin.ModelAdmin):
     inlines = [EdxCourseInline, ]
