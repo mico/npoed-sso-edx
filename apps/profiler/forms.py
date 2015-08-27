@@ -54,7 +54,6 @@ class CustomTextInput(forms.TextInput):
     '''
 
     def render(self, name, value, attrs=None):
-        print name, value, attrs
         #<input class="span12" id="id_username" maxlength="254" name="username" placeholder="9ineID / Email address" type="text">
         # output = ''
         # output_item = '''
