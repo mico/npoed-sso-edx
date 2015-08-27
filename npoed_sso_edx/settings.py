@@ -74,6 +74,8 @@ INSTALLED_APPS = (
     'apps.openedx_objects',
 )
 
+RAVEN_CONFIG = None
+
 OAUTH_OIDC_ISSUER = "https:///oauth2"
 
 MIDDLEWARE_CLASSES = (
@@ -203,6 +205,9 @@ try:
 except ImportError:
     print "CRITICAL: You must specify local_settings.py"
     exit()
+
+if RAVEN_CONFIG:
+    INSTALLED_APPS += ('raven.contrib.django.raven_compat',)
 
 EDX_API_LOGIN_URL = 'http://%s/auth/login/sso_npoed-oauth2' % EDX_LMS_URL
 EDX_COURSES_API = 'http://%s/api/extended/courses/' % EDX_LMS_URL
