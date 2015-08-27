@@ -47,3 +47,32 @@ def mail_validation(backend, details, is_new=False, *args, **kwargs):
             return backend.strategy.redirect(
                 backend.strategy.setting('EMAIL_VALIDATION_URL')
             )
+
+
+@partial
+def update_profile(backend, user, response, args, *kwargs):
+    if user is None or not response:
+        return
+
+    print response
+    image_url = None
+    profile_url = None
+
+    if backend.name == 'vk-oauth2':
+        image_url = response.get('photo_100')
+        profile_url = 'https://vk.com/id{}'.format(response.get('uid'))
+        user.vkontakte = profile_url
+    elif backend.name == 'facebook':
+        image_url = 'http://graph.facebook.com/{0}/picture?type=normal'.format(response['id'])
+        profile_url = response.get('link')
+        print user.icon_profile
+        user.icon_profile = profile_url
+
+    if profile_url:
+        user.save()
+
+    if image_url and not user.avatar:
+        try:
+            user.save()
+        except Exception as e:
+            print e
