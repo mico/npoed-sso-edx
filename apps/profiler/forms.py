@@ -119,11 +119,11 @@ class UserForm(forms.ModelForm):
 
 class RegUserForm(RegistrationFormUniqueEmail):
 
-    email = forms.EmailField(label='email')
-    password1 = forms.CharField(label='password1', widget=forms.PasswordInput())
-    password2 = forms.CharField(label='password2', widget=forms.PasswordInput())
+    email = forms.EmailField(label=u'Почта')
+    password1 = forms.CharField(label=u'Пароль', widget=forms.PasswordInput())
+    password2 = forms.CharField(label=u'Повторите', widget=forms.PasswordInput())
     username = forms.CharField(
-        label='username', validators=[
+        label=u'Имя пользователя', validators=[
             validators.RegexValidator('^[-a-zA-Z0-9_]+$'),
             validators.MinLengthValidator(3)
         ]
@@ -149,8 +149,10 @@ class LoginForm(AuthenticationForm):
 
     password = forms.CharField(
         label='', widget=forms.PasswordInput(attrs={
-                "class": "span12", "placeholder": "Password"}))
-    username = forms.CharField(widget=CustomTextInput())
+                "class": "span12", "placeholder": ""}))
+    username = forms.CharField(
+        label='', widget=CustomTextInput(attrs={
+                "class": "span12", "placeholder": ""}))
 
     def confirm_login_allowed(self, user):
         pass
