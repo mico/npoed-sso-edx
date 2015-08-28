@@ -16,6 +16,7 @@ import re
 from unidecode import unidecode
 
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import Http404
 
 from social.utils import slugify as psa_slugify
 
@@ -30,12 +31,18 @@ class LoginRequiredMixin(object):
         return login_required(view)
 
 
+def superuser(user):
+    if user.is_superuser:
+        return user.is_superuser
+    raise Http404('Page not found')
+
+
 class SuperUserRequiredMixin(object):
 
     @classmethod
     def as_view(cls, **initkwargs):
         view = super(SuperUserRequiredMixin, cls).as_view(**initkwargs)
-        return login_required(user_passes_test(lambda u: u.is_superuser)(view))
+        return login_required(user_passes_test(superuser)(view))
 
 
 def slugify(string):
