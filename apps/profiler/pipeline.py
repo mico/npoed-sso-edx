@@ -10,7 +10,12 @@
 __author__ = 'dorosh'
 __date__ = '04.08.2015'
 
+from datetime import datetime
+
+from django.core.files.storage import default_storage
 from django.shortcuts import redirect
+from django.core.files.base import ContentFile
+
 from social.pipeline.partial import partial
 
 
@@ -47,3 +52,78 @@ def mail_validation(backend, details, is_new=False, *args, **kwargs):
             return backend.strategy.redirect(
                 backend.strategy.setting('EMAIL_VALIDATION_URL')
             )
+
+
+@partial
+def update_profile(backend, user, response, *args, **kwargs):
+    if user is None or not response:
+        return
+
+    print response
+
+    gender_dict = {'male': 1, 'female': 2}
+    change_data = False
+    image_url = None
+
+    if backend.name == 'vk-oauth2':
+        image_url = response.get('photo_100')
+        gender = response.get('sex')
+        if not user.gender and gender:
+            change_data = True
+            # in vk male has id 2, female has id 1
+            user.gender = {2: 1, 1: 2}.get(gender)
+
+        bdate = response.get('bdate')
+        if not user.date_of_birth and bdate:
+            bdate = datetime.strptime(bdate, "%d.%m.%Y").date()
+            user.date_of_birth = bdate
+            change_data = True
+
+    elif backend.name == 'facebook':
+        image_url = 'http://graph.facebook.com/{0}/picture?type=normal'.format(response['id'])
+        gender = response.get('gender')
+        if not user.gender and gender:
+            change_data = True
+            user.gender = gender_dict.get(gender)
+
+    elif backend.name == 'twitter':
+        image_url = response.get('profile_image_url')
+        country = response.get('country')
+        if not user.country and country:
+            change_data = True
+            user.country = country
+
+    elif backend.name == 'google-oauth2':
+        
+        gender = response.get('gender')
+        if not user.gender and gender:
+            change_data = True
+            user.gender = gender_dict.get(gender)
+
+    elif backend.name == 'mailru-oauth2':
+
+        gender = response.get('sex')
+        if not user.gender and gender:
+            change_data = True
+            # in mailru male has id 0, female has id 1
+            user.gender = {0: 1, 1: 2}.get(gender)
+
+        birthday = response.get('birthday')
+        if not user.date_of_birth and bdate:
+            birthday = datetime.strptime(birthday, "%d.%m.%Y").date()
+            user.date_of_birth = birthday
+            change_data = True
+
+    if change_data:
+        user.save()
+
+    if image_url and not user.icon_profile:
+        try:
+            image_content = urlopen(image_url)
+            image_name = default_storage.get_available_name(
+                user.icon_profile.field.upload_to + '/' + str(user.id) + '.' + image_content.headers.subtype)
+            user.icon_profile.save(image_name, ContentFile(image_content.read()))
+            user.save()
+        except Exception:
+            pass
+
