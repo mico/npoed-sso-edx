@@ -59,8 +59,6 @@ def update_profile(backend, user, response, *args, **kwargs):
     if user is None or not response:
         return
 
-    print response
-
     gender_dict = {'male': 1, 'female': 2}
     change_data = False
     image_url = None
