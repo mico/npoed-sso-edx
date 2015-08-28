@@ -123,7 +123,7 @@ class RegUserForm(RegistrationFormUniqueEmail):
     password1 = forms.CharField(label=u'Пароль', widget=forms.PasswordInput())
     password2 = forms.CharField(label=u'Повторите', widget=forms.PasswordInput())
     username = forms.CharField(
-        label=u'Имя пользователя', validators=[
+        label=u'Имя', validators=[
             validators.RegexValidator('^[-a-zA-Z0-9_]+$'),
             validators.MinLengthValidator(3)
         ]

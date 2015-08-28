@@ -32,14 +32,6 @@ urlpatterns = patterns(
     url(r'^admin/logout/$', set_auth_cookie(wrap_admin(admin_site.logout)), name='logout'),
     url(r'^admin/', include(admin_site.urls)),
 
-    # логин
-    url(r'^login/', set_auth_cookie(login), name='login'),
-    url(r'^login_auth/$', set_auth_cookie(Login.as_view()), name='login_auth'),
-    url(r'^logout/', external_redirect(set_auth_cookie(logout)),
-        {'next_page': '/'}, name='logout'),
-
-    url(r'profile/$', Profile.as_view(), name='profile'),
-
     # social auth
     url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^complete/(?P<backend>[^/]+){0}$'.format(extra),
@@ -55,6 +47,14 @@ urlpatterns = patterns(
         name='registration_register2'),
 
     url(r'^accounts/', include('registration.backends.default.urls')),
+
+    # логин
+    url(r'^login/', set_auth_cookie(login), name='login'),
+    url(r'^login_auth/$', set_auth_cookie(Login.as_view()), name='login_auth'),
+    url(r'^logout/', external_redirect(set_auth_cookie(logout)),
+        {'next_page': '/'}, name='logout'),
+
+    url(r'profile/$', Profile.as_view(), name='profile'),
 
     #  смена пароля
     url('^accounts/password_change/',
