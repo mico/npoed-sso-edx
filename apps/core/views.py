@@ -34,7 +34,7 @@ from provider.oauth2.views import AccessTokenDetailView as AccessTokenDetailView
 from provider.oauth2.models import Client, AccessToken, Grant
 
 from .forms import CreateUserForm
-from apps.profiler.forms import RegUserForm, LoginForm
+from apps.profiler.forms import RegUserForm
 from apps.core.utils import LoginRequiredMixin, SuperUserRequiredMixin
 from apps.permissions.models import Role, Permission
 from apps.openedx_objects.models import (

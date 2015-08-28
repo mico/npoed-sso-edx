@@ -111,10 +111,10 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            'email', 'username', 'first_name', 'last_name', 'education',
-            'university', 'post_address', 'city', 'country',
-            'phone', 'time_zone', 'icon_profile', 'date_of_birth', 'gender',
-            'second_name']
+            'last_name', 'first_name', 'second_name', 'email', 'gender',
+            'time_zone', 'university', 'icon_profile', 'phone', 'post_address',
+            'city', 'country', 'education']
+        # 'username', 'date_of_birth'
 
 
 class RegUserForm(RegistrationFormUniqueEmail):
