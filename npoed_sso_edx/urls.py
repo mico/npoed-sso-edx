@@ -1,13 +1,14 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib.admin import site as admin_site
-from django.contrib.auth.views import login, logout
+from django.contrib.auth.views import logout
 from django.views.generic import TemplateView
 
 from social.utils import setting_name
 from social.apps.django_app.views import complete
 
 from apps.core.decorators import set_auth_cookie, external_redirect
+from apps.core.views import login
 from apps.profiler.views import (
     CustomActivationView, Login, RegistrationView, Profile
 )

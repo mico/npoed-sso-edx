@@ -181,7 +181,7 @@ SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/email-sent/'
 SOCIAL_AUTH_EMAIL_FORM_HTML = 'email_signup.html'
 SOCIAL_AUTH_USERNAME_FORM_HTML = 'username_signup.html'
 
-LOGIN_REDIRECT_URL = '/login'
+LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
 LOGIN_ERROR_URL = '/login'
 
