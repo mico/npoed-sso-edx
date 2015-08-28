@@ -126,4 +126,3 @@ def login(request, template_name='registration/login.html',
                 urllib.pathname2url(get_next.split('auth_entry=')[0])
             ))
     return auth_login(request)
-
