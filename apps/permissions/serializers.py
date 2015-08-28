@@ -38,7 +38,12 @@ class RoleSerializer(serializers.ModelSerializer):
             EdxCourseEnrollment._meta.verbose_name,
         )
 
+    def __init__(self, *args, **kwargs):
+        self.own_objects = kwargs.pop('own_objects', None)
+        super(RoleSerializer, self).__init__(*args, **kwargs)
+
     def validate(self, value):
+        ids = dict((k._meta.verbose_name, v) for k, v in self.own_objects.items())
         permissions = value.get('permissions', [])
         value['permissions'] = []
 
@@ -61,7 +66,13 @@ class RoleSerializer(serializers.ModelSerializer):
                         'permissions': ['Unknown target type %s.' % perm['target_type']]
                     })
 
-            value['permissions'].append(perm)
+            if perm['target_id'] in ids[perm['target_type']]:
+                value['permissions'].append(perm)
+
+        if not value['permissions']:
+            raise serializers.ValidationError({
+                    'permissions': ['You do not have a right to this']
+                })
 
         return value
 
@@ -159,8 +170,14 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({
                     'role': ['The list fields must be a integers.']
                 })
-        else:
-            value['role'] = role
+
+        self_roles = self.Meta.model.objects.select_related()\
+                    .filter(id=self.instance.id,
+                    role__permissions__action_type='Manage(permissions)')\
+                    .values_list('role__id', flat=True)
+        role = [r for r in role if r in self_roles]
+
+        value['role'] = role
 
         return value
 

@@ -1,13 +1,26 @@
 from django.contrib.auth import get_user_model
+from django.db.models import Q
+from django.contrib.contenttypes.models import ContentType
 
 import django_filters
-from rest_framework import filters, viewsets
+from rest_framework import filters, viewsets, permissions, status, response
 
+from apps.openedx_objects.models import (EdxOrg, EdxCourse, EdxCourseRun,
+                                         EdxCourseEnrollment)
 from .serializers import UserSerializer, RoleSerializer
-from .models import Role
+from .models import Role, Permission
 
 
 User = get_user_model()
+
+
+class ManagePermission(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        user = request.user
+        is_manager = User.objects.select_related().filter(id=user.id,
+                role__permissions__action_type='Manage(permissions)').exists()
+        return is_manager
 
 
 class UaserFilter(django_filters.FilterSet):
@@ -36,6 +49,7 @@ class UserAPIViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'put']
     queryset = User.objects.select_related().all()
     serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticated, ManagePermission)
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('username', 'target_type', 'target_id')
     filter_class = UaserFilter
@@ -47,9 +61,40 @@ class UserAPIViewSet(viewsets.ModelViewSet):
 class RoleAPIViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.select_related().all()
     serializer_class = RoleSerializer
+    permission_classes = (permissions.IsAuthenticated, ManagePermission)
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('name', 'target_type', 'target_id')
     filter_class = RoleFilter
+    content_types = ContentType.objects.get_for_models(EdxOrg, EdxCourse,
+                                        EdxCourseRun, EdxCourseEnrollment)
+    own_objects = {i: [] for i in content_types}
+
+    def dispatch(self, request, *args, **kwargs):
+        self.args = args
+        self.kwargs = kwargs
+        request = self.initialize_request(request, *args, **kwargs)
+        self.request = request
+        self.headers = self.default_response_headers  # deprecate?
+
+        self._set_user_manage_objects(request.user)
+
+        try:
+            self.initial(request, *args, **kwargs)
+
+            # Get the appropriate handler method
+            if request.method.lower() in self.http_method_names:
+                handler = getattr(self, request.method.lower(),
+                                  self.http_method_not_allowed)
+            else:
+                handler = self.http_method_not_allowed
+
+            response = handler(request, *args, **kwargs)
+
+        except Exception as exc:
+            response = self.handle_exception(exc)
+
+        self.response = self.finalize_response(request, response, *args, **kwargs)
+        return self.response
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
@@ -59,3 +104,61 @@ class RoleAPIViewSet(viewsets.ModelViewSet):
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data,
+                                         own_objects=self.own_objects)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return response.Response(serializer.data,
+                            status=status.HTTP_201_CREATED, headers=headers)
+
+    def filter_queryset(self, queryset):
+        query = None
+        queryset = super(RoleAPIViewSet, self).filter_queryset(queryset)
+
+        for model, ids in self.own_objects.iteritems():
+            ct = self.content_types[model]
+            if query is None:
+                query = Q(permissions__target_type=ct,
+                        permissions__target_id__in=ids)
+            else:
+                query |= Q(permissions__target_type=ct,
+                        permissions__target_id__in=ids)
+
+        queryset = queryset.filter(query)
+
+        return queryset
+
+    def _set_user_manage_objects(self, user):
+        for model, ct in self.content_types.items():
+            ids = list(User.objects.select_related().filter(id=user.id,
+                        role__permissions__target_type=ct,
+                        role__permissions__action_type='Manage(permissions)')\
+                        .values_list('role__permissions__target_id', flat=True))
+
+            if model == EdxOrg:
+                self.own_objects[EdxCourse].extend(EdxCourse.objects\
+                    .filter(org_id__in=ids).values_list('id', flat=True))
+                self.own_objects[EdxCourseRun].extend(EdxCourseRun.objects\
+                    .select_related().filter(course__org_id__in=ids)\
+                    .values_list('id', flat=True))
+                self.own_objects[EdxCourseEnrollment].extend(EdxCourseEnrollment\
+                    .objects.select_related()\
+                    .filter(course_run__course__org_id__in=ids)\
+                    .values_list('id', flat=True))
+            elif model == EdxCourse:
+                self.own_objects[EdxCourseRun].extend(EdxCourseRun.objects\
+                    .filter(course_id__in=ids)\
+                    .values_list('id', flat=True))
+                self.own_objects[EdxCourseEnrollment].extend(EdxCourseEnrollment\
+                    .objects.select_related()\
+                    .filter(course_run__course_id__in=ids)\
+                    .values_list('id', flat=True))
+            elif model == EdxCourseRun:
+                self.own_objects[EdxCourseEnrollment].extend(EdxCourseEnrollment\
+                    .objects.filter(course_run_id__in=ids)\
+                    .values_list('id', flat=True))
+
+            self.own_objects[model].extend(ids)
