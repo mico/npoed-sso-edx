@@ -10,6 +10,7 @@
 __author__ = 'dorosh'
 __date__ = '04.08.2015'
 
+from datetime import datetime
 from urllib import urlopen
 
 from django.core.files.storage import default_storage
@@ -117,7 +118,7 @@ def update_profile(backend, user, response, *args, **kwargs):
     if change_data:
         user.save()
 
-    if image_url and not user.avatar:
+    if image_url and not user.icon_profile:
         try:
             image_content = urlopen(image_url)
             image_name = default_storage.get_available_name(
