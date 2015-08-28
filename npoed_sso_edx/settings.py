@@ -75,6 +75,8 @@ INSTALLED_APPS = (
     'apps.openedx_objects',
 )
 
+RAVEN_CONFIG = None
+
 OAUTH_OIDC_ISSUER = "https:///oauth2"
 
 MIDDLEWARE_CLASSES = (
@@ -140,7 +142,8 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.user.create_user',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
-    'social.pipeline.user.user_details'
+    'social.pipeline.user.user_details',
+    'apps.profiler.pipeline.update_profile',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -183,8 +186,8 @@ SOCIAL_AUTH_EMAIL_FORM_HTML = 'email_signup.html'
 SOCIAL_AUTH_USERNAME_FORM_HTML = 'username_signup.html'
 
 LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/'
-LOGIN_ERROR_URL = '/'
+LOGIN_URL = '/login'
+LOGIN_ERROR_URL = '/login'
 
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
 REGISTRATION_AUTO_LOGIN = True # Automatically log the user in.
@@ -204,6 +207,9 @@ try:
 except ImportError:
     print "CRITICAL: You must specify local_settings.py"
     exit()
+
+if RAVEN_CONFIG:
+    INSTALLED_APPS += ('raven.contrib.django.raven_compat',)
 
 EDX_API_LOGIN_URL = 'http://%s/auth/login/sso_npoed-oauth2' % EDX_LMS_URL
 EDX_COURSES_API = 'http://%s/api/extended/courses/' % EDX_LMS_URL

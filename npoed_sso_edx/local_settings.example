@@ -13,8 +13,13 @@ DATABASES = {
     }
 }
 
+RAVEN_CONFIG = {
+    'dsn': 'http://00000000000000000000000000000000:00000000000000000000000000000000@10.11.12.13/1'
+}
+
 EDX_LMS_URL = 'domain'
 EDX_CMS_URL = 'studio-domain'
+PLP_URL = 'http://plp-domain'
 
 EDX_API_KEY = ''
 

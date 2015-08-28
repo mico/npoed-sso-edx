@@ -74,8 +74,8 @@ class UserProfileAPI(APIView):
         }
         for permission in Permission.objects.filter(role__user=user).distinct():
             if permission.target_type is not None:
-                try:
-                    obj = permission.get_object()
+                obj = permission.get_object()
+                if obj is not None:
                     if permission.target_type.name == EdxCourseRun._meta.verbose_name:
                         obj = permission.target_type.model_class().objects.get(
                             pk=permission.target_id
@@ -88,7 +88,7 @@ class UserProfileAPI(APIView):
                         name = obj.course_id
                     else:
                         name = obj.name
-                except ObjectDoesNotExist:
+                else:
                     if permission.target_id:
                         continue
                     name = '*'
@@ -150,7 +150,7 @@ class RegistrationView(RW):
     def get_success_url(self, request=None, user=None):
         # We need to be able to use the request and the new user when
         # constructing success_url.
-        return ('home', (), {})
+        return ('profile', (), {})
 
     def register(self, request, **cleaned_data):
         username, email, password = cleaned_data['username'], cleaned_data['email'], cleaned_data['password1']
@@ -173,7 +173,7 @@ class CustomActivationView(ActivationView):
 
     def get_success_url(self, request, user):
         next = request.GET.get('next')
-        return ('home', (), {}, ) if next is None else next
+        return ('profile', (), {}, ) if next is None else next
 
 
 @login_required

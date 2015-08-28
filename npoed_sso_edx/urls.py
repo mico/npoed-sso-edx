@@ -1,13 +1,14 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib.admin import site as admin_site
-from django.contrib.auth.views import login, logout
+from django.contrib.auth.views import logout
 from django.views.generic import TemplateView
 
 from social.utils import setting_name
 from social.apps.django_app.views import complete
 
 from apps.core.decorators import set_auth_cookie, external_redirect
+from apps.core.views import login
 from apps.profiler.views import (
     CustomActivationView, Login, RegistrationView, Profile
 )
@@ -47,15 +48,28 @@ urlpatterns = patterns(
         name='registration_register2'),
 
     url(r'^accounts/', include('registration.backends.default.urls')),
-    url(r'^accounts/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
+
+    url(r'^user/password/reset/$',
+        'django.contrib.auth.views.password_reset',
+        {'post_reset_redirect': '/user/password/reset/done/'},
+        name="password_reset"),
+    (r'^user/password/reset/done/$',
+        'django.contrib.auth.views.password_reset_done'),
+    (r'^user/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
         'django.contrib.auth.views.password_reset_confirm',
-        {'post_reset_redirect' : '/accounts/password/done/'}),
-    url(r'^accounts/reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-        'django.contrib.auth.views.password_reset_confirm',
-        name='password_reset_confirm'),
-    url(r'^accounts/reset/complete/$',
-        'django.contrib.auth.views.password_reset_complete',
-        name='password_reset_complete'),
+        {'post_reset_redirect': '/user/password/done/'}),
+    (r'^user/password/done/$',
+        'django.contrib.auth.views.password_reset_complete'),
+
+    # url(r'^accounts/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
+    #     'django.contrib.auth.views.password_reset_confirm',
+    #     {'post_reset_redirect' : '/accounts/password/done/'}),
+    # url(r'^accounts/reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+    #     'django.contrib.auth.views.password_reset_confirm',
+    #     name='password_reset_confirm'),
+    # url(r'^accounts/reset/complete/$',
+    #     'django.contrib.auth.views.password_reset_complete',
+    #     name='password_reset_complete'),
     url('^accounts/password_change/',
         'django.contrib.auth.views.password_change',
         name="password_change"),

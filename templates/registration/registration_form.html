@@ -1,49 +1,84 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
+
+{% block extra_css %}
+<link href="http://dev01.metod.ru:8080/static/css/style.css" rel="stylesheet" type="text/css" />
+<link href="{% static 'css/edx-theme.css' %}" rel="stylesheet" type="text/css" />
+{% endblock extra_css %}
+
 {% block content %}
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="gridSystemModalLabel">Register</h4>
-      </div>
-      <div class="modal-body">
-	<div class="buttons">
-	  <div class="social">
-            <div class="row">
-              <div class="col-sm-3 text-right">
-                <p><strong>Register with</strong></p>
-              </div>
-              <div class="col-sm-9">
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'facebook' %}?{{ request.META.QUERY_STRING }}">
-                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/facebook.png' %}" alt=""/>
-                </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'twitter' %}?{{ request.META.QUERY_STRING }}">
-                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/twitter.png' %}" alt=""/>
-                </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'google-oauth2' %}?{{ request.META.QUERY_STRING }}">
-                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/google.jpg' %}" alt=""/>
-                </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'mailru-oauth2' %}?{{ request.META.QUERY_STRING }}">
-                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/mail.png' %}" alt=""/>
-                </a>
-                <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'vk-oauth2' %}?{{ request.META.QUERY_STRING }}">
-                  <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/vkontakte.png' %}" alt=""/>
-                </a>
-              </div>
-            </div>
-	  </div>
-	  <div class="legacy">
-            <form class="form-horizontal" method="post" action="{% url 'registration_register2' %}?{{ request.META.QUERY_STRING }}" id="registr">
+<div class="content-wrapper">
+
+  <div class="auth-wrapper">
+    <div class="auth-section reg-social-networks">
+      <h2><span>Зарегистрироваться через</span></h2>
+      <ul>
+        <li class="reg-btn reg-btn-fb"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'facebook' %}?{{ request.META.QUERY_STRING }}"><i class="fa fa-facebook"></i> Facebook</a></li>
+        <li class="reg-btn reg-btn-vk"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'vk' %}?{{ request.META.QUERY_STRING }}"><i class="fa fa-vk"></i> Vkontakte</a></li>
+        <li class="reg-btn reg-btn-tw"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'twitter' %}?{{ request.META.QUERY_STRING }}"><i class="fa fa-twitter"></i> Twitter</a></li>
+        <li class="reg-btn reg-btn-gg"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'google-oauth2' %}?{{ request.META.QUERY_STRING }}"><i class="fa fa-google"></i> Google</a></li>
+        <li class="reg-btn reg-btn-ma"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'mailru' %}?{{ request.META.QUERY_STRING }}"><span class="icon-mailru"></span> Mail.ru</a></li>
+      </ul>
+    </div>
+    <div class="auth-section reg-new">
+      <h2><span>или создать новый аккаунт</span></h2>
+      <form class="form-horizontal" method="post" action="{% url 'registration_register2' %}?{{ request.META.QUERY_STRING }}" id="registr">
 	      {% csrf_token %}
-	      <div id="reg_body">
-		{{ form }}
+	       <div id="reg_body">
+      		{{ form }}
 	      </div>
 	      <div class="modal-footer">
-		<input type="submit" class="btn btn-success" value="Register" >
+      		<input type="submit" class="btn btn-primary btn-submit" value="Зарегистрироваться" >
 	      </div>
-            </form>
-	  </div>
-	</div>
-      </div>
+      </form>
     </div>
+  </div>
 
+
+<!--
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title" id="gridSystemModalLabel">Регистрация</h4>
+    </div>
+    <div class="modal-body">
+      <div class="buttons">
+        <div class="social">
+          <div class="row">
+            <div class="col-sm-3 text-right">
+              <p><strong>Регистрироваться через</strong></p>
+            </div>
+            <div class="col-sm-9">
+              <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'facebook' %}?{{ request.META.QUERY_STRING }}">
+                <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/facebook.png' %}" alt=""/>
+              </a>
+              <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'twitter' %}?{{ request.META.QUERY_STRING }}">
+                <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/twitter.png' %}" alt=""/>
+              </a>
+              <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'google-oauth2' %}?{{ request.META.QUERY_STRING }}">
+                <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/google.jpg' %}" alt=""/>
+              </a>
+              <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'mailru-oauth2' %}?{{ request.META.QUERY_STRING }}">
+                <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/mail.png' %}" alt=""/>
+              </a>
+              <a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'vk-oauth2' %}?{{ request.META.QUERY_STRING }}">
+                <img class="img-thumbnail custom_img-thumbnail" src="{% static 'images/vkontakte.png' %}" alt=""/>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="legacy">
+          <form class="form-horizontal" method="post" action="{% url 'registration_register2' %}?{{ request.META.QUERY_STRING }}" id="registr">
+            {% csrf_token %}
+             <div id="reg_body">
+              {{ form }}
+            </div>
+            <div class="modal-footer">
+              <input type="submit" class="btn btn-success" value="Зарегистрироваться" >
+            </div>
+          </form>
+    	  </div>
+    	</div>
+    </div>
+  </div> -->
+</div>
 {% endblock %}

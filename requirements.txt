@@ -19,3 +19,4 @@ wsgiref==0.1.2
 unidecode==0.04.18
 django-filter==0.11.0
 django_rest_framework_oauth
+raven==5.5.0

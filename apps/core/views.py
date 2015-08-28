@@ -19,6 +19,10 @@ import string
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django.contrib.auth import get_user_model
+from django.contrib.auth.views import login as auth_login
+from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.contrib.auth.forms import AuthenticationForm
+
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView, View
 from django.shortcuts import redirect
@@ -31,7 +35,7 @@ from provider.oauth2.models import Client, AccessToken, Grant
 
 from .forms import CreateUserForm
 from apps.profiler.forms import RegUserForm, LoginForm
-from apps.core.utils import LoginRequiredMixin
+from apps.core.utils import LoginRequiredMixin, SuperUserRequiredMixin
 from apps.permissions.models import Role, Permission
 from apps.openedx_objects.models import (
     EdxOrg, EdxCourse, EdxCourseRun, EdxCourseEnrollment
@@ -65,13 +69,13 @@ class Index(TemplateView):
 
         get_next = request.GET.get('next', '')
         if request.user.is_authenticated():
-            return redirect(reverse('home'))
+            return redirect(reverse('profile'))
         elif get_next.split('auth_entry=')[-1] == 'register':
             return redirect('{}?next={}'.format(
                     reverse('registration_register2'),
                     urllib.pathname2url(get_next.split('auth_entry=')[0])
                     ))
-        return super(Index, self).get(request, *args, **kwargs)
+        return redirect(settings.PLP_URL)
 
     def post(self, request, *args, **kwargs):
         form = RegUserForm(request.POST)
@@ -81,16 +85,16 @@ class Index(TemplateView):
                 })
 
 
-class Home(LoginRequiredMixin, FormView):
+class CreateManually(SuperUserRequiredMixin, FormView):
 
-    template_name = 'home.html'
+    template_name = 'create_manually.html'
     form_class = CreateUserForm
-    success_url = '/home/'
+    success_url = '/accounts/create_manually/ '
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if not form.is_valid():
-            return super(Home, self).get(request, *args, **kwargs)
+            return super(CreateManually, self).get(request, *args, **kwargs)
         form.save()
         try:
             user = User.objects.get(email=form.cleaned_data['email'])
@@ -109,3 +113,17 @@ class EdxPush(LoginRequiredMixin, View):
         except ObjectDoesNotExist:
             return redirect(self.success_url)
         return _push_to_edx(user, self.success_url)
+
+
+def login(request, template_name='registration/login.html',
+          redirect_field_name=REDIRECT_FIELD_NAME,
+          authentication_form=AuthenticationForm,
+          current_app=None, extra_context=None):
+    get_next = request.GET.get('next', '')    
+    if get_next.split('auth_entry=')[-1] == 'register':
+        return redirect('{}?next={}'.format(
+                reverse('registration_register2'),
+                urllib.pathname2url(get_next.split('auth_entry=')[0])
+            ))
+    return auth_login(request)
+

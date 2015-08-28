@@ -15,7 +15,7 @@ import re
 
 from unidecode import unidecode
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 from social.utils import slugify as psa_slugify
 
@@ -28,6 +28,14 @@ class LoginRequiredMixin(object):
     def as_view(cls, **initkwargs):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
         return login_required(view)
+
+
+class SuperUserRequiredMixin(object):
+
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(SuperUserRequiredMixin, cls).as_view(**initkwargs)
+        return login_required(user_passes_test(lambda u: u.is_superuser)(view))
 
 
 def slugify(string):
