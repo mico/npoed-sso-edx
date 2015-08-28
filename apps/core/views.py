@@ -119,6 +119,8 @@ def login(request, template_name='registration/login.html',
           redirect_field_name=REDIRECT_FIELD_NAME,
           authentication_form=AuthenticationForm,
           current_app=None, extra_context=None):
+    if request.user.is_authenticated():
+        return redirect(settings.PLP_URL)
     get_next = request.GET.get('next', '')    
     if get_next.split('auth_entry=')[-1] == 'register':
         return redirect('{}?next={}'.format(
