@@ -19,6 +19,7 @@ RAVEN_CONFIG = {
 
 EDX_LMS_URL = 'domain'
 EDX_CMS_URL = 'studio-domain'
+PLP_URL = 'http://plp-domain'
 
 EDX_API_KEY = ''
 
