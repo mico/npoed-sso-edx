@@ -74,8 +74,8 @@ class UserProfileAPI(APIView):
         }
         for permission in Permission.objects.filter(role__user=user).distinct():
             if permission.target_type is not None:
-                try:
-                    obj = permission.get_object()
+                obj = permission.get_object()
+                if obj is not None:
                     if permission.target_type.name == EdxCourseRun._meta.verbose_name:
                         obj = permission.target_type.model_class().objects.get(
                             pk=permission.target_id
@@ -88,7 +88,7 @@ class UserProfileAPI(APIView):
                         name = obj.course_id
                     else:
                         name = obj.name
-                except ObjectDoesNotExist:
+                else:
                     if permission.target_id:
                         continue
                     name = '*'
