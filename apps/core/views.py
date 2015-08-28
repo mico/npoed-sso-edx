@@ -89,7 +89,7 @@ class CreateManually(SuperUserRequiredMixin, FormView):
 
     template_name = 'create_manually.html'
     form_class = CreateUserForm
-    success_url = '/accounts/create_manually/ '
+    success_url = '/accounts/create_manually/'
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
