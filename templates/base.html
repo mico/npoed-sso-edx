@@ -3,112 +3,119 @@
 <html lang="ru">
 <head>
   {% block head %}
-  {% block meta %}
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  {% endblock meta %}
-  <title>
-    {% block title %}Npoed-Sso{% endblock title %}
-  </title>
-  {% block css %}
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <style>
-      h1 { padding: 0 30px; }
-      .col-md-2 { width: 18.6667%; }
-      .buttons { display: block; table-layout: fixed; border-radius: 7px; border: 1px solid #ccc;
-                 margin: 20px; background: #eee; padding: 30px; }
-      .buttons > div a { margin: 5px 10px; }
-      .buttons > div:not(:first-child) { margin-top: 10px; border-top: 1px solid #ccc;
-                                         padding-top: 10px; text-align: center; }
-      .user-details { text-align: center; font-size: 16px; font-weight: bold; }
-      .disconnect-form { padding: 0; margin: 0px 10px; }
-      .disconnect-form > a { display: block; margin: 5px 0 !important; }
-      .img-thumbnail { height: 30px; }
-    </style>
-  {% endblock css %}
-  {% block extra_css %}
-  {% endblock extra_css %}
+    {% block meta %}
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% endblock meta %}
+    <title>
+      {% block title %}Npoed-Sso{% endblock title %}
+    </title>
+    {% block css %}
+      <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+      <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css" rel="stylesheet">
+      <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+      <style>
+        body { background-color: #dedede; }
+        h1 { padding: 0 30px; }
+        .col-md-2 { width: 18.6667%; }
+        .buttons { display: block; table-layout: fixed; border-radius: 7px; border: 1px solid #ccc;
+                   margin: 20px; background: #eee; padding: 30px; }
+        .buttons > div a { margin: 5px 10px; }
+        .buttons > div:not(:first-child) { margin-top: 10px; border-top: 1px solid #ccc;
+                                           padding-top: 10px; text-align: center; }
+        .user-details { text-align: center; font-size: 16px; font-weight: bold; }
+        .disconnect-form { padding: 0; margin: 0px 10px; }
+        .disconnect-form > a { display: block; margin: 5px 0 !important; }
+        .img-thumbnail { height: 30px; }
+      </style>
+    {% endblock css %}
+    {% block extra_css %}
+    {% endblock extra_css %}
   {% endblock head %}
 </head>
-<body style="background-color: #dedede;">
-{% block header %}
- <header class="global-header">
-   <div class="container">
-     <div class="top-bar row">
-       <div class="menu col-md-1 col"><a href="#/"><span aria-hidden="true" class="icon menu-icon"></span></a></div>
-       <div class="col-md-2"><a id="logo" href="/"><img alt="" src="/static/images/logo-light.png"></a></div>
-       <div class="catalog-link col-md-6 col"><a href="http://test.npoed.ru/course/"><span aria-hidden="true" class="icon catalog-icon"></span>Каталог курсов</a></div>
-       <div class="version col-md-2 text-right col">
-         <span id="sb_login" class="l-btn" style="">
-           <span class="icon login-icon"></span><a href="http://test.npoed.ru/login/npoedsso/?next=/course/">Вход</a>
-         </span>
+
+<body class="{% block bodyclass %}{% endblock %}">
+
+  {% block header %}
+   <header class="global-header">
+     <div class="container">
+       <div class="top-bar row">
+         <div class="menu col-md-1 col"><a href="#/"><span aria-hidden="true" class="icon menu-icon"></span></a></div>
+         <div class="col-md-2"><a id="logo" href="/"><img alt="" src="/static/images/logo-light.png"></a></div>
+         <div class="catalog-link col-md-6 col"><a href="http://test.npoed.ru/course/"><span aria-hidden="true" class="icon catalog-icon"></span>Каталог курсов</a></div>
+         <div class="version col-md-2 text-right col">
+           <span id="sb_login" class="l-btn" style="">
+             <span class="icon login-icon"></span><a href="http://test.npoed.ru/login/npoedsso/?next=/course/">Вход</a>
+           </span>
+         </div>
        </div>
      </div>
-   </div>
- </header>
-{% endblock header %}
+   </header>
+  {% endblock header %}
+
   <div class="container custom_container">
     {% block content %}
     {% endblock content %}
   </div>
-{% block footer %}
-<footer>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-5 side left-side">
-        <a href="/" class="pull-left"><img src="/static/images/logo-small.png" alt="" class="logo-small"></a>
-        <ul class="list-unstyled">
-          <li><a href="">Каталог курсов</a></li>
-          <li><a href="">Направления подготовки</a></li>
-        </ul>
-      </div>
-      <div class="col-md-7 side right-side">
-        <div class="row">
-          <div class="col-md-5">
-            <ul class="list-unstyled narrow">
-              <li><a href="http://test.npoed.ru/about/">О платформе</a></li>
-              <li><a href="http://test.npoed.ru/faq/">Вопрос-ответ</a></li>
-              <li><a href="http://test.npoed.ru/">Для преподавателей </a></li>
-              <li><a href="http://test.npoed.ru/">Партнерам</a></li>
-            </ul>
-          </div>
-          <div class="col-md-7">
-            <ul class="list-unstyled wide">
-              <li><a href="#">Условия предоставления услуг</a></li>
-              <li><a href="#">Политика конфиденциальности</a></li>
-              <li><a href="#">Правила использования</a></li>
-              <li><a href="#">Версия для&nbsp;слабовидящих</a></li>
-            </ul>
+
+  {% block footer %}
+  <footer>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-5 side left-side">
+          <a href="/" class="pull-left"><img src="/static/images/logo-small.png" alt="" class="logo-small"></a>
+          <ul class="list-unstyled">
+            <li><a href="">Каталог курсов</a></li>
+            <li><a href="">Направления подготовки</a></li>
+          </ul>
+        </div>
+        <div class="col-md-7 side right-side">
+          <div class="row">
+            <div class="col-md-5">
+              <ul class="list-unstyled narrow">
+                <li><a href="http://test.npoed.ru/about/">О платформе</a></li>
+                <li><a href="http://test.npoed.ru/faq/">Вопрос-ответ</a></li>
+                <li><a href="http://test.npoed.ru/">Для преподавателей </a></li>
+                <li><a href="http://test.npoed.ru/">Партнерам</a></li>
+              </ul>
+            </div>
+            <div class="col-md-7">
+              <ul class="list-unstyled wide">
+                <li><a href="#">Условия предоставления услуг</a></li>
+                <li><a href="#">Политика конфиденциальности</a></li>
+                <li><a href="#">Правила использования</a></li>
+                <li><a href="#">Версия для&nbsp;слабовидящих</a></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row copyright">
-      <div class="col-md-5">
-        © 2015 Открытое образование
-        <ul class="list-inline">
-          <li>
-            <a href="#"><img src="/static/images/social/fb.png" alt=""></a>
-            <a href="#"><img src="/static/images/social/vk.png" alt=""></a>
-            <a href="#"><img src="/static/images/social/ok.png" alt=""></a>
-            <a href="#"><img src="/static/images/social/inst.png" alt=""></a>
-            <a href="#"><img src="/static/images/social/tw.png" alt=""></a>
-            <a href="#"><img src="/static/images/social/you.png" alt=""></a>
-          </li>
-        </ul>
+      <div class="row copyright">
+        <div class="col-md-5">
+          © 2015 Открытое образование
+          <ul class="list-inline">
+            <li>
+              <a href="#"><img src="/static/images/social/fb.png" alt=""></a>
+              <a href="#"><img src="/static/images/social/vk.png" alt=""></a>
+              <a href="#"><img src="/static/images/social/ok.png" alt=""></a>
+              <a href="#"><img src="/static/images/social/inst.png" alt=""></a>
+              <a href="#"><img src="/static/images/social/tw.png" alt=""></a>
+              <a href="#"><img src="/static/images/social/you.png" alt=""></a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-7">
+          <div class="warning"><span class="label label-primary">12+</span>Ресурс может содержать материалы для лиц старше 12 лет</div>
+        </div>
       </div>
-      <div class="col-md-7">
-        <div class="warning"><span class="label label-primary">12+</span>Ресурс может содержать материалы для лиц старше 12 лет</div>
-      </div>
     </div>
-  </div>
-</footer>
-{% endblock footer %}
+  </footer>
+  {% endblock footer %}
+
   {% block modals %}
   {% endblock modals %}
+
   {% block js %}
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
@@ -209,7 +216,9 @@
       });
     </script>
   {% endblock js %}
+
   {% block extra_js %}
   {% endblock extra_js %}
+
 </body>
 </html>
