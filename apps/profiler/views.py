@@ -12,20 +12,13 @@ __date__ = '15.03.2015'
 
 import json
 
-from django.shortcuts import redirect
 from django.conf import settings
 from django.views.generic.edit import FormView, UpdateView
-from django.views.generic import View, ListView, TemplateView, DetailView
-from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
-from django.contrib.auth import (
-    authenticate, login, get_user_model, logout as auth_logout
-)
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse, Http404
+from django.contrib.auth import login, get_user_model
 from django.template.loader import render_to_string
-from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site, RequestSite
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
 
 from social.backends.oauth import BaseOAuth1, BaseOAuth2
 from social.backends.google import GooglePlusAuth
@@ -44,10 +37,8 @@ from apps.core.utils import LoginRequiredMixin
 from apps.core.decorators import render_to
 from apps.profiler.forms import UserForm, LoginForm, RegUserForm
 from apps.profiler.models import RegistrationProfile
-from apps.permissions.models import Role, Permission
-from apps.openedx_objects.models import (
-    EdxOrg, EdxCourse, EdxCourseRun, EdxCourseEnrollment
-)
+from apps.permissions.models import Permission
+from apps.openedx_objects.models import EdxCourse, EdxCourseRun
 
 User = get_user_model()
 
@@ -177,23 +168,29 @@ class CustomActivationView(ActivationView):
 
 
 @login_required
-@render_to('index.html')
+@render_to('registration/registration_form.html')
 def done(request):
     """Login complete view, displays user data"""
     return context()
 
 
-@render_to('index.html')
+@render_to('registration/registration_form.html')
 def validation_sent(request):
-    return context(
-        validation_sent=True,
-        email=request.session.get('email_validation_address')
-    )
+    if request.session.get('email_validation_address'):
+        return context(
+            validation_sent=True,
+            email=request.session.get('email_validation_address')
+        )
+    else:
+        raise Http404
 
 
 @render_to('index.html')
 def require_email(request):
-    backend = request.session['partial_pipeline']['backend']
+    try:
+        backend = request.session['partial_pipeline']['backend']
+    except KeyError:
+        raise Http404
     return context(email_required=True, backend=backend)
 
 
