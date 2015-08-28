@@ -75,8 +75,7 @@ class Index(TemplateView):
                     reverse('registration_register2'),
                     urllib.pathname2url(get_next.split('auth_entry=')[0])
                     ))
-        return redirect('http://test.npoed.ru/')
-        # return super(Index, self).get(request, *args, **kwargs)
+        return redirect(settings.PLP_URL)
 
     def post(self, request, *args, **kwargs):
         form = RegUserForm(request.POST)

@@ -31,7 +31,8 @@ ALLOWED_HOSTS = ['*']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_oauth.authentication.OAuth2Authentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_oauth.authentication.OAuth2Authentication'
     ),
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
     'PAGE_SIZE': 10,
