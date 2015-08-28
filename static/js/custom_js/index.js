@@ -24,7 +24,6 @@ $(document).ready(function() {
 
     $(document).on("click", "#form_sub", function(e) {
         e.preventDefault();
-	console.dir('!!!!!!!!!!!!!!!!!!');
 
         if($("#day").val() && $("#month").val() && $("#year").val()) {
             $("#id_date_of_birth").val([$("#day").val(), $("#month").val(), $("#year").val()].join("/"));

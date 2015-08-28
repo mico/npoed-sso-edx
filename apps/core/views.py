@@ -35,7 +35,7 @@ from provider.oauth2.models import Client, AccessToken, Grant
 
 from .forms import CreateUserForm
 from apps.profiler.forms import RegUserForm, LoginForm
-from apps.core.utils import LoginRequiredMixin
+from apps.core.utils import LoginRequiredMixin, SuperUserRequiredMixin
 from apps.permissions.models import Role, Permission
 from apps.openedx_objects.models import (
     EdxOrg, EdxCourse, EdxCourseRun, EdxCourseEnrollment
@@ -85,16 +85,16 @@ class Index(TemplateView):
                 })
 
 
-class Home(LoginRequiredMixin, FormView):
+class CreateManually(SuperUserRequiredMixin, FormView):
 
-    template_name = 'home.html'
+    template_name = 'create_manually.html'
     form_class = CreateUserForm
-    success_url = '/home/'
+    success_url = '/accounts/create_manually/ '
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if not form.is_valid():
-            return super(Home, self).get(request, *args, **kwargs)
+            return super(CreateManually, self).get(request, *args, **kwargs)
         form.save()
         try:
             user = User.objects.get(email=form.cleaned_data['email'])

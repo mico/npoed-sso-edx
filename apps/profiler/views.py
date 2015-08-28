@@ -150,7 +150,7 @@ class RegistrationView(RW):
     def get_success_url(self, request=None, user=None):
         # We need to be able to use the request and the new user when
         # constructing success_url.
-        return ('home', (), {})
+        return ('profile', (), {})
 
     def register(self, request, **cleaned_data):
         username, email, password = cleaned_data['username'], cleaned_data['email'], cleaned_data['password1']
@@ -173,7 +173,7 @@ class CustomActivationView(ActivationView):
 
     def get_success_url(self, request, user):
         next = request.GET.get('next')
-        return ('home', (), {}, ) if next is None else next
+        return ('profile', (), {}, ) if next is None else next
 
 
 @login_required
