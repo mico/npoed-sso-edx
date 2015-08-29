@@ -33,12 +33,12 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin_site.urls)),
 
     # social auth
-    url('', include('social.apps.django_app.urls', namespace='social')),
+    url(r'^', include('social.apps.django_app.urls', namespace='social')),
     url(r'^complete/(?P<backend>[^/]+){0}$'.format(extra),
         set_auth_cookie(complete), name='social:complete'),
 
-    url(r'^', include('apps.core.urls')),
     url(r'^', include('apps.profiler.urls')),
+    url(r'^', include('apps.core.urls')),
 
     url(r'^accounts/activate/(?P<activation_key>\w+)/$',
         set_auth_cookie(CustomActivationView.as_view()),
@@ -53,7 +53,7 @@ urlpatterns = patterns(
         {'next_page': '/'}, name='logout'),
 
     #  смена пароля
-    url('^accounts/password_change/',
+    url(r'^accounts/password_change/$',
         'django.contrib.auth.views.password_change',
         name="password_change"),
     url(r'^accounts/password_changed/$',
@@ -74,7 +74,7 @@ urlpatterns = patterns(
         'django.contrib.auth.views.password_reset_complete'),
 
 
-    url(r'^email-sent/', 'apps.profiler.views.validation_sent'),
+    url(r'^email-sent/$', 'apps.profiler.views.validation_sent'),
     url(r'^ajax-auth/(?P<backend>[^/]+)/$', 'apps.profiler.views.ajax_auth',
         name='ajax-auth'),
     url(r'^email/$', 'apps.profiler.views.require_email', name='require_email'),
@@ -87,8 +87,8 @@ urlpatterns = patterns(
     #     TemplateView.as_view(template_name='login_form.html'), name='login_form'),
 
     #  API
-    url(r'', include('apps.openedx_objects.urls', namespace='api-edx')),
-    url(r'', include('apps.permissions.urls', namespace='api-permissions'))
+    url(r'^', include('apps.openedx_objects.urls', namespace='api-edx')),
+    url(r'^', include('apps.permissions.urls', namespace='api-permissions'))
 )
 
 
