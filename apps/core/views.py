@@ -21,7 +21,6 @@ from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import login as auth_login
 from django.contrib.auth import REDIRECT_FIELD_NAME
-from django.contrib.auth.forms import AuthenticationForm
 
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView, View
@@ -34,7 +33,7 @@ from provider.oauth2.views import AccessTokenDetailView as AccessTokenDetailView
 from provider.oauth2.models import Client, AccessToken, Grant
 
 from .forms import CreateUserForm
-from apps.profiler.forms import RegUserForm
+from apps.profiler.forms import RegUserForm, LoginForm
 from apps.core.utils import LoginRequiredMixin, SuperUserRequiredMixin
 from apps.permissions.models import Role, Permission
 from apps.openedx_objects.models import (
@@ -117,7 +116,7 @@ class EdxPush(LoginRequiredMixin, View):
 
 def login(request, template_name='registration/login.html',
           redirect_field_name=REDIRECT_FIELD_NAME,
-          authentication_form=AuthenticationForm,
+          authentication_form=LoginForm,
           current_app=None, extra_context=None):
     if request.user.is_authenticated():
         return redirect(settings.PLP_URL)
@@ -127,4 +126,4 @@ def login(request, template_name='registration/login.html',
                 reverse('registration_register2'),
                 urllib.pathname2url(get_next.split('auth_entry=')[0])
             ))
-    return auth_login(request)
+    return auth_login(request, authentication_form=LoginForm)
