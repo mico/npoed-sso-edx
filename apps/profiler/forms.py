@@ -151,10 +151,10 @@ class RegUserForm(RegistrationFormUniqueEmail):
 class LoginForm(AuthenticationForm):
 
     password = forms.CharField(
-        label='', widget=forms.PasswordInput(attrs={
+        label=u'Имя пользователя', widget=forms.PasswordInput(attrs={
                 "class": "span12", "placeholder": ""}))
     username = forms.CharField(
-        label='', widget=CustomTextInput(attrs={
+        label=u'Пароль', widget=CustomTextInput(attrs={
                 "class": "span12", "placeholder": ""}))
 
     def confirm_login_allowed(self, user):

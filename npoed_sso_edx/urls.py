@@ -45,12 +45,10 @@ urlpatterns = patterns(
         name='registration_activate'),
     url(r'^register/$', set_auth_cookie(RegistrationView.as_view()),
         name='registration_register2'),
-
     url(r'^accounts/', include('registration.backends.default.urls')),
 
     # логин
     url(r'^login/', set_auth_cookie(login), name='login'),
-    url(r'^login_auth/$', set_auth_cookie(Login.as_view()), name='login_auth'),
     url(r'^logout/', external_redirect(set_auth_cookie(logout)),
         {'next_page': '/'}, name='logout'),
 
