@@ -12,7 +12,7 @@ from functools import update_wrapper
 from apps.core.decorators import set_auth_cookie, external_redirect
 from apps.core.views import login
 from apps.profiler.views import (
-    CustomActivationView, Login, RegistrationView, Profile
+    CustomActivationView, Login, RegistrationView, UserProfileAPI
 )
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
@@ -51,8 +51,7 @@ urlpatterns = patterns(
     url(r'^login/', set_auth_cookie(login), name='login'),
     url(r'^logout/', external_redirect(set_auth_cookie(logout)),
         {'next_page': '/'}, name='logout'),
-
-    url(r'profile/$', Profile.as_view(), name='profile'),
+    url(r'^users/me$', UserProfileAPI.as_view(), name='users-me'),
 
     #  смена пароля
     url('^accounts/password_change/',
