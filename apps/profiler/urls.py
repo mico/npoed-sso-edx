@@ -15,12 +15,14 @@ from django.views.generic import TemplateView
 
 from rest_framework.routers import DefaultRouter
 
-from apps.profiler.views import Profile
+from apps.profiler.views import Profile, UserProfileAPI
 
 
 urlpatterns = patterns(
-    url(r'^profile/$', Profile.as_view(), name='profile'),
-    url(r'^profile_social',
+    '',
+    url(r'users/me$', UserProfileAPI.as_view(), name='users-me'),
+    url(r'profile/$', Profile.as_view(), name='profile'),
+    url(r'profile_social',
         TemplateView.as_view(template_name='profile-social-networks.html'),
         name='profile-social'),
 )

@@ -51,7 +51,6 @@ urlpatterns = patterns(
     url(r'^login/', set_auth_cookie(login), name='login'),
     url(r'^logout/', external_redirect(set_auth_cookie(logout)),
         {'next_page': '/'}, name='logout'),
-    url(r'^users/me$', UserProfileAPI.as_view(), name='users-me'),
 
     #  смена пароля
     url('^accounts/password_change/',
