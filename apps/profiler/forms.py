@@ -152,10 +152,10 @@ class LoginForm(AuthenticationForm):
 
     password = forms.CharField(
         label=u'Пароль', widget=forms.PasswordInput(attrs={
-                "class": "span12", "placeholder": ""}))
+                "class": "span12", "placeholder": "", "tabindex": "1"}))
     username = forms.CharField(
         label=u'Имя пользователя', widget=CustomTextInput(attrs={
-                "class": "span12", "placeholder": ""}))
+                "class": "span12", "placeholder": "", "tabindex": "1"}))
 
     def confirm_login_allowed(self, user):
         pass
