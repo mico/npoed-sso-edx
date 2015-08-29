@@ -20,6 +20,7 @@ RAVEN_CONFIG = {
 EDX_LMS_URL = 'domain'
 EDX_CMS_URL = 'studio-domain'
 PLP_URL = 'http://plp-domain'
+AUTH_SESSION_COOKIE_DOMAIN = ".sso.net"
 
 EDX_API_KEY = ''
 
