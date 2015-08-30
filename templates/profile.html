@@ -17,21 +17,21 @@
 {% block bodyclass %}section-profile{% endblock %}
 
 {% block content %}
+
 <div class="content-wrapper">
 
-  <h1 class="firstDocumentHeading">Профиль</h1>
+    <div class="auth-wrapper">
+      <div class="auth-section">
+        <h2><span>Профиль</span></h2>
+        {% if user.is_authenticated %}
+        <ul class="profile-nav">
+          <li>Мои данные</li>
+          <li><a href="{% url 'password_change' %}">Сменить пароль</a></li>
+          <!-- <li><a href="{% url 'edx-push' pk=user.id %}">Push to edx</a></li> -->
+        </ul>
 
-  {% if user.is_authenticated %}
-
-    <ul class="profile-nav">
-      <li>Мои данные</li>
-      <li><a href="{% url 'password_change' %}">Сменить пароль</a></li>
-      <li><a href="#">Социальные сети</a></li>
-      <!-- <li><a href="{% url 'edx-push' pk=user.id %}">Push to edx</a></li> -->
-    </ul>
-
-    <div class="profile-content-wrapper profile-connect-social-network">
-      <h5>Привязать аккаунт</h5>
+    <div class="col-sm-2">
+      <h4>Связать аккаунты:</h4>
       {% for sublist in available_backends|social_backends %}
         {% for name, backend in sublist %}
           {% associated backend %}
@@ -56,12 +56,11 @@
         <button class="btn btn-primary" type="submit">Сохранить изменения</button>
       </div>
     </form>
-
-  {% else %}
-
-    <p>Вы должны быть авторизованы для просмотра вашего профиля.</p>
-
-  {% endif %}
-
-</div>
+    </div>
+        {% else %}
+        <p>Вы должны быть авторизованы для просмотра вашего профиля.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 {% endblock content %}

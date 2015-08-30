@@ -108,15 +108,17 @@ class SubscribeRadio(forms.RadioSelect):
 
 class UserForm(forms.ModelForm):
 
-    username = forms.CharField(widget=forms.TextInput(
-            attrs={'class':'disabled', 'readonly':'readonly'}))
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'disabled', 'readonly': 'readonly'}))
+    about_me = forms.CharField(widget=forms.Textarea(attrs={
+        'style': 'width: 100%;'}))
 
     class Meta:
         model = User
         fields = [
             'username', 'email', 'last_name', 'first_name', 'second_name',
             'icon_profile', 'gender', 'date_of_birth', 'education', 'university',
-            'country', 'city', 'post_address', 'phone', 'time_zone'
+            'country', 'city', 'post_address', 'phone', 'time_zone', 'about_me'
         ]
 
 

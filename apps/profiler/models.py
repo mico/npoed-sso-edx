@@ -63,6 +63,8 @@ class User(AbstractUser):
         default=0, choices=education_choice)
     # permissions
     role = models.ManyToManyField(Role, blank=True, null=True)
+    # about me field
+    about_me = models.TextField(blank=True, null=True)
 
 
 class RegistrationProfile(BaseRegistrationProfile):
