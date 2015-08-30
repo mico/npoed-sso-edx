@@ -291,34 +291,43 @@ body {
 .profile-nav li a {
   text-decoration: underline;
 }
-.form-profile {
+.profile-content-wrapper {
   display: block;
   margin: 0 0 50px;
-  padding: 0 15px;
+  padding: 15px;
   background-color: #f8f8f8;
   border-radius: 5px;
 }
-.form-profile table {
+.profile-content-wrapper h5 {
+  margin: 0 0 0.5em;
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #666;
+}
+.profile-content-wrapper table {
   display: block;
   width: 100%;
 }
-.form-profile table br {
+.profile-content-wrapper table br {
   display: none;
 }
-.form-profile table tbody,
-.form-profile table tr,
-.form-profile table th,
-.form-profile table td {
+.profile-content-wrapper table tbody,
+.profile-content-wrapper table tr,
+.profile-content-wrapper table th,
+.profile-content-wrapper table td {
   display: block;
 }
-.form-profile table th label {
+.profile-content-wrapper table th label {
   margin: 15px 0 3px;
   font-weight: normal;
   font-size: 0.9em;
 }
-.form-profile table input[type="text"],
-.form-profile table input[type="email"],
-.form-profile table input[type="password"] {
+.profile-content-wrapper table tbody tr:first-child th label {
+  margin-top: 0;
+}
+.profile-content-wrapper table input[type="text"],
+.profile-content-wrapper table input[type="email"],
+.profile-content-wrapper table input[type="password"] {
   display: block;
   width: 100%;
   margin: 0 0 7px;
@@ -331,10 +340,10 @@ body {
      -moz-box-shadow: 0 2px 1px rgba(0,0,0,0.1);
   -webkit-box-shadow: 0 2px 1px rgba(0,0,0,0.1);
 }
-.form-profile table select {
+.profile-content-wrapper table select {
   width: 100%;
 }
-.form-profile .helptext {
+.profile-content-wrapper .helptext {
   display: block;
   padding: 0 10px;
   font-size: 12px;
@@ -349,4 +358,47 @@ body {
 .footer-buttons .btn {
   padding: 5px 50px;
   font-size: 1.2em;
+}
+
+.profile-connect-social-network a span {
+  display: none;
+}
+.profile-connect-social-network .link-facebook:before,
+.profile-connect-social-network .link-google-oauth2:before,
+.profile-connect-social-network .link-mailru-oauth2:before,
+.profile-connect-social-network .link-twitter:before,
+.profile-connect-social-network .link-vk-oauth2:before {
+  content: "@";
+  display: inline-block;
+  font-family: FontAwesome;
+  width: 40px;
+  line-height: 40px;
+  text-align: center;
+  margin-right: 10px;
+  font-size: 25px;
+  color: #fff;
+  vertical-align: middle;
+  background-color: #000;
+  border-radius: 50%;
+}
+.profile-connect-social-network .link-facebook:before {
+  content: "\f09a";
+  background-color: #3b5998;
+}
+.profile-connect-social-network .link-google-oauth2:before {
+  content: "\f0d5";
+  background-color: #cc3732;
+}
+.profile-connect-social-network .link-mailru-oauth2:before {
+  /*font-family: 'icosocial';*/
+  /*content: "\e600";*/
+  background-color: #154079;
+}
+.profile-connect-social-network .link-twitter:before {
+  content: "\f099";
+  background-color: #00abe1;
+}
+.profile-connect-social-network .link-vk-oauth2:before {
+  content: "\f189";
+  background-color: #4c75a3;
 }
