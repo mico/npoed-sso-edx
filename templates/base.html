@@ -1,6 +1,6 @@
 {% load static from staticfiles %}
 <!doctype html>
-<html lang="ru">
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
 <head>
   {% block head %}
     {% block meta %}
@@ -42,12 +42,17 @@
    <header class="global-header">
      <div class="container">
        <div class="top-bar row">
-         <div class="menu col-md-1 col"><a href="#/"><span aria-hidden="true" class="icon menu-icon"></span></a></div>
+         <div class="menu col-md-1 col"></div>
          <div class="col-md-2"><a id="logo" href="/"><img alt="" src="/static/images/logo-light.png"></a></div>
-         <div class="catalog-link col-md-6 col"><a href="http://test.npoed.ru/course/"><span aria-hidden="true" class="icon catalog-icon"></span>Каталог курсов</a></div>
+         <div class="catalog-link col-md-6 col"><a href="{{ plp_url }}/course/"><span aria-hidden="true" class="icon catalog-icon"></span>Каталог курсов</a></div>
          <div class="version col-md-2 text-right col">
            <span id="sb_login" class="l-btn" style="">
-             <span class="icon login-icon"></span><a href="http://test.npoed.ru/login/npoedsso/?next=/course/">Вход</a>
+               {% if not user.is_authenticated %}
+                 <span class="icon login-icon"></span><a href="{{ plp_url }}/login/npoedsso/?next=/course/">Вход</a>
+               {% else %}
+                 <span class="icon logout-icon"></span><a href="/logout">Выход</a>
+                 {{ user }}
+               {% endif %}
            </span>
          </div>
        </div>
@@ -75,10 +80,10 @@
           <div class="row">
             <div class="col-md-5">
               <ul class="list-unstyled narrow">
-                <li><a href="http://test.npoed.ru/about/">О платформе</a></li>
-                <li><a href="http://test.npoed.ru/faq/">Вопрос-ответ</a></li>
-                <li><a href="http://test.npoed.ru/">Для преподавателей </a></li>
-                <li><a href="http://test.npoed.ru/">Партнерам</a></li>
+                <li><a href="{{ plp_url }}/about/">О платформе</a></li>
+                <li><a href="{{ plp_url }}/faq/">Вопрос-ответ</a></li>
+                <li><a href="{{ plp_url }}/">Для преподавателей </a></li>
+                <li><a href="{{ plp_url }}/">Партнерам</a></li>
               </ul>
             </div>
             <div class="col-md-7">

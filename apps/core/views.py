@@ -21,7 +21,6 @@ from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import login as auth_login
 from django.contrib.auth import REDIRECT_FIELD_NAME
-from django.contrib.auth.forms import AuthenticationForm
 
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView, View
@@ -117,12 +116,14 @@ class EdxPush(LoginRequiredMixin, View):
 
 def login(request, template_name='registration/login.html',
           redirect_field_name=REDIRECT_FIELD_NAME,
-          authentication_form=AuthenticationForm,
+          authentication_form=LoginForm,
           current_app=None, extra_context=None):
+    if request.user.is_authenticated():
+        return redirect(settings.PLP_URL)
     get_next = request.GET.get('next', '')    
     if get_next.split('auth_entry=')[-1] == 'register':
         return redirect('{}?next={}'.format(
                 reverse('registration_register2'),
                 urllib.pathname2url(get_next.split('auth_entry=')[0])
             ))
-    return auth_login(request)
+    return auth_login(request, authentication_form=LoginForm)

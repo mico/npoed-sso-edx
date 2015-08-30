@@ -19,7 +19,7 @@
         <div id="auth_form">
           {{ login_form }}
         </div>
-        <a class="reset-password-link" href="/accounts/password/reset/">Забыли пароль?</a>
+        <a class="reset-password-link" href="/accounts/password/reset/" tabindex="2">Забыли пароль?</a>
   <!--       <div class="row">
           <div class="col-sm-3 text-right">
             <p><strong>Login with</strong></p>
@@ -51,7 +51,7 @@
             <a href="{% url 'registration_register2' %}?{{ request.META.QUERY_STRING }}">Registration</a>
           </div>
         </div> -->
-        <button type="button" class="btn btn-primary btn-submit" id="auth_form_sub" >Войти</button>
+        <button type="button" class="btn btn-primary btn-submit" id="auth_form_sub"  tabindex="1">Войти</button>
       </form>
     </div>
 
@@ -61,7 +61,7 @@
         <li class="reg-btn reg-btn-fb"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'facebook' %}?{{ request.META.QUERY_STRING }}"><i class="fa fa-facebook"></i> Facebook</a></li>
         <li class="reg-btn reg-btn-vk"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'vk' %}?{{ request.META.QUERY_STRING }}"><i class="fa fa-vk"></i> Vkontakte</a></li>
         <li class="reg-btn reg-btn-tw"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'twitter' %}?{{ request.META.QUERY_STRING }}"><i class="fa fa-twitter"></i> Twitter</a></li>
-        <li class="reg-btn reg-btn-gg"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'google-oauth2' %}?{{ request.META.QUERY_STRING }}"><i class="fa fa-google"></i> Google</a></li>
+        <li class="reg-btn reg-btn-gg"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'google-oauth2' %}?{{ request.META.QUERY_STRING }}"><i class="fa fa-google-plus"></i> Google</a></li>
         <li class="reg-btn reg-btn-ma"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'mailru' %}?{{ request.META.QUERY_STRING }}"><span class="icon-mailru"></span> Mail.ru</a></li>
       </ul>
     </div>

@@ -1,3 +1,6 @@
+{% if form.non_field_errors %}
+<div class="myerrors clearfix">{{ form.non_field_errors }}</div>
+{% endif %}
 <lable>Имя пользователя</lable>
 {% if form.username.errors %}<div class="myerrors clearfix">{{ form.username.errors }}</div>{% endif %}{{ form.username }}
 <label>Пароль</label>

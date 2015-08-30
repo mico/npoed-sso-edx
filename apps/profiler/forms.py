@@ -108,13 +108,16 @@ class SubscribeRadio(forms.RadioSelect):
 
 class UserForm(forms.ModelForm):
 
+    username = forms.CharField(widget=forms.TextInput(
+            attrs={'class':'disabled', 'readonly':'readonly'}))
+
     class Meta:
         model = User
         fields = [
-            'email', 'username', 'first_name', 'last_name', 'education',
-            'university', 'post_address', 'city', 'country',
-            'phone', 'time_zone', 'icon_profile', 'date_of_birth', 'gender',
-            'second_name']
+            'username', 'email', 'last_name', 'first_name', 'second_name',
+            'icon_profile', 'gender', 'date_of_birth', 'education', 'university',
+            'country', 'city', 'post_address', 'phone', 'time_zone'
+        ]
 
 
 class RegUserForm(RegistrationFormUniqueEmail):
@@ -123,7 +126,7 @@ class RegUserForm(RegistrationFormUniqueEmail):
     password1 = forms.CharField(label=u'Пароль', widget=forms.PasswordInput())
     password2 = forms.CharField(label=u'Повторите', widget=forms.PasswordInput())
     username = forms.CharField(
-        label=u'Имя пользователя', validators=[
+        label=u'Имя', validators=[
             validators.RegexValidator('^[-a-zA-Z0-9_]+$'),
             validators.MinLengthValidator(3)
         ]
@@ -148,11 +151,11 @@ class RegUserForm(RegistrationFormUniqueEmail):
 class LoginForm(AuthenticationForm):
 
     password = forms.CharField(
-        label='', widget=forms.PasswordInput(attrs={
-                "class": "span12", "placeholder": ""}))
+        label=u'Пароль', widget=forms.PasswordInput(attrs={
+                "class": "span12", "placeholder": "", "tabindex": "1"}))
     username = forms.CharField(
-        label='', widget=CustomTextInput(attrs={
-                "class": "span12", "placeholder": ""}))
+        label=u'Имя пользователя', widget=CustomTextInput(attrs={
+                "class": "span12", "placeholder": "", "tabindex": "1"}))
 
     def confirm_login_allowed(self, user):
         pass

@@ -27,4 +27,5 @@ def forms(request):
         'plus_id': getattr(settings, 'SOCIAL_AUTH_GOOGLE_PLUS_KEY', None),
         'plus_scope': ' '.join(GooglePlusAuth.DEFAULT_SCOPE),
         'available_backends': load_backends(settings.AUTHENTICATION_BACKENDS),
+        'plp_url': settings.PLP_URL,
     }
