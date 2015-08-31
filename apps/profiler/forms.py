@@ -109,7 +109,7 @@ class SubscribeRadio(forms.RadioSelect):
 class UserForm(forms.ModelForm):
 
     about_me = forms.CharField(widget=forms.Textarea(attrs={
-        'style': 'width: 100%;'}))
+        'style': 'width: 100%;'}), required=False)
     username = forms.CharField(widget=forms.TextInput(
             attrs={'class':'disabled', 'readonly':'readonly'}), label=u'Логин')
     email = forms.EmailField(label=u'Адрес e-mail')
@@ -117,7 +117,7 @@ class UserForm(forms.ModelForm):
     first_name = forms.CharField(label=u'Имя')
 
     date_of_birth = forms.DateField(label=u'Дата рождения',
-            widget=forms.TextInput(attrs={'class':'vDateField'}))
+            widget=forms.TextInput(attrs={'class': 'vDateField'}), required=False)
 
     class Meta:
         model = User
