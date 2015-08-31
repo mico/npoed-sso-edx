@@ -123,6 +123,7 @@ def update_profile(backend, user, response, *args, **kwargs):
 
     if not user.has_usable_password():
         user.set_password(make_random_password())
+        user.save()
 
     if image_url and not user.icon_profile:
         try:
