@@ -64,7 +64,7 @@ class User(AbstractUser):
     # permissions
     role = models.ManyToManyField(Role, blank=True, null=True)
     # about me field
-    about_me = models.TextField(blank=True, null=True)
+    about_me = models.TextField(blank=True, null=True, verbose_name=u'О себе')
 
 
 class RegistrationProfile(BaseRegistrationProfile):
