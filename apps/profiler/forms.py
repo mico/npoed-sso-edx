@@ -110,7 +110,7 @@ class SubscribeRadio(forms.RadioSelect):
 class UserForm(forms.ModelForm):
 
     about_me = forms.CharField(widget=forms.Textarea(attrs={
-        'style': 'width: 100%;'}), required=False)
+        'style': 'width: 100%;'}), required=False, label=u'О себе')
     username = forms.CharField(widget=forms.TextInput(
             attrs={'class':'disabled', 'readonly':'readonly'}), label=u'Логин')
     email = forms.EmailField(label=u'Адрес e-mail')
