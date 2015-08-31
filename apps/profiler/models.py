@@ -80,12 +80,17 @@ class RegistrationProfile(BaseRegistrationProfile):
         # because template context processors
         # can overwrite some of the values like user
         # if django.contrib.auth.context_processors.auth is used
+        prefix = 'http'
+        if settings.SECURE_PROXY_SSL_HEADER:
+            if settings.SECURE_PROXY_SSL_HEADER[1] == 'https':
+                prefix = 'https'
         ctx_dict.update({
             'user': self.user,
             'activation_key': self.activation_key,
             'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
             'site': site,
             'redirect_url': urllib.pathname2url(request.GET.get('next', '')),
+            'prefix': prefix,
         })
 
         subject = (getattr(settings, 'REGISTRATION_EMAIL_SUBJECT_PREFIX', '') +
