@@ -19,6 +19,7 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template import RequestContext, TemplateDoesNotExist
 from django.template.loader import render_to_string
+from django_countries.fields import CountryField
 
 from registration.models import RegistrationProfile as BaseRegistrationProfile
 
@@ -53,7 +54,8 @@ class User(AbstractUser):
     # location
     time_zone = models.CharField(max_length=50, default='GMT+4', verbose_name=u'Часовой пояс')
     phone = models.CharField(max_length=20, blank=True, null=True, verbose_name=u'Телефон')
-    country = models.CharField(max_length=50, default='ru', verbose_name=u'Страна')
+    # country = models.CharField(max_length=50, default='ru', verbose_name=u'Страна')
+    country = CountryField(default='RU', verbose_name=u'Страна')
     city = models.CharField(max_length=150, blank=True, null=True, verbose_name=u'Город')
     post_address = models.CharField(max_length=255, blank=True, null=True, verbose_name=u'Почтовый адрес')
     # education

@@ -68,6 +68,7 @@ INSTALLED_APPS = (
     'oauth2_provider',
     'gunicorn',
     'social.apps.django_app.default',
+    'django_countries',
     # my apps
     'apps.core',
     'apps.profiler',
@@ -113,7 +114,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
