@@ -155,7 +155,7 @@ class RegUserForm(RegistrationFormUniqueEmail):
         password = self.cleaned_data.get('password1')
         if len(password) < settings.MIN_LENGTH_PASSWORD:
             raise forms.ValidationError(
-                u'Пароль слишком мал. Не меньше %s символов' % settings.MIN_LENGTH_PASSWORD)
+                u'Пароль слишком короткий, минимальная длина %s' % settings.MIN_LENGTH_PASSWORD)
         return password
 
     class Meta:
