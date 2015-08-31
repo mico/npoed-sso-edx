@@ -151,7 +151,6 @@ class RegUserForm(RegistrationFormUniqueEmail):
         return data
 
     def clean_password1(self):
-        print "clean_password"
         password = self.cleaned_data.get('password1')
         if len(password) < settings.MIN_LENGTH_PASSWORD:
             raise forms.ValidationError(
