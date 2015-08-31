@@ -155,6 +155,20 @@ body {
   width: 100%;
 }
 
+/* chosen.js SELECT tag replacement */
+.chosen-container-single .chosen-single {
+  height: 40px;
+}
+.chosen-container-single .chosen-single span {
+  line-height: 40px;
+}
+.chosen-container-single .chosen-single div b {
+  background-position: 0 8px;
+}
+.chosen-container-active.chosen-with-drop .chosen-single div b {
+  background-position: -18px 8px;
+}
+
 /* Login page */
 
 .modal-footer {
