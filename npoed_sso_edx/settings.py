@@ -87,6 +87,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
 )
 
 ROOT_URLCONF = 'npoed_sso_edx.urls'
@@ -190,6 +191,7 @@ SOCIAL_AUTH_USERNAME_FORM_HTML = 'username_signup.html'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
 LOGIN_ERROR_URL = '/login'
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/login'
 
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
 REGISTRATION_AUTO_LOGIN = True # Automatically log the user in.
