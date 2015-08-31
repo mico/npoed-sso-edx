@@ -1,4 +1,20 @@
 {% extends 'base.html' %}
+{% load  backend_utils %}
+{% load static from staticfiles %}
+
+{% block extra_css %}
+  <link href="{% static 'css/edx-theme.css' %}" rel="stylesheet" type="text/css" />
+{% endblock extra_css %}
+
+{% block title %}Открытое образование - Такая почта уже есть{% endblock title %}
+
 {% block content %}
-<p>Такая почта уже есть, возможно, вы уже регистрировались через {{ backend_name }} с этой почтой</p>
-{% endblock content %}
+<div class="content-wrapper">
+  <div class="auth-wrapper">
+    <div class="auth-section">
+      <h2><span>Такая почта уже есть</span></h2>
+        <p>Такая почта уже есть, возможно, вы уже регистрировались через {{ backend_name }} с этой почтой</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
