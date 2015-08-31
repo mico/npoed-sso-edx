@@ -31,36 +31,36 @@ class User(AbstractUser):
     based off of the AbstractUser from auth.models
     '''
 
-    sex_choice = [[1, 'male'], [2, 'female']]
+    sex_choice = [[1, u'мужской'], [2, u'женский']]
     education_choice = [[1, u'Кандидат или доктор наук, PhD'],
                         [2, u'Магистр'],
                         [3, u'Бакалавр'],
                         [4, u'Специалист'],
-                        [5, u'Полное общее образование'],
-                        [6, u'Основное общее образование'],
-                        [7, u'Начальное общее образование'],
+                        [5, u'Полное общее образование (10-11 классы)'],
+                        [6, u'Основное общее образование (5-9 классы)'],
+                        [7, u'Начальное общее образование (1-4 классы)'],
                         [8, u'Без образования'],
                         [9, u'Другое'],
-                        [0, u'Не указан']]
+                        [0, u'Не указано']]
 
     # extra userinfo
-    second_name = models.CharField(max_length=50, blank=True, null=True)
-    gender = models.PositiveSmallIntegerField(blank=True, null=True,
+    second_name = models.CharField(max_length=50, blank=True, null=True, verbose_name=u'Отчество')
+    gender = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name=u'Пол',
                                               choices=sex_choice)
-    date_of_birth = models.DateField(blank=True, null=True)
+    date_of_birth = models.DateField(blank=True, null=True, verbose_name=u'Дата рождения')
     icon_profile = models.ImageField(upload_to='icon_profile',
-                                     blank=True, null=True)
+                                     blank=True, null=True, verbose_name=u'Фото')
     # location
-    time_zone = models.CharField(max_length=50, default='GMT+4')
-    phone = models.CharField(max_length=20, blank=True, null=True)
-    country = models.CharField(max_length=50, default='ru')
-    city = models.CharField(max_length=150, blank=True, null=True)
-    post_address = models.CharField(max_length=255, blank=True, null=True)
+    time_zone = models.CharField(max_length=50, default='GMT+4', verbose_name=u'Часовой пояс')
+    phone = models.CharField(max_length=20, blank=True, null=True, verbose_name=u'Телефон')
+    country = models.CharField(max_length=50, default='ru', verbose_name=u'Страна')
+    city = models.CharField(max_length=150, blank=True, null=True, verbose_name=u'Город')
+    post_address = models.CharField(max_length=255, blank=True, null=True, verbose_name=u'Почтовый адрес')
     # education
-    university = models.CharField(max_length=150, blank=True, null=True)
+    university = models.CharField(max_length=150, blank=True, null=True, verbose_name=u'Вуз')
     university_group = models.CharField(max_length=150, blank=True, null=True)
     education = models.PositiveSmallIntegerField(
-        default=0, choices=education_choice)
+        default=0, choices=education_choice, verbose_name=u'Образование')
     # permissions
     role = models.ManyToManyField(Role, blank=True, null=True)
     # about me field

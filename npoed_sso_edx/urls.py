@@ -4,6 +4,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib.admin import site as admin_site
 from django.contrib.auth.views import logout
 from django.views.generic import TemplateView
+from django.views.generic.base import RedirectView
 
 from social.apps.django_app.views import complete
 from social.utils import setting_name
@@ -27,6 +28,7 @@ def wrap_admin(view, cacheable=False):
 
 urlpatterns = patterns(
     '',
+    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/images/favicon.ico')),
     #  админка
     url(r'^admin/login/$', set_auth_cookie(admin_site.login), name='admin:login'),
     url(r'^admin/logout/$', set_auth_cookie(wrap_admin(admin_site.logout)), name='logout'),

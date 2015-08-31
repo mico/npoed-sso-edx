@@ -5,14 +5,8 @@
 {% block extra_css %}
   <link href="{% static 'css/chosen.min.css' %}" rel="stylesheet" type="text/css" />
   <link href="{% static 'css/edx-theme.css' %}" rel="stylesheet" type="text/css" />
+  <link href="{% static 'css/chosen.min.css' %}" rel="stylesheet" type="text/css" />
 {% endblock extra_css %}
-
-{% block extra_js %}
-  <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
-  <script>
-    $(".profile-content-wrapper select").chosen();
-  </script>
-{% endblock extra_js %}
 
 {% block bodyclass %}section-profile{% endblock %}
 
@@ -64,3 +58,20 @@
     </div>
   </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'js/chosen.jquery.min.js' %}"></script>
+  <script>
+    $(".profile-content-wrapper select").chosen();
+  </script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="{% static 'js/datepicker-ru.js'  %}"></script>
+<script type="text/javascript">
+    $( function () {
+        $('.vDateField').datepicker($.datepicker.regional[ "ru" ]);
+        $('.vDateField').datepicker("option", "defaultDate", '-20y');
+        $('select').chosen();
+    })
+</script>
+{% endblock extra_js %}

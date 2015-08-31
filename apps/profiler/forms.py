@@ -25,13 +25,13 @@ class MessageForm(forms.Form):
     name = forms.CharField(
         label='', widget=forms.TextInput(
             attrs={"class": "span12", "id":"contact-name",
-                   "placeholder": "Name"}))
+                   "placeholder": u'Имя'}))
     email = forms.EmailField(label='', widget=forms.TextInput(
             attrs={"class": "span12", "id": "contact-email",
-                   "placeholder": "Email address"}))
+                   "placeholder": u'Адрес e-mail'}))
     text = forms.CharField(label='', widget=forms.Textarea(
             attrs={"class": "span12", "rows": "5", "id": "contact-msg",
-                   "placeholder": "Send us your questions or comments!"}))
+                   "placeholder": u'Ваш вопрос или предложение'}))
 
 
 class TextInput(forms.TextInput):
@@ -41,7 +41,7 @@ class TextInput(forms.TextInput):
     def render(self, name, value, attrs=None):
         output = ''
         output_item = '''
-	  <h4 id="myModalLabel" class="label_nineID">Choose a unique Username:</h4>
+	  <h4 id="myModalLabel" class="label_nineID">Выберите уникальное имя пользователя:</h4>
           <span class="nineID">@</span>%s
             '''
         output = output_item % super(TextInput, self).render(
@@ -93,7 +93,7 @@ class DateInput(forms.DateInput):
 class SexRadio(forms.RadioSelect):
 
     def render(self, name, value, attrs=None):
-        output = '<p>Sex</p>%s' % super(SexRadio, self).render(
+        output = '<p>Пол</p>%s' % super(SexRadio, self).render(
             name, value, attrs=attrs)
         return mark_safe(output.replace('ul ', 'ul class="form-inline" '))
 
@@ -101,26 +101,31 @@ class SexRadio(forms.RadioSelect):
 class SubscribeRadio(forms.RadioSelect):
 
     def render(self, name, value, attrs=None):
-        output = '<p>Subscribe to updates and special offers</p>%s' % super(
+        output = '<p>Подписаться на рассылку</p>%s' % super(
             SubscribeRadio, self).render(name, value, attrs=attrs)
         return mark_safe(output.replace('ul ', 'ul class="form-inline" '))
 
 
 class UserForm(forms.ModelForm):
 
-    username = forms.CharField(widget=forms.TextInput(attrs={
-        'class': 'disabled', 'readonly': 'readonly'}))
     about_me = forms.CharField(widget=forms.Textarea(attrs={
         'style': 'width: 100%;'}))
+    username = forms.CharField(widget=forms.TextInput(
+            attrs={'class':'disabled', 'readonly':'readonly'}), label=u'Логин')
+    email = forms.EmailField(label=u'Адрес e-mail')
+    last_name = forms.CharField(label=u'Фамилия')
+    first_name = forms.CharField(label=u'Имя')
+
+    date_of_birth = forms.DateField(label=u'Дата рождения',
+            widget=forms.TextInput(attrs={'class':'vDateField'}))
 
     class Meta:
         model = User
         fields = [
             'username', 'email', 'last_name', 'first_name', 'second_name',
             'icon_profile', 'gender', 'date_of_birth', 'education', 'university',
-            'country', 'city', 'post_address', 'phone', 'time_zone', 'about_me'
+            'country', 'city', 'post_address', 'phone', 'time_zone', 'about_me',
         ]
-
 
 class RegUserForm(RegistrationFormUniqueEmail):
 
@@ -141,7 +146,7 @@ class RegUserForm(RegistrationFormUniqueEmail):
     def clean_email(self):
         data = self.cleaned_data['email']
         if User.objects.filter(email=data).exists():
-            raise forms.ValidationError("This email already used")
+            raise forms.ValidationError(u'Этот e-mail уже используется')
         return data
 
     class Meta:
@@ -167,6 +172,6 @@ class LoginForm(AuthenticationForm):
         try:
             user = User.objects.get(username=cleaned_data.get("username"))
         except:
-            raise forms.ValidationError("Invalid username")
+            raise forms.ValidationError(u'Неправильное имя пользователя')
         if not user.is_active:
-            raise forms.ValidationError("This account is inactive.")
+            raise forms.ValidationError(u'Этот аккаунт не активирован')

@@ -30,12 +30,12 @@ class CreateUserForm(forms.Form):
             User.objects.get(username=self.cleaned_data['username'])
         except ObjectDoesNotExist:
             return self.cleaned_data['username']
-        raise forms.ValidationError("this user exist already")
+        raise forms.ValidationError(u'пользователь с таким именем уже существует')
 
     def clean(self):
         if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:
             if self.cleaned_data['password1'] != self.cleaned_data['password2']:
-                raise forms.ValidationError("passwords dont match each other")
+                raise forms.ValidationError(u'пароли не совпадают')
         return self.cleaned_data
 
     def save(self):
