@@ -33,9 +33,9 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin_site.urls)),
 
     # social auth
-    url(r'^', include('social.apps.django_app.urls', namespace='social')),
     url(r'^complete/(?P<backend>[^/]+){0}$'.format(extra),
         set_auth_cookie(complete), name='social:complete'),
+    url(r'^', include('social.apps.django_app.urls', namespace='social')),
 
     url(r'^', include('apps.profiler.urls')),
     url(r'^', include('apps.core.urls')),
