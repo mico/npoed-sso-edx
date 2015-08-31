@@ -18,6 +18,8 @@ from django.core.files.base import ContentFile
 
 from social.pipeline.partial import partial
 
+from apps.core.utils import make_random_password
+
 
 @partial
 def require_email(strategy, details, user=None, is_new=False, *args, **kwargs):
@@ -119,6 +121,9 @@ def update_profile(backend, user, response, *args, **kwargs):
     if change_data:
         user.save()
 
+    if not user.has_usable_password():
+        user.set_password(make_random_password())
+
     if image_url and not user.icon_profile:
         try:
             image_content = urlopen(image_url)
@@ -128,4 +133,3 @@ def update_profile(backend, user, response, *args, **kwargs):
             user.save()
         except Exception:
             pass
-
