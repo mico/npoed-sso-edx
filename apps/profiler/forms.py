@@ -135,7 +135,8 @@ class RegUserForm(RegistrationFormUniqueEmail):
     password2 = forms.CharField(label=u'Повторите', widget=forms.PasswordInput())
     username = forms.CharField(
         label=u'Имя', validators=[
-            validators.RegexValidator('^[-a-zA-Z0-9_]+$'),
+            validators.RegexValidator('^[-a-zA-Z0-9_]+$',
+                                      message=u'Вы можете использовать латинские символы, цифры и _'),
             validators.MinLengthValidator(3)
         ]
     )

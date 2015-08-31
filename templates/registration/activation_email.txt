@@ -1,4 +1,6 @@
-Регистрация на сайте, {{ site }}.
+Регистрация на сайте Открытое образование.
+
 Для активации вашего аккаунта необходимо перейти по ссылке:
-http://{{ site }}/accounts/activate/{{ activation_key }}/{% if redirect_url %}?next={{ redirect_url }}{% endif %}
+{{ prefix }}://{{ site }}/accounts/activate/{{ activation_key }}/{% if redirect_url %}?next={{ redirect_url }}{% endif %}
+
 Спасибо!
