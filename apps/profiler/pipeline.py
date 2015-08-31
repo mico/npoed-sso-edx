@@ -108,9 +108,13 @@ def update_profile(backend, user, response, *args, **kwargs):
 
         birthday = response.get('birthday')
         if not user.date_of_birth and birthday:
-            birthday = datetime.strptime(birthday, "%d.%m.%Y").date()
-            user.date_of_birth = birthday
-            change_data = True
+            try:
+                birthday = datetime.strptime(birthday, "%d.%m.%Y").date()
+            except ValueError:
+                pass
+            else:
+                user.date_of_birth = birthday
+                change_data = True
 
     if change_data:
         user.save()
