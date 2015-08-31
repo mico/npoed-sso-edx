@@ -15,6 +15,7 @@ from django.utils.safestring import mark_safe
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import get_user_model
 from django.core import validators
+from django.conf import settings
 
 from registration.forms import RegistrationFormUniqueEmail
 
@@ -148,6 +149,14 @@ class RegUserForm(RegistrationFormUniqueEmail):
         if User.objects.filter(email=data).exists():
             raise forms.ValidationError(u'Этот e-mail уже используется')
         return data
+
+    def clean_password1(self):
+        print "clean_password"
+        password = self.cleaned_data.get('password1')
+        if len(password) < settings.MIN_LENGTH_PASSWORD:
+            raise forms.ValidationError(
+                u'Пароль слишком мал. Не меньше %s символов' % settings.MIN_LENGTH_PASSWORD)
+        return password
 
     class Meta:
         prefix = 'reg'
