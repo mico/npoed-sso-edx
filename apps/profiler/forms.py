@@ -124,7 +124,7 @@ class UserForm(forms.ModelForm):
         fields = [
             'username', 'email', 'last_name', 'first_name', 'second_name',
             'icon_profile', 'gender', 'date_of_birth', 'education', 'university',
-            'country', 'city', 'post_address', 'phone', 'time_zone', 'about_me',
+            'country', 'city', 'post_address', 'phone', 'about_me',
         ]
 
 class RegUserForm(RegistrationFormUniqueEmail):
