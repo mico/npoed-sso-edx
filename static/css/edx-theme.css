@@ -374,14 +374,17 @@ body {
   font-size: 1.2em;
 }
 
-.profile-connect-social-network a span {
+#profile-connect-social-network {
+  margin-bottom: 15px;
+}
+#profile-connect-social-network a span {
   display: none;
 }
-.profile-connect-social-network .link-facebook:before,
-.profile-connect-social-network .link-google-oauth2:before,
-.profile-connect-social-network .link-mailru-oauth2:before,
-.profile-connect-social-network .link-twitter:before,
-.profile-connect-social-network .link-vk-oauth2:before {
+.link-facebook:before,
+.link-google-oauth2:before,
+.link-mailru-oauth2:before,
+.link-twitter:before,
+.link-vk-oauth2:before {
   content: "@";
   display: inline-block;
   font-family: FontAwesome;
@@ -395,24 +398,41 @@ body {
   background-color: #000;
   border-radius: 50%;
 }
-.profile-connect-social-network .link-facebook:before {
+.link-facebook:before {
   content: "\f09a";
   background-color: #3b5998;
 }
-.profile-connect-social-network .link-google-oauth2:before {
+.link-google-oauth2:before {
   content: "\f0d5";
   background-color: #cc3732;
 }
-.profile-connect-social-network .link-mailru-oauth2:before {
+.link-mailru-oauth2:before {
   /*font-family: 'icosocial';*/
   /*content: "\e600";*/
   background-color: #154079;
 }
-.profile-connect-social-network .link-twitter:before {
+.link-twitter:before {
   content: "\f099";
   background-color: #00abe1;
 }
-.profile-connect-social-network .link-vk-oauth2:before {
+.link-vk-oauth2:before {
   content: "\f189";
   background-color: #4c75a3;
+}
+.disconnect-social-networks {
+  margin: 10px 0;
+  padding: 10px 0;
+}
+#profile-connected-social-network ul {
+  display: block;
+  list-style: none;
+  padding: 0;
+}
+#profile-connected-social-network li {
+  display: block;
+  margin-bottom: 20px;
+}
+#profile-connected-social-network li form {
+  margin: 0;
+  padding: 0;
 }
