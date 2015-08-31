@@ -47,16 +47,24 @@
           <a class="logo" href="/"><img alt="" src="/static/images/logo-light.png"></a>
         </div>
         <div class="catalog-link col col-md-3 col-sm-3 hidden-xs">
-          <a href="{{ plp_url }}/course/"><span aria-hidden="true" class="icon catalog-icon"></span><span class="hidden-xs">Каталог курсов</span></a>
+          <a href="{{ plp_url }}course/"><span aria-hidden="true" class="icon catalog-icon"></span><span class="hidden-xs">Каталог курсов</span></a>
         </div>
-        <div class="search-form col-xs-8 col-sm-3 col-md-3  col"></div>
-        <div class="version col-md-3 col-sm-2 text-right aut-block hidden-xs col">
-          {% if not user.is_authenticated %}
-            <span class="icon login-icon"></span><a href="{{ plp_url }}/login/npoedsso/?next=/course/">Вход</a>
-          {% else %}
-            <span class="icon logout-icon"></span><a href="/logout">Выход {{ user }}</a>
-          {% endif %}
-        </div>
+           <div class="version col-md-3 col-sm-1 text-right aut-block hidden-xs col">
+           {% if not user.is_authenticated %}
+             <span id="sb_login" class="l-btn">
+               <span class="icon login-icon"></span><a href="{{ plp_url }}login/npoedsso/?next=/course/">Вход</a>
+             </span>
+           {% else %}
+             <div class="dropdown" id="sb_profile" style="width: 100%">
+               <span class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown"><span class="icon profile-icon"></span><span class="hidden-sm">Мой профиль</span></span>
+               <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
+                 <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ plp_url }}my/" title="Мои курсы">Мои курсы</a></li>
+                 <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'profile' %}" title="Профиль">Профиль</a></li>
+                 <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'logout' %}" title="Выйти">Выйти</a></li>
+               </ul>
+             </div>
+           {% endif %}
+           </div>
       </div>
     </div>
   </header>
@@ -82,10 +90,10 @@
           <div class="row">
             <div class="col-md-5">
               <ul class="list-unstyled narrow">
-                <li><a href="{{ plp_url }}/about/">О платформе</a></li>
-                <li><a href="{{ plp_url }}/faq/">Вопрос-ответ</a></li>
-                <li><a href="{{ plp_url }}/">Для преподавателей </a></li>
-                <li><a href="{{ plp_url }}/">Партнерам</a></li>
+                <li><a href="{{ plp_url }}about/">О платформе</a></li>
+                <li><a href="{{ plp_url }}faq/">Вопрос-ответ</a></li>
+                <li><a href="{{ plp_url }}">Для преподавателей </a></li>
+                <li><a href="{{ plp_url }}">Партнерам</a></li>
               </ul>
             </div>
             <div class="col-md-7">
