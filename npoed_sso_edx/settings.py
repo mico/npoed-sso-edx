@@ -68,6 +68,7 @@ INSTALLED_APPS = (
     'oauth2_provider',
     'gunicorn',
     'social.apps.django_app.default',
+    'django_countries',
     # my apps
     'apps.core',
     'apps.profiler',
