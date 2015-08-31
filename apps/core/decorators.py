@@ -11,13 +11,17 @@ User = get_user_model()
 
 def set_auth_cookie(view):
     def wrapper(request, *args, **kwargs):
+        user = request.user
         response = view(request, *args, **kwargs)
-        is_auth = request.user.is_authenticated()
+        is_auth = user.is_authenticated()
 
         response.set_cookie('authenticated', str(int(is_auth)),
                             domain=settings.AUTH_SESSION_COOKIE_DOMAIN,
                             secure=settings.SESSION_COOKIE_SECURE or None)
-
+        response.set_cookie('authenticated_user',
+                            is_auth and user.username or 'Anonymous',
+                            domain=settings.AUTH_SESSION_COOKIE_DOMAIN,
+                            secure=settings.SESSION_COOKIE_SECURE or None)
         return response
 
     return wrapper
