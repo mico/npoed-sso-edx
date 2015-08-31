@@ -87,7 +87,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
+    'npoed_sso_edx.middleware.SocialAuthExceptionMiddleware',
 )
 
 ROOT_URLCONF = 'npoed_sso_edx.urls'

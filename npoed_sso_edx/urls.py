@@ -85,8 +85,6 @@ urlpatterns = patterns(
     # url(r'^done/$', 'apps.profiler.views.done', name='done'),
     # url(r'^/receiver.html$',
     #     TemplateView.as_view(template_name='-receiver.html')),
-    # url(r'^login-form/$',
-    #     TemplateView.as_view(template_name='login_form.html'), name='login_form'),
 
     #  API
     url(r'^', include('apps.openedx_objects.urls', namespace='api-edx')),
