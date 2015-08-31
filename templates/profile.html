@@ -3,8 +3,16 @@
 {% load backend_utils %}
 
 {% block extra_css %}
+  <link href="{% static 'css/chosen.min.css' %}" rel="stylesheet" type="text/css" />
   <link href="{% static 'css/edx-theme.css' %}" rel="stylesheet" type="text/css" />
 {% endblock extra_css %}
+
+{% block extra_js %}
+  <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
+  <script>
+    $(".profile-content-wrapper select").chosen();
+  </script>
+{% endblock extra_js %}
 
 {% block bodyclass %}section-profile{% endblock %}
 
