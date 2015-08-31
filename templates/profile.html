@@ -5,75 +5,76 @@
 {% block extra_css %}
   <link href="{% static 'css/chosen.min.css' %}" rel="stylesheet" type="text/css" />
   <link href="{% static 'css/edx-theme.css' %}" rel="stylesheet" type="text/css" />
-  <link href="{% static 'css/chosen.min.css' %}" rel="stylesheet" type="text/css" />
 {% endblock extra_css %}
-
-{% block title %}Открытое образование - Профиль{% endblock title %}
 
 {% block bodyclass %}section-profile{% endblock %}
 
 {% block content %}
-
 <div class="content-wrapper">
 
-    <div class="auth-wrapper">
-      <div class="auth-section">
-        <h2><span>Профиль</span></h2>
-        {% if user.is_authenticated %}
-        <ul class="profile-nav">
-          <li>Мои данные</li>
-          <li><a href="{% url 'password_change' %}">Сменить пароль</a></li>
-          <!-- <li><a href="{% url 'edx-push' pk=user.id %}">Push to edx</a></li> -->
-        </ul>
+  <div class="auth-wrapper">
+    <div class="auth-section">
+      <h2><span>Профиль</span></h2>
+      {% if user.is_authenticated %}
+      <ul class="profile-nav">
+        <li>Мои данные</li>
+        <li><a href="{% url 'password_change' %}">Сменить пароль</a></li>
+        <!-- <li><a href="{% url 'edx-push' pk=user.id %}">Push to edx</a></li> -->
+      </ul>
 
-    <div class="col-sm-2">
-      <h4>Связать аккаунты:</h4>
-      {% for sublist in available_backends|social_backends %}
-        {% for name, backend in sublist %}
-          {% associated backend %}
-          {% if association %}
-            <form method="POST" action="{% url 'social:disconnect_individual' backend=association.provider association_id=association.id %}?next={{ request.path }}">
-              {% csrf_token %}
-              <input type="submit" value="disconnect {{ name }}">
-            </form>
-          {% else %}
-            <a class="custom_img-thumbnail_link link-{{ name }}" href="{% url 'social:begin' backend=name %}?next={{ request.path }}"><span>Подключить {{ name }}</span></a>
-          {% endif %}
+      <div class="col-sm-2">
+        <h4>Связать аккаунты:</h4>
+        {% for sublist in available_backends|social_backends %}
+          {% for name, backend in sublist %}
+            {% associated backend %}
+            {% if association %}
+              <form method="POST" action="{% url 'social:disconnect_individual' backend=association.provider association_id=association.id %}?next={{ request.path }}">
+                {% csrf_token %}
+                <input type="submit" value="disconnect {{ name }}">
+              </form>
+            {% else %}
+              <a class="custom_img-thumbnail_link link-{{ name }}" href="{% url 'social:begin' backend=name %}?next={{ request.path }}"><span>Подключить {{ name }}</span></a>
+            {% endif %}
+          {% endfor %}
         {% endfor %}
-      {% endfor %}
+      </div>
+
+      <form method="post" class="profile-content-wrapper">
+        {% csrf_token %}
+        <table>
+          {{ form.as_table }}
+        </table>
+        <div class="footer-buttons">
+          <button class="btn btn-primary" type="submit">Сохранить изменения</button>
+        </div>
+      </form>
+
     </div>
 
-    <form method="post" class="profile-content-wrapper">
-      {% csrf_token %}
-      <table>
-        {{ form.as_table }}
-      </table>
-      <div class="footer-buttons">
-        <button class="btn btn-primary" type="submit">Сохранить изменения</button>
-      </div>
-    </form>
-    </div>
-        {% else %}
-        <p>Вы должны быть авторизованы для просмотра вашего профиля.</p>
-        {% endif %}
-      </div>
-    </div>
+    {% else %}
+      <p>Вы должны быть авторизованы для просмотра вашего профиля.</p>
+    {% endif %}
+
   </div>
+</div>
+
+</div>
 {% endblock content %}
 
 {% block extra_js %}
 <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
-  <script>
-    $(".profile-content-wrapper select").chosen();
-  </script>
+<script>
+  $(".profile-content-wrapper select").chosen();
+</script>
+
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="{% static 'js/datepicker-ru.js'  %}"></script>
 <script type="text/javascript">
-    $( function () {
-        $('.vDateField').datepicker($.datepicker.regional[ "ru" ]);
-        $('.vDateField').datepicker("option", "defaultDate", '-20y');
-        $('select').chosen();
-    })
+  $( function () {
+    $('.vDateField').datepicker($.datepicker.regional[ "ru" ]);
+    $('.vDateField').datepicker("option", "defaultDate", '-20y');
+    $('select').chosen();
+  })
 </script>
 {% endblock extra_js %}
