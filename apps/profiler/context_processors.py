@@ -20,6 +20,10 @@ from registration.forms import RegistrationFormUniqueEmail
 
 
 def forms(request):
+    plp_url = settings.PLP_URL
+    # мы хотим, чтобы url PLP в шаблонах был наверняка со слэшом в конце
+    if settings.PLP_URL[-1] != '/':
+        plp_url = "{}/".format(plp_url)
     return {
         'login_form': render_to_string(
             'forms/form.html', {'form': LoginForm()}
@@ -27,5 +31,5 @@ def forms(request):
         'plus_id': getattr(settings, 'SOCIAL_AUTH_GOOGLE_PLUS_KEY', None),
         'plus_scope': ' '.join(GooglePlusAuth.DEFAULT_SCOPE),
         'available_backends': load_backends(settings.AUTHENTICATION_BACKENDS),
-        'plp_url': settings.PLP_URL,
+        'plp_url': plp_url,
     }
