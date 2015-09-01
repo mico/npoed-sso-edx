@@ -9,9 +9,13 @@
 
 {% block content %}
 <div class="content-wrapper">
-
   <div class="auth-wrapper">
     <div class="auth-section reg-social-networks">
+      {% if email %}
+      <h3>На вашу почту {{ email }} была выслана ссылка активации вашего акаунта,
+	для завершения процесса авторизации необходимо по не перейти.</h3>
+      {% endif %}
+
       <h2><span>Зарегистрироваться через</span></h2>
       <ul>
         <li class="reg-btn reg-btn-fb"><a class="custom_img-thumbnail_link" href="{% url 'social:begin' 'facebook' %}?{{ request.META.QUERY_STRING }}"><i class="fa fa-facebook"></i> Facebook</a></li>
