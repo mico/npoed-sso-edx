@@ -78,55 +78,50 @@
 
   {% block footer %}
   <footer>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-5 side left-side">
-          <a href="/" class="pull-left"><img src="/static/images/logo-small.png" alt="" class="logo-small"></a>
-          <ul class="list-unstyled">
-            <li><a href="">Каталог курсов</a></li>
-            <li><a href="">Направления подготовки</a></li>
-          </ul>
-        </div>
-        <div class="col-md-7 side right-side">
-          <div class="row">
-            <div class="col-md-5">
-              <ul class="list-unstyled narrow">
-                <li><a href="{{ plp_url }}about/">О платформе</a></li>
-                <li><a href="{{ plp_url }}faq/">Вопрос-ответ</a></li>
-                <li><a href="{{ plp_url }}">Для преподавателей </a></li>
-                <li><a href="{{ plp_url }}">Партнерам</a></li>
-              </ul>
-            </div>
-            <div class="col-md-7">
-              <ul class="list-unstyled wide">
-                <li><a href="#">Условия предоставления услуг</a></li>
-                <li><a href="#">Политика конфиденциальности</a></li>
-                <li><a href="#">Правила использования</a></li>
-                <li><a href="#">Версия для&nbsp;слабовидящих</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
+  <div class="container-fluid">
+  <div class="row">
+      <div class="col-md-5  col-sm-12 side left-side" style="margin-top: 0px;">
+        <a href="/" class="pull-left"><img src="{% static 'img/logo-small.png' %}" alt="" class="logo-small"></a>
+        <ul  class="list-unstyled">
+          <li><a href="{{ plp_url }}course">Каталог курсов</a></li>
+          <li><a href="{{ plp_url }}specialize">Направления подготовки</a></li>
+        </ul>
       </div>
-      <div class="row copyright">
-        <div class="col-md-5">
-          © 2015 Открытое образование
-          <ul class="list-inline">
-            <li>
-              <a href="#"><img src="/static/images/social/fb.png" alt=""></a>
-              <a href="#"><img src="/static/images/social/vk.png" alt=""></a>
-              <a href="#"><img src="/static/images/social/ok.png" alt=""></a>
-              <a href="#"><img src="/static/images/social/inst.png" alt=""></a>
-              <a href="#"><img src="/static/images/social/tw.png" alt=""></a>
-              <a href="#"><img src="/static/images/social/you.png" alt=""></a>
-            </li>
-          </ul>
+      <div class="col-md-7 side right-side hidden-xs">
+        <div class="row">
+          <div class="col-md-5 col-sm-6">
+            <ul class="list-unstyled narrow">
+              <li><a href="http://npoed.ru/about">О проекте</a></li>
+              <li><a href="http://npoed.ru/faq">Вопрос-ответ</a></li>
+            </ul>
+          </div>
+          <div class="col-md-7 col-sm-6">
+            <ul class="list-unstyled wide">
+              <li><a href="{{ plp_url }} terms/">Пользовательское соглашение</a></li>
+              <li><a href="http://npoed.ru/contacts">Контактная информация</a></li>
+            </ul>
+          </div>
+
         </div>
-        <div class="col-md-7">
-          <div class="warning"><span class="label label-primary">12+</span>Ресурс может содержать материалы для лиц старше 12 лет</div>
-        </div>
+
       </div>
     </div>
+
+    <div class="row copyright">
+      <div class="col-md-5">
+        &copy; 2015 Открытое образование
+        <ul class="list-inline">
+          <li>
+            <a href="https://www.facebook.com/npoed"><img src="{% static 'img/social/fb.png' %}" alt=""></a>
+            <a href="https://vk.com/npoed"><img src="{% static 'img/social/vk.png' %}" alt=""></a>
+            <a href="http://ok.ru/group/52786563514445"><img src="{% static 'img/social/ok.png' %}" alt=""></a>
+            <a href="https://instagram.com/npoed"><img src="{% static 'img/social/inst.png' %}" alt=""></a>
+            <a href="https://twitter.com/npoed"><img src="{% static 'img/social/tw.png' %}" alt=""></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
   </footer>
   {% endblock footer %}
 
@@ -242,7 +237,7 @@
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-65311486-5', 'auto');
-ga('send', 'pageview');</script><!-- Yandex.Metrika counter --> <script type="text/javascript"> (function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter32212994 = new Ya.Metrika({ id:32212994, clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true }); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = "https://mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(document, window, "yandex_metrika_callbacks"); </script> <noscript><div><img src="https://mc.yandex.ru/watch/32212994" style="position:absolute; left:-9999px;" alt="" /></div></noscript> <!-- /Yandex.Metrika counter --> 
+ga('send', 'pageview');</script><!-- Yandex.Metrika counter --> <script type="text/javascript"> (function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter32212994 = new Ya.Metrika({ id:32212994, clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true }); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = "https://mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(document, window, "yandex_metrika_callbacks"); </script> <noscript><div><img src="https://mc.yandex.ru/watch/32212994" style="position:absolute; left:-9999px;" alt="" /></div></noscript> <!-- /Yandex.Metrika counter -->
 
 </body>
 </html>
