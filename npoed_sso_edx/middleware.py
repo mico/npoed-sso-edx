@@ -1,18 +1,29 @@
-from social.exceptions import AuthAlreadyAssociated
+from social.exceptions import AuthAlreadyAssociated, SocialAuthBaseException
 from social.apps.django_app.middleware import SocialAuthExceptionMiddleware as \
     SocialAuthExceptionMiddlewareBase
 from django.shortcuts import render
+from raven import Client
+
+client = Client('___DSN___')
 
 
 class SocialAuthExceptionMiddleware(SocialAuthExceptionMiddlewareBase):
 
     def process_exception(self, request, exception):
+
         if type(exception) == AuthAlreadyAssociated:
             backend = getattr(request, 'backend', None)
             backend_name = getattr(backend, 'name', 'unknown-backend')
             message = self.get_message(request, exception)
             return render(request, "auth_already_associated.html",
                           {'message': message, 'backend_name': backend_name})
+        elif isinstance(exception, SocialAuthBaseException):
+            client.captureMessage('Social Auth Base: {}'.format(
+                    self.get_message(request, exception)))
+            return render(request, "auth_errors.html", {'message': message})
+        else:
+            client.captureMessage('Another: {}'.format(
+                    self.get_message(request, exception)))
 
         return super(SocialAuthExceptionMiddleware, self).process_exception(
             request, exception)
