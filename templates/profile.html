@@ -18,7 +18,9 @@
       $('.vDateField').datepicker($.datepicker.regional[ "ru" ]);
       $('.vDateField').datepicker("option", "defaultDate", '-20y');
       $('select').chosen();
-    })
+    });
+    $("#id_gender_chosen").find(".chosen-search").hide();
+    $("#id_education_chosen").find(".chosen-search").hide();
   </script>
 {% endblock extra_js %}
 
