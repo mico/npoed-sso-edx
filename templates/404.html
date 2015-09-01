@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load  backend_utils %}
+{% load static from staticfiles %}
+
+{% block extra_css %}
+  <link href="{% static 'css/edx-theme.css' %}" rel="stylesheet" type="text/css" />
+{% endblock extra_css %}
+
+{% block title %}Открытое образование - 404{% endblock title%}
+
+{% block content %}
+<div class="content-wrapper">
+  <div class="auth-wrapper">
+    <div class="auth-section">
+    <h2><span>404</span></h2>
+    <p>Страница не найдена! <a href="/">Перейти на главную</a>.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
