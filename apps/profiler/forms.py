@@ -134,7 +134,7 @@ class RegUserForm(RegistrationFormUniqueEmail):
     password1 = forms.CharField(label=u'Пароль', widget=forms.PasswordInput())
     password2 = forms.CharField(label=u'Повторите', widget=forms.PasswordInput())
     username = forms.CharField(
-        label=u'Имя', validators=[
+        label=u'Логин', validators=[
             validators.RegexValidator('^[-a-zA-Z0-9_]+$',
                                       message=u'Вы можете использовать латинские символы, цифры и _'),
             validators.MinLengthValidator(3)
@@ -170,7 +170,7 @@ class LoginForm(AuthenticationForm):
         label=u'Пароль', widget=forms.PasswordInput(attrs={
                 "class": "span12", "placeholder": "", "tabindex": "1"}))
     username = forms.CharField(
-        label=u'Имя пользователя', widget=CustomTextInput(attrs={
+        label=u'Логин', widget=CustomTextInput(attrs={
                 "class": "span12", "placeholder": "", "tabindex": "1"}))
 
     def confirm_login_allowed(self, user):
@@ -181,6 +181,6 @@ class LoginForm(AuthenticationForm):
         try:
             user = User.objects.get(username=cleaned_data.get("username"))
         except:
-            raise forms.ValidationError(u'Неправильное имя пользователя')
+            raise forms.ValidationError(u'Неправильный логин')
         if not user.is_active:
             raise forms.ValidationError(u'Этот аккаунт не активирован')
