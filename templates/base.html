@@ -55,7 +55,7 @@
         <div class="version col-md-3 col-sm-1 text-right aut-block hidden-xs col">
         {% if not user.is_authenticated %}
           <span id="sb_login" class="l-btn" >
-            <a href="{{ plp_url }}login/npoedsso/?next=/course/"><span class="icon profile-icon"></span><span class="hidden-sm hidden-xs">Войти</span></a>
+            <a href="{% url 'login' %}"><span class="icon profile-icon"></span><span class="hidden-sm hidden-xs">Войти</span></a>
           </span>
         {% else %}
           <div class="dropdown" id="sb_profile" style="width: 100%">
