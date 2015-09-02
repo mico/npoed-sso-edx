@@ -133,7 +133,7 @@ class UserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
         list_countries = list(countries)
-        try:
+        if hasattr(settings, 'COUNTRIES_FIRST'):
             first = []
             for country in settings.COUNTRIES_FIRST:
                 ind = [element[0] for element in list_countries].index(country)
@@ -143,8 +143,7 @@ class UserForm(forms.ModelForm):
                 list_countries,
                 key=lambda list_countries: list_countries[1])
         # COUNTRIES_FIRST not set
-        except AttributeError:
-            print (u'AR')
+        else:
             self.fields['country'].choices = sorted(
                 list_countries,
                 key=lambda list_countries: list_countries[1])
