@@ -5,11 +5,11 @@ from django.shortcuts import render
 from raven import Client
 from django.conf import settings
 
-dsn = getattr(settings, 'RAVEN_CONFIG', {}).get('dsn')
+RAVEN_CONFIG = getattr(settings, 'RAVEN_CONFIG', {})
 client = None
 
 if dsn:
-    client = Client(dsn)
+    client = Client(RAVEN_CONFIG.get('dsn'))
 
 
 class SocialAuthExceptionMiddleware(SocialAuthExceptionMiddlewareBase):
