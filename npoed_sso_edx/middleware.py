@@ -3,8 +3,13 @@ from social.apps.django_app.middleware import SocialAuthExceptionMiddleware as \
     SocialAuthExceptionMiddlewareBase
 from django.shortcuts import render
 from raven import Client
+from django.conf import settings
 
-client = Client('___DSN___')
+dsn = getattr(settings, RAVEN_CONFIG, {}).get('dsn')
+client = None
+
+if dsn:
+    client = Client(dsn)
 
 
 class SocialAuthExceptionMiddleware(SocialAuthExceptionMiddlewareBase):
@@ -18,12 +23,14 @@ class SocialAuthExceptionMiddleware(SocialAuthExceptionMiddlewareBase):
             return render(request, "auth_already_associated.html",
                           {'message': message, 'backend_name': backend_name})
         elif isinstance(exception, SocialAuthBaseException):
-            client.captureMessage('Social Auth Base: {}'.format(
-                    self.get_message(request, exception)))
+            if client:
+                client.captureMessage('Social Auth Base: {}'.format(
+                        self.get_message(request, exception)))
             return render(request, "auth_errors.html", {'message': message})
         else:
-            client.captureMessage('Another: {}'.format(
-                    self.get_message(request, exception)))
+            if client:
+                client.captureMessage('Another: {}'.format(
+                        self.get_message(request, exception)))
 
         return super(SocialAuthExceptionMiddleware, self).process_exception(
             request, exception)
