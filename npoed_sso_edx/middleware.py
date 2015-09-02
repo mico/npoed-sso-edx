@@ -8,7 +8,7 @@ from django.conf import settings
 RAVEN_CONFIG = getattr(settings, 'RAVEN_CONFIG', {})
 client = None
 
-if dsn:
+if RAVEN_CONFIG:
     client = Client(RAVEN_CONFIG.get('dsn'))
 
 
