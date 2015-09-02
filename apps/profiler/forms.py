@@ -18,6 +18,7 @@ from django.core import validators
 from django.conf import settings
 
 from registration.forms import RegistrationFormUniqueEmail
+from django_countries import countries
 
 User = get_user_model()
 
@@ -127,6 +128,20 @@ class UserForm(forms.ModelForm):
             'icon_profile', 'gender', 'date_of_birth', 'education', 'university',
             'country', 'city', 'post_address', 'phone', 'about_me',
         ]
+
+    # sort countries by translate name
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        list_countries = list(countries)
+        first = []
+        if hasattr(settings, 'COUNTRIES_FIRST'):
+            for country in settings.COUNTRIES_FIRST:
+                ind = [element[0] for element in list_countries].index(country)
+                first.append(list_countries[ind])
+                list_countries.pop(ind)
+        self.fields['country'].choices = first + sorted(
+            list_countries,
+            key=lambda list_countries: list_countries[1])
 
 class RegUserForm(RegistrationFormUniqueEmail):
 
