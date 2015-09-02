@@ -133,20 +133,15 @@ class UserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
         list_countries = list(countries)
+        first = []
         if hasattr(settings, 'COUNTRIES_FIRST'):
-            first = []
             for country in settings.COUNTRIES_FIRST:
                 ind = [element[0] for element in list_countries].index(country)
                 first.append(list_countries[ind])
                 list_countries.pop(ind)
-            self.fields['country'].choices = first + sorted(
-                list_countries,
-                key=lambda list_countries: list_countries[1])
-        # COUNTRIES_FIRST not set
-        else:
-            self.fields['country'].choices = sorted(
-                list_countries,
-                key=lambda list_countries: list_countries[1])
+        self.fields['country'].choices = first + sorted(
+            list_countries,
+            key=lambda list_countries: list_countries[1])
 
 class RegUserForm(RegistrationFormUniqueEmail):
 
