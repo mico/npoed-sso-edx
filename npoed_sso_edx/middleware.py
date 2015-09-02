@@ -5,7 +5,7 @@ from django.shortcuts import render
 from raven import Client
 from django.conf import settings
 
-dsn = getattr(settings, RAVEN_CONFIG, {}).get('dsn')
+dsn = getattr(settings, 'RAVEN_CONFIG', {}).get('dsn')
 client = None
 
 if dsn:
