@@ -2,6 +2,7 @@ import json
 
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 
 from rest_framework import serializers
 from rest_framework.utils import model_meta
@@ -14,7 +15,13 @@ from .models import Permission, Role
 User = get_user_model()
 
 
-class PermissionSertializer(serializers.ModelSerializer):
+class BaseModelSerializer(serializers.ModelSerializer):
+    def __init__(self, *args, **kwargs):
+        self.own_objects = kwargs.pop('own_objects', None)
+        super(BaseModelSerializer, self).__init__(*args, **kwargs)
+
+
+class PermissionSertializer(BaseModelSerializer):
     target_name = serializers.CharField(source='get_object', read_only=True)
     target_type = serializers.CharField(read_only=True)
 
@@ -24,7 +31,7 @@ class PermissionSertializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 
-class RoleSerializer(serializers.ModelSerializer):
+class RoleSerializer(BaseModelSerializer):
     permissions = PermissionSertializer(many=True, read_only=False)
 
     class Meta:
@@ -37,10 +44,6 @@ class RoleSerializer(serializers.ModelSerializer):
             EdxCourseRun._meta.verbose_name,
             EdxCourseEnrollment._meta.verbose_name,
         )
-
-    def __init__(self, *args, **kwargs):
-        self.own_objects = kwargs.pop('own_objects', None)
-        super(RoleSerializer, self).__init__(*args, **kwargs)
 
     def validate(self, value):
         ids = dict((k._meta.verbose_name, v) for k, v in self.own_objects.items())
@@ -148,7 +151,7 @@ class RoleSerializer(serializers.ModelSerializer):
         return value
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(BaseModelSerializer):
     role = RoleSerializer(many=True, read_only=False)
 
     class Meta:
@@ -175,6 +178,19 @@ class UserSerializer(serializers.ModelSerializer):
                     .filter(id=self.instance.id,
                     role__permissions__action_type='Manage(permissions)')\
                     .values_list('role__id', flat=True)
+
+        query = None
+        for model, ids in self.own_objects.iteritems():
+            ct = ContentType.objects.get_for_model(model)
+            if query is None:
+                query = Q(permissions__target_type=ct,
+                        permissions__target_id__in=ids)
+            else:
+                query |= Q(permissions__target_type=ct,
+                        permissions__target_id__in=ids)
+
+        self_roles = Role.objects.select_related().filter(query).values_list('id',
+                                                                    flat=True)
         role = [r for r in role if r in self_roles]
 
         value['role'] = role
