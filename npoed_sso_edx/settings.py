@@ -152,7 +152,7 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.FacebookOAuth2',
     'social.backends.google.GoogleOAuth2',
     'social.backends.twitter.TwitterOAuth',
-    # 'social.backends.mailru.MailruOAuth2',
+    'social.backends.mailru.MailruOAuth2',
     'social.backends.vk.VKOAuth2',
     'social.backends.email.EmailAuth',
     'social.backends.username.UsernameAuth',
