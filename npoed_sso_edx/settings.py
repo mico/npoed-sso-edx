@@ -218,5 +218,5 @@ if RAVEN_CONFIG:
 
 EDX_API_LOGIN_URL = 'http://%s/auth/login/sso_npoed-oauth2' % EDX_LMS_URL
 EDX_COURSES_API = 'http://%s/api/extended/courses/' % EDX_LMS_URL
-EDX_ENROLLMENTS_API = 'http://%s/api/enrollment/v1/enrollment' % EDX_LMS_URL
+EDX_ENROLLMENTS_API = 'http://%s/api/extended/enrollment' % EDX_LMS_URL
 EDX_CRETEUSER_URL = 'http://%s/auth/complete/sso_npoed-oauth2/' % EDX_LMS_URL
