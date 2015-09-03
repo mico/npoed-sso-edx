@@ -45,29 +45,11 @@ class RoleFilter(django_filters.FilterSet):
         fields = ('name', 'target_type', 'target_id')
 
 
-class UserAPIViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get', 'put']
-    queryset = User.objects.select_related().all()
-    serializer_class = UserSerializer
+class BaseAPIViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, ManagePermission)
     filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('username', 'target_type', 'target_id')
-    filter_class = UaserFilter
-
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
-
-
-class RoleAPIViewSet(viewsets.ModelViewSet):
-    queryset = Role.objects.select_related().all()
-    serializer_class = RoleSerializer
-    permission_classes = (permissions.IsAuthenticated, ManagePermission)
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('name', 'target_type', 'target_id')
-    filter_class = RoleFilter
-    content_types = ContentType.objects.get_for_models(EdxOrg, EdxCourse,
-                                        EdxCourseRun, EdxCourseEnrollment)
-    own_objects = {i: [] for i in content_types}
+    models = (EdxOrg, EdxCourse, EdxCourseRun, EdxCourseEnrollment)
+    own_objects = {i: [] for i in models}
 
     def dispatch(self, request, *args, **kwargs):
         self.args = args
@@ -96,43 +78,19 @@ class RoleAPIViewSet(viewsets.ModelViewSet):
         self.response = self.finalize_response(request, response, *args, **kwargs)
         return self.response
 
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data,
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data,
+                                         partial=partial,
                                          own_objects=self.own_objects)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return response.Response(serializer.data,
-                            status=status.HTTP_201_CREATED, headers=headers)
-
-    def filter_queryset(self, queryset):
-        query = None
-        queryset = super(RoleAPIViewSet, self).filter_queryset(queryset)
-
-        for model, ids in self.own_objects.iteritems():
-            ct = self.content_types[model]
-            if query is None:
-                query = Q(permissions__target_type=ct,
-                        permissions__target_id__in=ids)
-            else:
-                query |= Q(permissions__target_type=ct,
-                        permissions__target_id__in=ids)
-
-        queryset = queryset.filter(query)
-
-        return queryset
+        self.perform_update(serializer)
+        return response.Response(serializer.data)
 
     def _set_user_manage_objects(self, user):
-        for model, ct in self.content_types.items():
+        content_types = ContentType.objects.get_for_models(*self.models)
+        for model, ct in content_types.items():
             ids = list(User.objects.select_related().filter(id=user.id,
                         role__permissions__target_type=ct,
                         role__permissions__action_type='Manage(permissions)')\
@@ -162,3 +120,57 @@ class RoleAPIViewSet(viewsets.ModelViewSet):
                     .values_list('id', flat=True))
 
             self.own_objects[model].extend(ids)
+
+
+class UserAPIViewSet(BaseAPIViewSet):
+    http_method_names = ['get', 'put']
+    queryset = User.objects.select_related().all().distinct()
+    serializer_class = UserSerializer
+    filter_fields = ('username', 'target_type', 'target_id')
+    filter_class = UaserFilter
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+
+class RoleAPIViewSet(BaseAPIViewSet):
+    queryset = Role.objects.select_related().all().distinct()
+    serializer_class = RoleSerializer
+    filter_fields = ('name', 'target_type', 'target_id')
+    filter_class = RoleFilter
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data,
+                                         own_objects=self.own_objects)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return response.Response(serializer.data,
+                            status=status.HTTP_201_CREATED, headers=headers)
+
+    def filter_queryset(self, queryset):
+        query = None
+        queryset = super(RoleAPIViewSet, self).filter_queryset(queryset)
+
+        content_types = ContentType.objects.get_for_models(*self.models)
+        for model, ids in self.own_objects.iteritems():
+            ct = content_types[model]
+            if query is None:
+                query = Q(permissions__target_type=ct,
+                        permissions__target_id__in=ids)
+            else:
+                query |= Q(permissions__target_type=ct,
+                        permissions__target_id__in=ids)
+
+        queryset = queryset.filter(query)
+
+        return queryset
