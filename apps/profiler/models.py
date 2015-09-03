@@ -83,8 +83,8 @@ class RegistrationProfile(BaseRegistrationProfile):
         # can overwrite some of the values like user
         # if django.contrib.auth.context_processors.auth is used
         prefix = 'http'
-        if request.META.get('HTTP_X_FORWARDED_PROTO'):
-            prefix = request.META.get('HTTP_X_FORWARDED_PROTO')
+        if hasattr(settings, 'URL_PREFIX'):
+            prefix = settings.URL_PREFIX
         ctx_dict.update({
             'user': self.user,
             'activation_key': self.activation_key,

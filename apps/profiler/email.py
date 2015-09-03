@@ -12,9 +12,8 @@ def send_validation(strategy, backend, code):
     url = strategy.request.build_absolute_uri(url)
     # Убедимся, что мы правильно ходим в случае https
     url_parts = url.split('://')
-    if settings.SECURE_PROXY_SSL_HEADER:
-        if settings.SECURE_PROXY_SSL_HEADER[1] == 'https':
-            url_parts[0] = 'https'
+    if hasattr(settings, 'URL_PREFIX'):
+        url_parts[0] = settings.URL_PREFIX
     text = u'''
     Регистрация на сайте Открытое образование.
 

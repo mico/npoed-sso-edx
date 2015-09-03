@@ -50,3 +50,6 @@ MIN_LENGTH_PASSWORD = 6
 
 # django country
 COUNTRIES_FIRST = ['RU']
+
+# prefix for https
+URL_PREFIX = 'https'
