@@ -120,13 +120,14 @@ class UserForm(forms.ModelForm):
 
     date_of_birth = forms.DateField(label=u'Дата рождения',
             widget=forms.TextInput(attrs={'class': 'vDateField'}), required=False)
+    id = forms.CharField(label='', widget=forms.HiddenInput())
 
     class Meta:
         model = User
         fields = [
             'username', 'email', 'last_name', 'first_name', 'second_name',
             'icon_profile', 'gender', 'date_of_birth', 'education', 'university',
-            'country', 'city', 'post_address', 'phone', 'about_me',
+            'country', 'city', 'post_address', 'phone', 'about_me', 'id'
         ]
 
     # sort countries by translate name
@@ -142,6 +143,7 @@ class UserForm(forms.ModelForm):
         self.fields['country'].choices = first + sorted(
             list_countries,
             key=lambda list_countries: list_countries[1])
+
 
 class RegUserForm(RegistrationFormUniqueEmail):
 
