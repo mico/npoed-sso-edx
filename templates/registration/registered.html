@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load  backend_utils %}
+{% load static from staticfiles %}
+
+{% block extra_css %}
+  <link href="{% static 'css/edx-theme.css' %}" rel="stylesheet" type="text/css" />
+{% endblock extra_css %}
+
+{% block title %}Открытое образование - Подтверждение электронной почты{% endblock title %}
+
+{% block content %}
+<div class="content-wrapper">
+  <div class="auth-wrapper">
+    <div class="auth-section">
+      <h2><span> Поздравляем!</span></h2>
+      <p>Вы зарегистрировались на портале <a href="{{ plp_url }}">"Открытое образование"</a></p>
+      <p>В целях безопасности вам нужно подтвердить свой email адрес.
+         Перейдите по ссылке в письме, отправленном на адрес, указанный при регистрации.</p>
+      <p>После этого вы сможете записываться на <a href="{{ plp_url }}course"> курсы ведущих вузов России!</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -13,6 +13,7 @@ __date__ = '15.03.2015'
 import json
 
 from django.conf import settings
+from django.views.generic import TemplateView
 from django.views.generic.edit import FormView, UpdateView
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse, Http404
 from django.contrib.auth import login, get_user_model
@@ -141,7 +142,7 @@ class RegistrationView(RW):
     def get_success_url(self, request=None, user=None):
         # We need to be able to use the request and the new user when
         # constructing success_url.
-        return ('profile', (), {})
+        return ('registered', (), {})
 
     def register(self, request, **cleaned_data):
         username, email, password = cleaned_data['username'], cleaned_data['email'], cleaned_data['password1']
@@ -160,11 +161,24 @@ class RegistrationView(RW):
         return new_user
 
 
+class RegisteredView(TemplateView):
+
+    template_name = 'registration/registered.html'
+
+
 class CustomActivationView(ActivationView):
 
-    def get_success_url(self, request, user):
-        next = request.GET.get('next')
-        return ('profile', (), {}, ) if next is None else next
+    template_name = 'registration/activation_complete.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        activated_user = self.activate(request, *args, **kwargs)
+        if activated_user:
+            context['activated_user'] = True
+            context['username'] = activated_user.username
+        if request.GET.get('next'):
+            context['next'] = request.GET.get('next')
+        return self.render_to_response(context)
 
 
 @login_required

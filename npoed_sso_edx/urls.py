@@ -13,7 +13,7 @@ from functools import update_wrapper
 from apps.core.decorators import set_auth_cookie, external_redirect
 from apps.core.views import login
 from apps.profiler.views import (
-    CustomActivationView, Login, RegistrationView, UserProfileAPI
+    CustomActivationView, Login, RegistrationView, UserProfileAPI, RegisteredView
 )
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
@@ -48,6 +48,9 @@ urlpatterns = patterns(
     url(r'^register/$', set_auth_cookie(RegistrationView.as_view()),
         name='registration_register2'),
     url(r'^accounts/', include('registration.backends.default.urls')),
+    # подтвержения регистрации
+    url(r'^registered/$', set_auth_cookie(RegisteredView.as_view()),
+        name='registered'),
 
     # логин
     url(r'^login/', set_auth_cookie(login), name='login'),
