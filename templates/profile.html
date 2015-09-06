@@ -15,8 +15,12 @@
   <script type="text/javascript">
     $(".profile-content-wrapper select").chosen();
     $( function () {
+      var date_of_birth = $('#id_date_of_birth').val(),
+          dob = date_of_birth.split('-').reverse().join('.');
+
       $('.vDateField').datepicker($.datepicker.regional[ "ru" ]);
       $('.vDateField').datepicker("option", "defaultDate", '-20y');
+      $('.vDateField').datepicker( "setDate", dob);
       $('select').chosen();
     });
     $("#id_gender_chosen").find(".chosen-search").hide();
