@@ -32,4 +32,9 @@ def forms(request):
         'plus_scope': ' '.join(GooglePlusAuth.DEFAULT_SCOPE),
         'available_backends': load_backends(settings.AUTHENTICATION_BACKENDS),
         'plp_url': plp_url,
+        'social_facebook': getattr(settings, 'SOCIAL_ACCOUNT_FACEBOOK'),
+        'social_vk': getattr(settings, 'SOCIAL_ACCOUNT_VK'),
+        'social_ok': getattr(settings, 'SOCIAL_ACCOUNT_OK'),
+        'social_instagram': getattr(settings, 'SOCIAL_ACCOUNT_INSTAGRAM'),
+        'social_twitter': getattr(settings, 'SOCIAL_ACCOUNT_TWITTER'),
     }
