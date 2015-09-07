@@ -1,7 +1,40 @@
 {% extends "base.html" %}
+{% load  backend_utils %}
+{% load static from staticfiles %}
+
+{% block extra_css %}
+  <link href="{% static 'css/edx-theme.css' %}" rel="stylesheet" type="text/css" />
+{% endblock extra_css %}
+
+{% block title %}Открытое образование - Активация завершена{% endblock title %}
+
 {% block content %}
-<h1>Активация</h1>
-Привет, {{ account }}!<br/>
-Ваша учетная запись активирована. <a href="{% url 'auth_login' %}">Заходите</a> на сайт.
-<br/><br/>
+<div class="content-wrapper">
+  <div class="auth-wrapper">
+    <div class="auth-section">
+      {% if activated_user %}
+      <h2><span>Активация завершена успешно!</span></h2>
+        <p>Добро пожаловать, {{ username }}!</p>
+        <p>Ваша учетная запись активирована.
+            {% if not next %}Теперь вы можете <a href="/login/">войти на сайт.</a>
+            {% else %}Через 3 секунды вы будете автоматически перенаправлены <a href="{{ next }}">на страницу</a>{% endif %}</p>
+    {% else %}
+      <h2><span>Неправильный ключ активации!</span></h2>
+        <h4><p style="color: red;">Ключ активации неверен!</p></h4>
+        <br>
+    {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}
+
+{% block extra_js %}
+  {% if next and activated_user %}
+    <script>
+      function redirect(){
+       window.location.href = "{{ next }}";
+      }
+      setTimeout(redirect, 3000);
+    </script>
+  {% endif %}
+{% endblock extra_js %}
