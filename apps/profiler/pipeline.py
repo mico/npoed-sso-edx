@@ -10,6 +10,7 @@
 __author__ = 'dorosh'
 __date__ = '04.08.2015'
 
+from urllib import urlopen
 from datetime import datetime
 
 from django.core.files.storage import default_storage
@@ -58,6 +59,7 @@ def mail_validation(backend, details, is_new=False, *args, **kwargs):
 
 @partial
 def update_profile(backend, user, response, *args, **kwargs):
+
     if user is None or not response:
         return
 
@@ -94,7 +96,7 @@ def update_profile(backend, user, response, *args, **kwargs):
             user.country = country
 
     elif backend.name == 'google-oauth2':
-        
+
         gender = response.get('gender')
         if not user.gender and gender:
             change_data = True

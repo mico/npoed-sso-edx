@@ -101,6 +101,9 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
     )
 
+MEDIA_ROOT = os.path.join(BASE_DIR,  "media")
+MEDIA_URL = "/media/"
+
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
@@ -128,8 +131,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/static/'
-
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 SOCIAL_AUTH_PIPELINE = (
@@ -155,14 +156,18 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.mailru.MailruOAuth2',
     'social.backends.vk.VKOAuth2',
     'social.backends.email.EmailAuth',
+    'apps.profiler.backends.npoed.NpoedBackend',
     'social.backends.username.UsernameAuth',
     'django.contrib.auth.backends.ModelBackend',
 )
 
+SOCIAL_AUTH_EXTRA_DATA = ['sex', 'bdate', 'city', 'country', 'education',
+                          'universities', 'schools', 'timezone', 'photo_100']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'fields': 'email,last_name,first_name,name,id,birthday,address,education,gender,timezone'}
+
 SOCIAL_AUTH_PROTECTED_USER_FIELDS = ['first_name', 'last_name']
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'last_name', 'email', 'gender', ]
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'fields': 'email,last_name,first_name,name,id'}
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_CREATE_USERS = True
 SOCIAL_AUTH_SLUGIFY_USERNAMES = True
@@ -204,8 +209,6 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = 'info@google.ru'
 EMAIL_FROM = DEFAULT_FROM_EMAIL
-
-EDX_CRETEUSER_URL = 'http://rnoep.raccoongang.com/auth/complete/sso_npoed-oauth2/'
 
 try:
     from local_settings import *
