@@ -104,6 +104,7 @@ def update_profile(backend, user, response, *args, **kwargs):
 
     elif backend.name == 'mailru-oauth2':
 
+        image_url = response.get('pic')
         gender = response.get('sex')
         if not user.gender and gender:
             change_data = True
