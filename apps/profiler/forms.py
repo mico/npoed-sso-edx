@@ -12,7 +12,7 @@ __date__ = '15.03.2015'
 
 from django import forms
 from django.utils.safestring import mark_safe
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 from django.contrib.auth import get_user_model
 from django.core import validators
 from django.conf import settings
@@ -200,3 +200,13 @@ class LoginForm(AuthenticationForm):
             raise forms.ValidationError(u'Неправильный логин')
         if not user.is_active:
             raise forms.ValidationError(u'Этот аккаунт не активирован')
+
+
+class CustomPasswordResetForm(PasswordResetForm):
+
+    # Check exist email
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError(u'Пользователь с такой почтой не найден')
+        return email
