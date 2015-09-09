@@ -15,7 +15,7 @@ from apps.core.views import login
 from apps.profiler.views import (
     CustomActivationView, Login, RegistrationView, UserProfileAPI, RegisteredView
 )
-from apps.profiler.forms import CustomPasswordResetForm
+from apps.profiler.forms import CustomPasswordResetForm, CustomSetPasswordForm
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
@@ -76,7 +76,8 @@ urlpatterns = patterns(
         'django.contrib.auth.views.password_reset_done'),
     (r'^user/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
         'django.contrib.auth.views.password_reset_confirm',
-        {'post_reset_redirect': '/user/password/done/'}),
+        {'post_reset_redirect': '/user/password/done/',
+         'set_password_form': CustomSetPasswordForm}),
     (r'^user/password/done/$',
         'django.contrib.auth.views.password_reset_complete'),
 
