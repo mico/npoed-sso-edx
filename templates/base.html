@@ -176,6 +176,7 @@
         modalDialog('#username-modal', 'username');
         $validationModal = modalDialog('#validation-sent-modal');
         $emailRequired = modalDialog('#email-required-modal');
+        $lastsocialModal = modalDialog('#last-social-modal');
 
         modalDialog('#ajax-login-modal', 'ajax-login', function (event) {
           var $backend, $accessToken, $accessTokenSecret, $fields, $result;
@@ -227,6 +228,9 @@
         {% if email_required %}
           $emailRequired.modal('show');
         {% endif %}
+
+        $lastsocialModal.modal('show');
+
       });
     </script>
   {% endblock js %}
