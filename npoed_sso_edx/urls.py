@@ -15,7 +15,9 @@ from apps.core.views import login
 from apps.profiler.views import (
     CustomActivationView, Login, RegistrationView, UserProfileAPI, RegisteredView
 )
-from apps.profiler.forms import CustomPasswordResetForm, CustomSetPasswordForm
+from apps.profiler.forms import (
+    CustomPasswordResetForm, CustomSetPasswordForm, CustomPasswordChangeForm
+)
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
@@ -61,6 +63,7 @@ urlpatterns = patterns(
     #  смена пароля
     url(r'^accounts/password_change/$',
         'django.contrib.auth.views.password_change',
+        {'password_change_form': CustomPasswordChangeForm},
         name="password_change"),
     url(r'^accounts/password_changed/$',
         'django.contrib.auth.views.password_change_done',

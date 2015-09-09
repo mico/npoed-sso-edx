@@ -12,7 +12,9 @@ __date__ = '15.03.2015'
 
 from django import forms
 from django.utils.safestring import mark_safe
-from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm
+from django.contrib.auth.forms import (
+    AuthenticationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
+)
 from django.contrib.auth import get_user_model
 from django.core import validators
 from django.conf import settings
@@ -220,3 +222,14 @@ class CustomSetPasswordForm(SetPasswordForm):
             raise forms.ValidationError(
                 u'Пароль слишком короткий, минимальная длина %s' % settings.MIN_LENGTH_PASSWORD)
         return password
+
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+
+    def clean_new_password1(self):
+        password = self.cleaned_data.get('new_password1')
+        if len(password) < settings.MIN_LENGTH_PASSWORD:
+            raise forms.ValidationError(
+                u'Пароль слишком короткий, минимальная длина %s' % settings.MIN_LENGTH_PASSWORD)
+        return password
+# TODO DRY ^
