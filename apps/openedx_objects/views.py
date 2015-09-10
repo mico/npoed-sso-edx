@@ -40,10 +40,10 @@ def course(request):
 
     if course_created:
         if not org_created:
-            api_course_create.send(course_obj, request)
+            api_course_create.send(course, obj=course_obj, request=request)
         message = 'Course is created!'
     elif run_created:
-        api_course_create.send(run_obj, request)
+        api_course_create.send(course, obj=run_obj, request=request)
 
     return HttpResponse(json.dumps({'message': message, 'status': 'SUCCESS'}),
                         content_type="application/json")
@@ -105,10 +105,10 @@ def _update_course_permissions(sender, obj, request, **kwargs):
                 role__permissions__target_type=course_content_type
             )
         ).distinct()
-    _update_roles(users)
+    _update_roles(users, request)
 
 
-def _update_roles(users):
+def _update_roles(users, request):
     client = Client.objects.filter(url__contains=request.META['REMOTE_HOST'])
 
     for user in users.iterator():
