@@ -61,3 +61,6 @@ COUNTRIES_FIRST = ['RU']
 
 # prefix for https
 URL_PREFIX = 'https'
+
+# prefix for https in edx
+URL_PREFIX_EDX = 'https'
