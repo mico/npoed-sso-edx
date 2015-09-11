@@ -1,8 +1,14 @@
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.conf import settings
 
 
 class BaseObjectModel(models.Model):
+    """
+    Базовая абстрактная модель для объектов из edx
+    """
     is_published = models.BooleanField(default=True)
     is_archived = models.BooleanField(default=False)
 
@@ -11,6 +17,9 @@ class BaseObjectModel(models.Model):
 
 
 class EdxOrg(BaseObjectModel):
+    """
+    Модель для хранения объектов организации создавших курс в edx
+    """
     name = models.CharField(max_length=128, unique=True)
 
     class Meta:
@@ -21,6 +30,10 @@ class EdxOrg(BaseObjectModel):
 
 
 class EdxCourse(BaseObjectModel):
+    """
+    Модель для хранения объектов курса в edx
+    """
+
     name = models.CharField(max_length=128)
     course_id = models.CharField(max_length=255, unique=True)
     start = models.DateTimeField()
@@ -35,6 +48,10 @@ class EdxCourse(BaseObjectModel):
 
 
 class EdxCourseRun(BaseObjectModel):
+    """
+    Модель для хранения объектов конкретного запуска курса в edx
+    """
+
     name = models.CharField(max_length=128)
     course = models.ForeignKey(EdxCourse)
 
@@ -47,6 +64,10 @@ class EdxCourseRun(BaseObjectModel):
 
 
 class EdxCourseEnrollment(BaseObjectModel):
+    """
+    Модель для хранения записей об участии пользователей в конкретном запуске курса в edx
+    """
+
     name = models.CharField(max_length=128, blank=True)
     mode = models.CharField(default="honor", max_length=100)
     is_active = models.BooleanField(default=True)

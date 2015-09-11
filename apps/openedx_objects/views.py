@@ -1,3 +1,10 @@
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
+"""
+API для доступа к отображению edx объектов в sso
+Нужны для инкрементальных апдейтов, чтоб edx мог присылать в sso новые и
+редактировать старые объекты курсов и енролментов
+"""
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
@@ -16,7 +23,6 @@ import json
 import string
 import random
 import requests
-from functools import update_wrapper
 
 User = get_user_model()
 
@@ -86,6 +92,10 @@ def enrollment(request):
 
 @receiver(api_course_create)
 def _update_course_permissions(sender, obj, request, **kwargs):
+    """
+    Обработчик сигнала. При создании нового курса, происходит синхронизация ролей пользователей
+    из sso в edx, которые имеют права более высого уровня по иерархии к данному курсу
+    """
     org_content_type = ContentType.objects.get_for_model(EdxOrg)
     course_content_type = ContentType.objects.get_for_model(EdxCourse)
 
