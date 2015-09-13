@@ -4,7 +4,7 @@ from .models import EdxCourse, EdxOrg, EdxCourseRun, EdxCourseEnrollment
 
 
 class EdxCourseEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ['user', 'course_run', 'mode', 'is_active',
+    list_display = ['id', 'user', 'course_run', 'mode', 'is_active',
                     'is_published', 'is_archived']
 
 
@@ -13,7 +13,7 @@ class EdxCourseEnrollInline(admin.TabularInline):
 
 
 class EdxCourseRunAdmin(admin.ModelAdmin):
-    list_display = ['name', 'course', 'is_published', 'is_archived']
+    list_display = ['id', 'name', 'course', 'is_published', 'is_archived']
     inlines = [EdxCourseEnrollInline, ]
 
 
@@ -22,8 +22,8 @@ class EdxCourseRunInline(admin.TabularInline):
 
 
 class EdxCourseAdmin(admin.ModelAdmin):
-    list_display = ['name', 'course_id', 'org', 'start',
-                     'is_published', 'is_archived']
+    list_display = ['id', 'name', 'course_id', 'org', 'start',
+                    'is_published', 'is_archived']
     inlines = [EdxCourseRunInline, ]
 
 

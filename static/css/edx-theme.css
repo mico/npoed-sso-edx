@@ -347,14 +347,80 @@ body {
 .profile-content-wrapper table tbody tr:first-child th label {
   margin-top: 0;
 }
+.profile-input
+{
+  margin-bottom: 20px;
+}
+.profile-input label
+{
+  color: #777;
+  font-weight: normal;
+  width: 100%;
+}
+.profile-input .chosen-container-single .chosen-single
+{
+  background: #fff;
+  border-radius: 3px;
+  border: none;
+  color: #999;
+  font-size: 14px;
+  padding-left: 15px;
+  padding-right: 15px;
+          box-shadow: 0 2px 1px rgba(0,0,0,0.1);
+     -moz-box-shadow: 0 2px 1px rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 2px 1px rgba(0,0,0,0.1);
+}
+.profile-input .chosen-container-active .chosen-single
+{
+  color: #000;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+          box-shadow: 0 2px 1px rgba(0,0,0,0.4);
+     -moz-box-shadow: 0 2px 1px rgba(0,0,0,0.3);
+  -webkit-box-shadow: 0 2px 1px rgba(0,0,0,0.3);
+}
+.profile-input .chosen-container-single .chosen-drop
+{
+  border: none;
+          box-shadow: 0 2px 1px rgba(0,0,0,0.4);
+     -moz-box-shadow: 0 2px 1px rgba(0,0,0,0.3);
+  -webkit-box-shadow: 0 2px 1px rgba(0,0,0,0.3);
+}
+.profile-input .chosen-container-single .chosen-drop ul
+{
+  margin: 0;
+  padding: 0;
+}
+.profile-input .chosen-container-single .chosen-drop li
+{
+  font-size: 14px;
+  line-height: 100%;
+  padding: 10px 15px 8px 15px;
+}
+.profile-input .chosen-container-single .chosen-drop li.highlighted
+{
+  background: #1F323C;
+}
+.profile-input .chosen-container-single .chosen-single div b
+{
+  width: 90%;
+}
+.profile-input .chosen-container-single .chosen-search input[type="text"]
+{
+  border: 1px solid #eee;
+}
 .profile-content-wrapper table input[type="text"],
 .profile-content-wrapper table input[type="email"],
-.profile-content-wrapper table input[type="password"] {
+.profile-content-wrapper table input[type="password"],
+.profile-input input[type="text"],
+.profile-input input[type="email"],
+.profile-input input[type="password"],
+.profile-input textarea  {
   display: block;
   width: 100%;
   margin: 0 0 7px;
-  padding: 10px;
-  color: #999;
+  padding: 10px 15px 8px 15px;
+  color: #777;
   background-color: #fff;
   border: 0;
   border-radius: 3px;
@@ -362,7 +428,21 @@ body {
      -moz-box-shadow: 0 2px 1px rgba(0,0,0,0.1);
   -webkit-box-shadow: 0 2px 1px rgba(0,0,0,0.1);
 }
-.profile-content-wrapper table select {
+.profile-input input:focus,
+.profile-input textarea:focus
+{
+  color: #1F323C;
+          box-shadow: 0 2px 1px rgba(0,0,0,0.4);
+     -moz-box-shadow: 0 2px 1px rgba(0,0,0,0.3);
+  -webkit-box-shadow: 0 2px 1px rgba(0,0,0,0.3);
+}
+.profile-content-wrapper table select,
+.profile-input select {
+  width: 100%;
+}
+.profile-photo img
+{
+  margin-bottom: 20px;
   width: 100%;
 }
 .profile-content-wrapper .helptext {

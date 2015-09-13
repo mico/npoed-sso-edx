@@ -48,9 +48,45 @@
 
     <form method="post" class="profile-content-wrapper" id="profile-main-data-form">
       {% csrf_token %}
-      <table>
-        {{ form.as_table }}
-      </table>
+      <div class="hide">{% include "profile_input.html" with input=form.username %}</div>
+      <div class="row">
+        <div class="col-md-6">
+          {% include "profile_input.html" with input=form.last_name %}
+          {% include "profile_input.html" with input=form.first_name %}
+          {% include "profile_input.html" with input=form.second_name %}
+          {% include "profile_input.html" with input=form.email %}
+          {% include "profile_input.html" with input=form.education %}
+          {% include "profile_input.html" with input=form.university %}
+        </div>
+        <div class="col-md-6">
+          {% comment %}
+          <div class="profile-photo">
+            <img src="/media/icon_profile/{{ user.id }}.jpeg" class="img-responsive">
+          </div>
+          {% endcomment %}
+          {% include "profile_input.html" with input=form.icon_profile %}
+          <div class="row">
+            <div class="col-md-6">
+              {% include "profile_input.html" with input=form.gender %}
+            </div>
+            <div class="col-md-6">
+              {% include "profile_input.html" with input=form.date_of_birth %}
+            </div>
+          </div>
+          {% include "profile_input.html" with input=form.about_me %}
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-6">
+          {% include "profile_input.html" with input=form.country %}
+          {% include "profile_input.html" with input=form.city %}
+        </div>
+        <div class="col-md-6">
+          {% include "profile_input.html" with input=form.post_address %}
+          {% include "profile_input.html" with input=form.phone %}
+        </div>
+      </div>
       <div class="footer-buttons">
         <button class="btn btn-primary" type="submit">Сохранить изменения</button>
       </div>
@@ -108,18 +144,16 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">Вы удалили последнюю свою привязку к социальным сетям.</h4>
+          <h4 class="modal-title">Вы удалили свою последнюю привязку к социальной сети</h4>
         </div>
 
         <div class="modal-body">
-          <p>Вы удалили последнюю свою привязку к социальным сетям.</p>
-          <p>Для дальнешей возможности пользования нашим порталом убедитесь что вы</p>
-          <p>помните пароль от вашей учётной записи.</p>
-          <p>Если вы забыли пароль вы можете его востановить <a href="/accounts/password/reset/">здесь</a>.</p>
+          <p>Чтобы и в дальнейшем пользоваться нашим порталом, убедитесь, что вы помните пароль от вашей учётной записи.</p>
+          <p>Если вы забыли пароль, можете его восстановить <a href="/user/password/reset/">здесь</a>.</p>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
         </div>
       </div>
     </div>
