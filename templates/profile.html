@@ -33,7 +33,7 @@
 {% block bodyclass %}section-profile{% endblock %}
 
 {% block content %}
-<div class="content-wrapper">
+<div class="profile-container">
 
   <h1 class="firstDocumentHeading">Профиль</h1>
 
@@ -48,43 +48,35 @@
 
     <form method="post" class="profile-content-wrapper" id="profile-main-data-form">
       {% csrf_token %}
-      <div class="hide">{% include "profile_input.html" with input=form.username %}</div>
       <div class="row">
-        <div class="col-md-6">
-          {% include "profile_input.html" with input=form.last_name %}
-          {% include "profile_input.html" with input=form.first_name %}
-          {% include "profile_input.html" with input=form.second_name %}
-          {% include "profile_input.html" with input=form.email %}
-          {% include "profile_input.html" with input=form.education %}
-          {% include "profile_input.html" with input=form.university %}
-        </div>
-        <div class="col-md-6">
+        <div class="col-xs-12">
           {% comment %}
           <div class="profile-photo">
             <img src="/media/icon_profile/{{ user.id }}.jpeg" class="img-responsive">
           </div>
           {% endcomment %}
           {% include "profile_input.html" with input=form.icon_profile %}
+          {% include "profile_input.html" with input=form.username %}
+          {% include "profile_input.html" with input=form.last_name %}
+          {% include "profile_input.html" with input=form.first_name %}
+          {% include "profile_input.html" with input=form.second_name %}
+          {% include "profile_input.html" with input=form.email %}
           <div class="row">
-            <div class="col-md-6">
-              {% include "profile_input.html" with input=form.gender %}
+            <div class="col-sm-6">
+               {% include "profile_input.html" with input=form.gender %}
             </div>
-            <div class="col-md-6">
+            <div class="col-sm-6">
               {% include "profile_input.html" with input=form.date_of_birth %}
             </div>
           </div>
-          {% include "profile_input.html" with input=form.about_me %}
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-md-6">
+          <hr>
+          {% include "profile_input.html" with input=form.education %}
+          {% include "profile_input.html" with input=form.university %}
           {% include "profile_input.html" with input=form.country %}
           {% include "profile_input.html" with input=form.city %}
-        </div>
-        <div class="col-md-6">
           {% include "profile_input.html" with input=form.post_address %}
           {% include "profile_input.html" with input=form.phone %}
+          {% include "profile_input.html" with input=form.about_me %}
         </div>
       </div>
       <div class="footer-buttons">
