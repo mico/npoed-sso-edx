@@ -224,7 +224,7 @@ body {
 }
 .reg-social-networks li {
   display: inline-block;
-  margin: 0 5px;
+  margin: 0 4px;
 }
 .reg-btn {
   display: inline-block;
@@ -296,7 +296,12 @@ body {
 }
 
 /* Profile page */
-
+.profile-container
+{
+  margin: 20px auto;
+  max-width:600px;
+  width: 100%;
+}
 .section-profile {}
 .profile-nav {
   display: block;
@@ -357,6 +362,10 @@ body {
   font-weight: normal;
   width: 100%;
 }
+.profile-input .chosen-container
+{
+  width: 100% !important;
+}
 .profile-input .chosen-container-single .chosen-single
 {
   background: #fff;
@@ -415,7 +424,8 @@ body {
 .profile-input input[type="text"],
 .profile-input input[type="email"],
 .profile-input input[type="password"],
-.profile-input textarea  {
+.profile-input textarea,
+.profile-input select  {
   display: block;
   width: 100%;
   margin: 0 0 7px;
@@ -427,6 +437,44 @@ body {
           box-shadow: 0 2px 1px rgba(0,0,0,0.1);
      -moz-box-shadow: 0 2px 1px rgba(0,0,0,0.1);
   -webkit-box-shadow: 0 2px 1px rgba(0,0,0,0.1);
+}
+.profile-input select
+{
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+  border: none;
+  cursor: pointer;
+  height: 38px;
+  outline:none;
+  padding: 0 32px 0 15px;
+}
+.profile-input.select label
+{
+  position: relative;
+}
+.profile-input.select label:after
+{
+  content: "\f0d7";
+  font-family: 'FontAwesome';
+  pointer-events:none;
+  position: absolute;
+  right: 15px;
+  top: 34px;
+}
+.profile-input select option
+{
+  border: none;
+  padding: 5px 10px;
+}
+.profile-input input.disabled
+{
+  cursor: not-allowed;
+  background: #fffdfd;
+  color: #1F323C;
+          box-shadow: 0 2px 1px rgba(0,0,0,0.4);
+     -moz-box-shadow: 0 2px 1px rgba(0,0,0,0.3);
+  -webkit-box-shadow: 0 2px 1px rgba(0,0,0,0.3);
 }
 .profile-input input:focus,
 .profile-input textarea:focus
