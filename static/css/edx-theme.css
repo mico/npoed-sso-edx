@@ -424,7 +424,8 @@ body {
 .profile-input input[type="text"],
 .profile-input input[type="email"],
 .profile-input input[type="password"],
-.profile-input textarea  {
+.profile-input textarea,
+.profile-input select  {
   display: block;
   width: 100%;
   margin: 0 0 7px;
@@ -436,6 +437,35 @@ body {
           box-shadow: 0 2px 1px rgba(0,0,0,0.1);
      -moz-box-shadow: 0 2px 1px rgba(0,0,0,0.1);
   -webkit-box-shadow: 0 2px 1px rgba(0,0,0,0.1);
+}
+.profile-input select
+{
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+  border: none;
+  cursor: pointer;
+  height: 38px;
+  outline:none;
+  padding: 0 32px 0 15px;
+}
+.profile-input.select label
+{
+  position: relative;
+}
+.profile-input.select label:after
+{
+  content: "\f0d7";
+  font-family: 'FontAwesome';
+  pointer-events:none;
+  position: absolute;
+  right: 15px;
+  top: 34px;
+}
+.profile-input select option
+{
+  border: none;
+  padding: 5px 10px;
 }
 .profile-input input.disabled
 {

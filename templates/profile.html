@@ -9,11 +9,9 @@
 {% endblock extra_css %}
 
 {% block extra_js %}
-  <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
   <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <script src="{% static 'js/datepicker-ru.js'  %}"></script>
   <script type="text/javascript">
-    $(".profile-content-wrapper select").chosen();
     $( function () {
       var date_of_birth = $('#id_date_of_birth').val(),
           dob = date_of_birth.split('-').reverse().join('.');
@@ -63,16 +61,16 @@
           {% include "profile_input.html" with input=form.email %}
           <div class="row">
             <div class="col-sm-6">
-               {% include "profile_input.html" with input=form.gender %}
+               {% include "profile_select.html" with input=form.gender %}
             </div>
             <div class="col-sm-6">
               {% include "profile_input.html" with input=form.date_of_birth %}
             </div>
           </div>
           <hr>
-          {% include "profile_input.html" with input=form.education %}
+          {% include "profile_select.html" with input=form.education %}
           {% include "profile_input.html" with input=form.university %}
-          {% include "profile_input.html" with input=form.country %}
+          {% include "profile_select.html" with input=form.country %}
           {% include "profile_input.html" with input=form.city %}
           {% include "profile_input.html" with input=form.post_address %}
           {% include "profile_input.html" with input=form.phone %}
