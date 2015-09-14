@@ -44,7 +44,7 @@
       <!-- <li><a href="{% url 'edx-push' pk=user.id %}">Push to edx</a></li> -->
     </ul>
 
-    <form method="post" class="profile-content-wrapper" id="profile-main-data-form">
+    <form method="post" class="profile-content-wrapper" id="profile-main-data-form" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="row">
         <div class="col-xs-12">
