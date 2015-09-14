@@ -9,11 +9,9 @@
 {% endblock extra_css %}
 
 {% block extra_js %}
-  <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
   <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <script src="{% static 'js/datepicker-ru.js'  %}"></script>
   <script type="text/javascript">
-    $(".profile-content-wrapper select").chosen();
     $( function () {
       var date_of_birth = $('#id_date_of_birth').val(),
           dob = date_of_birth.split('-').reverse().join('.');
@@ -33,7 +31,7 @@
 {% block bodyclass %}section-profile{% endblock %}
 
 {% block content %}
-<div class="content-wrapper">
+<div class="profile-container">
 
   <h1 class="firstDocumentHeading">Профиль</h1>
 
@@ -48,9 +46,37 @@
 
     <form method="post" class="profile-content-wrapper" id="profile-main-data-form">
       {% csrf_token %}
-      <table>
-        {{ form.as_table }}
-      </table>
+      <div class="row">
+        <div class="col-xs-12">
+          {% comment %}
+          <div class="profile-photo">
+            <img src="/media/icon_profile/{{ user.id }}.jpeg" class="img-responsive">
+          </div>
+          {% endcomment %}
+          {% include "profile_input.html" with input=form.icon_profile %}
+          {% include "profile_input.html" with input=form.username %}
+          {% include "profile_input.html" with input=form.last_name %}
+          {% include "profile_input.html" with input=form.first_name %}
+          {% include "profile_input.html" with input=form.second_name %}
+          {% include "profile_input.html" with input=form.email %}
+          <div class="row">
+            <div class="col-sm-6">
+               {% include "profile_select.html" with input=form.gender %}
+            </div>
+            <div class="col-sm-6">
+              {% include "profile_input.html" with input=form.date_of_birth %}
+            </div>
+          </div>
+          <hr>
+          {% include "profile_select.html" with input=form.education %}
+          {% include "profile_input.html" with input=form.university %}
+          {% include "profile_select.html" with input=form.country %}
+          {% include "profile_input.html" with input=form.city %}
+          {% include "profile_input.html" with input=form.post_address %}
+          {% include "profile_input.html" with input=form.phone %}
+          {% include "profile_input.html" with input=form.about_me %}
+        </div>
+      </div>
       <div class="footer-buttons">
         <button class="btn btn-primary" type="submit">Сохранить изменения</button>
       </div>
@@ -101,4 +127,27 @@
   {% endif %}
 
 </div>
+
+{% if last_social %}
+  <div id="last-social-modal" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Вы удалили свою последнюю привязку к социальной сети</h4>
+        </div>
+
+        <div class="modal-body">
+          <p>Чтобы и в дальнейшем пользоваться нашим порталом, убедитесь, что вы помните пароль от вашей учётной записи.</p>
+          <p>Если вы забыли пароль, можете его восстановить <a href="/user/password/reset/">здесь</a>.</p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
 {% endblock content %}

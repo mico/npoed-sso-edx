@@ -131,6 +131,13 @@ class Profile(LoginRequiredMixin, UpdateView):
     success_url = '/profile/'
     model = User
 
+    def get_context_data(self, **kwargs):
+        context = super(Profile, self).get_context_data(**kwargs)
+        context['last_social'] = self.request.session.get('last_social', 0)
+        if context['last_social']:
+            self.request.session.pop('last_social')
+        return context
+
     def get_object(self, queryset=None):
         return self.request.user
 

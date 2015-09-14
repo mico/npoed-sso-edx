@@ -15,6 +15,9 @@ from apps.core.views import login
 from apps.profiler.views import (
     CustomActivationView, Login, RegistrationView, UserProfileAPI, RegisteredView
 )
+from apps.profiler.forms import (
+    CustomPasswordResetForm, CustomSetPasswordForm, CustomPasswordChangeForm
+)
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
@@ -60,6 +63,7 @@ urlpatterns = patterns(
     #  смена пароля
     url(r'^accounts/password_change/$',
         'django.contrib.auth.views.password_change',
+        {'password_change_form': CustomPasswordChangeForm},
         name="password_change"),
     url(r'^accounts/password_changed/$',
         'django.contrib.auth.views.password_change_done',
@@ -68,13 +72,15 @@ urlpatterns = patterns(
     #  сброс пароля
     url(r'^user/password/reset/$',
         'django.contrib.auth.views.password_reset',
-        {'post_reset_redirect': '/user/password/reset/done/'},
+        {'post_reset_redirect': '/user/password/reset/done/',
+         'password_reset_form': CustomPasswordResetForm},
         name="password_reset"),
     (r'^user/password/reset/done/$',
         'django.contrib.auth.views.password_reset_done'),
     (r'^user/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
         'django.contrib.auth.views.password_reset_confirm',
-        {'post_reset_redirect': '/user/password/done/'}),
+        {'post_reset_redirect': '/user/password/done/',
+         'set_password_form': CustomSetPasswordForm}),
     (r'^user/password/done/$',
         'django.contrib.auth.views.password_reset_complete'),
 

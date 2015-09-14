@@ -1,5 +1,6 @@
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
 from django.conf import settings
-from django.core.urlresolvers import reverse
 
 from .models import EdxCourse, EdxOrg, EdxCourseRun, EdxCourseEnrollment
 from .utils import datetime_parser
@@ -19,6 +20,11 @@ _uoc_enrollment = EdxCourseEnrollment.objects.update_or_create
 
 
 def get_edx_objects():
+    """
+    Получаем из edx объекты через API.
+    Процесс полной синхронизации.
+    Необходимо использовать в случае если sso по какой-то причине не получал инкриментальные апдейты
+    """
     if not settings.EDX_API_KEY:
         log.error("EDX_API_KEY settings should be specified!")
         return
@@ -75,6 +81,7 @@ def get_edx_objects():
                 result = json.loads(r.text, object_hook=datetime_parser)
                 enrollments.extend(add_enrollments(result, run_obj))
 
+        # переходим на следующий шаг пагинации
         url = data.get('next')
         if url is None:
             break
@@ -87,6 +94,9 @@ def get_edx_objects():
 
 
 def add_enrollments(result, run_obj):
+    """
+    Создание объектов енролмента из данных API
+    """
     enrollments = []
     for enrollment in result:
         if run_obj.course.course_id != enrollment['course_details']['course_id']:

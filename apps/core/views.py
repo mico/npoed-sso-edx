@@ -1,23 +1,12 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
-"""
-    apps.core.views
-    ~~~~~~~~~
-
-    :copyright: (c) 2015 by dorosh.
-"""
-
-__author__ = 'dorosh'
-__date__ = '15.03.2015'
-
 import random
 import requests
-import json
 import urllib
 import string
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import login as auth_login
 from django.contrib.auth import REDIRECT_FIELD_NAME
@@ -29,24 +18,28 @@ from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-from provider.oauth2.views import AccessTokenDetailView as AccessTokenDetailView_origin
-from provider.oauth2.models import Client, AccessToken, Grant
+from provider.oauth2.models import Client, Grant
 
 from .forms import CreateUserForm
 from apps.profiler.forms import RegUserForm, LoginForm
 from apps.core.utils import LoginRequiredMixin, SuperUserRequiredMixin
-from apps.permissions.models import Role, Permission
-from apps.openedx_objects.models import (
-    EdxOrg, EdxCourse, EdxCourseRun, EdxCourseEnrollment
-)
 
 
 User = get_user_model()
 
 
 def _push_to_edx(user, success_url):
+    """
+    Специальный хак, чтоб активировать процесс логина/регистрации пользователя в edx
+    через sso по инициативе sso
+    Данную функцию следует вызывать например когда нужно в edx принудительно создать пользователя
+    без его участия или засинхронизировать его роли
+    """
+
+    # вибираем текущий oauth клиент
     client = Client.objects.filter(redirect_uri=settings.EDX_CRETEUSER_URL)
     if client:
+        # создаем grant запись (второй шаг авторизации после проверки валидности запроса от клиента)
         grant = Grant.objects.create(
             user=user,
             client=client[0],
@@ -55,6 +48,9 @@ def _push_to_edx(user, success_url):
         )
         params = {'state': ''.join(random.sample(string.ascii_letters, 32)),
                   'code': grant.code}
+        # с этими параметрами возвращаемся на edx
+        # дальше редиректы отработают по процессу oauth взаимодействия
+        # и авторизационный бекенд создаст или засинкает пользователя
         r = requests.get(settings.EDX_CRETEUSER_URL, params)
     return redirect(success_url)
 
@@ -85,7 +81,10 @@ class Index(TemplateView):
 
 
 class CreateManually(SuperUserRequiredMixin, FormView):
-
+    """
+    Въюшка с формой, которая позволяет создать нового пользователя в sso
+    и тут же его засинкать в edx. Нужна была как минимум для демонстрации функционала
+    """
     template_name = 'create_manually.html'
     form_class = CreateUserForm
     success_url = '/accounts/create_manually/'
@@ -103,7 +102,9 @@ class CreateManually(SuperUserRequiredMixin, FormView):
 
 
 class EdxPush(LoginRequiredMixin, View):
-
+    """
+    Вьюшка для обработки синхронизации существующего sso-пользователя на edx
+    """
     success_url = '/profile/'
 
     def get(self, request, *args, **kwargs):
@@ -120,6 +121,8 @@ def login(request, template_name='registration/login.html',
           current_app=None, extra_context=None):
     if request.user.is_authenticated():
         return redirect(settings.PLP_URL)
+    # проверка параметра auth_entry, чтоб отредиректить на форму регистрации если такова запрошена
+    # с сохранением всех get параметров для нормального продолжение oauth авторизации через регистрацию
     get_next = request.GET.get('next', '')    
     if get_next.split('auth_entry=')[-1] == 'register':
         return redirect('{}?next={}'.format(

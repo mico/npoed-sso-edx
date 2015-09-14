@@ -12,7 +12,9 @@ __date__ = '15.03.2015'
 
 from django import forms
 from django.utils.safestring import mark_safe
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import (
+    AuthenticationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
+)
 from django.contrib.auth import get_user_model
 from django.core import validators
 from django.conf import settings
@@ -21,91 +23,6 @@ from registration.forms import RegistrationFormUniqueEmail
 from django_countries import countries
 
 User = get_user_model()
-
-
-class MessageForm(forms.Form):
-    name = forms.CharField(
-        label='', widget=forms.TextInput(
-            attrs={"class": "span12", "id":"contact-name",
-                   "placeholder": u'Имя'}))
-    email = forms.EmailField(label='', widget=forms.TextInput(
-            attrs={"class": "span12", "id": "contact-email",
-                   "placeholder": u'Адрес e-mail'}))
-    text = forms.CharField(label='', widget=forms.Textarea(
-            attrs={"class": "span12", "rows": "5", "id": "contact-msg",
-                   "placeholder": u'Ваш вопрос или предложение'}))
-
-
-class TextInput(forms.TextInput):
-    '''
-    '''
-
-    def render(self, name, value, attrs=None):
-        output = ''
-        output_item = '''
-	  <h4 id="myModalLabel" class="label_nineID">Выберите уникальное имя пользователя:</h4>
-          <span class="nineID">@</span>%s
-            '''
-        output = output_item % super(TextInput, self).render(
-            name, value, attrs=attrs)
-        return mark_safe(output)
-
-
-class CustomTextInput(forms.TextInput):
-    '''
-    '''
-
-    def render(self, name, value, attrs=None):
-        #<input class="span12" id="id_username" maxlength="254" name="username" placeholder="9ineID / Email address" type="text">
-        # output = ''
-        # output_item = '''
-        #     <div class="form-group">
-        #       <label for="inputPassword3" class="col-sm-3 control-label">Nickname</label>
-        #       <div class="col-sm-9">
-        #         <input type="text" class="form-control" id="inputPassword3" placeholder="Nickname">
-        #       </div>
-        #     </div>
-        #     '''
-        # output = output_item % super(TextInput, self).render(
-        #     name, value, attrs=attrs)
-        # return mark_safe(output)
-        return super(CustomTextInput, self).render(name, value, attrs=attrs)
-
-
-class DateInput(forms.DateInput):
-    '''
-    '''
-
-    def render(self, name, value, attrs=None):
-        output = '''
-	  <p>Date of Birth</p>
-	  <div class="form-inline">
-	    <input class="span3" id="day" type="tel" maxlength="2" placeholder="DD" value="%s"/>
-	    <input class="span3" id="month" type="tel" maxlength="2" placeholder="MM" value="%s"/>
-	    <input class="span4" id="year" type="tel" maxlength="4" placeholder="YYYY" value="%s"/>
-	    <input type="hidden" id="id_date_of_birth" name="date_of_birth" value="%s"/>
-	  </div>
-            '''
-        if value and not isinstance(value, basestring):
-            value = value.strftime('%m/%d/%Y')
-        params = ('', '', '', '',) if not value else tuple(value.split('/') + [value])
-        return mark_safe(output % params)
-
-
-class SexRadio(forms.RadioSelect):
-
-    def render(self, name, value, attrs=None):
-        output = '<p>Пол</p>%s' % super(SexRadio, self).render(
-            name, value, attrs=attrs)
-        return mark_safe(output.replace('ul ', 'ul class="form-inline" '))
-
-
-class SubscribeRadio(forms.RadioSelect):
-
-    def render(self, name, value, attrs=None):
-        output = '<p>Подписаться на рассылку</p>%s' % super(
-            SubscribeRadio, self).render(name, value, attrs=attrs)
-        return mark_safe(output.replace('ul ', 'ul class="form-inline" '))
 
 
 class UserForm(forms.ModelForm):
@@ -142,6 +59,13 @@ class UserForm(forms.ModelForm):
         self.fields['country'].choices = first + sorted(
             list_countries,
             key=lambda list_countries: list_countries[1])
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        username = self.cleaned_data['username']
+        if User.objects.exclude(username=username).filter(email=email).exists():
+            raise forms.ValidationError(u'Этот e-mail уже используется')
+        return email
 
 
 class RegUserForm(RegistrationFormUniqueEmail):
@@ -186,7 +110,7 @@ class LoginForm(AuthenticationForm):
         label=u'Пароль', widget=forms.PasswordInput(attrs={
                 "class": "span12", "placeholder": "", "tabindex": "1"}))
     username = forms.CharField(
-        label=u'Логин', widget=CustomTextInput(attrs={
+        label=u'Логин', widget=forms.TextInput(attrs={
                 "class": "span12", "placeholder": "", "tabindex": "1"}))
 
     def confirm_login_allowed(self, user):
@@ -200,3 +124,34 @@ class LoginForm(AuthenticationForm):
             raise forms.ValidationError(u'Неправильный логин')
         if not user.is_active:
             raise forms.ValidationError(u'Этот аккаунт не активирован')
+
+
+class CustomPasswordResetForm(PasswordResetForm):
+
+    # Check exist email
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError(u'Пользователь с такой почтой не найден')
+        return email
+
+
+class CustomSetPasswordForm(SetPasswordForm):
+
+    def clean_new_password1(self):
+        password = self.cleaned_data.get('new_password1')
+        if len(password) < settings.MIN_LENGTH_PASSWORD:
+            raise forms.ValidationError(
+                u'Пароль слишком короткий, минимальная длина %s' % settings.MIN_LENGTH_PASSWORD)
+        return password
+
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+
+    def clean_new_password1(self):
+        password = self.cleaned_data.get('new_password1')
+        if len(password) < settings.MIN_LENGTH_PASSWORD:
+            raise forms.ValidationError(
+                u'Пароль слишком короткий, минимальная длина %s' % settings.MIN_LENGTH_PASSWORD)
+        return password
+# TODO DRY ^
