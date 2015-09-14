@@ -1,14 +1,5 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
-"""
-    apps.permissions.models
-    ~~~~~~~~~
-
-    :copyright: (c) 2015 by dorosh.
-"""
-
-__author__ = 'dorosh'
-__date__ = '07.08.2015'
 
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
@@ -18,7 +9,15 @@ from provider.oauth2.models import Client
 
 class Permission(models.Model):
     '''
-    Model of actions for objects from another modules.
+    Модель для хранения прав на доступ к объектам.
+    Права могут общими:
+        Все права на все объекты (админ): action_type='*', target_type=None, target_id=None
+        Все права на конкретный объект:
+            Org-staff: action_type='*', target_type=org, target_id=1
+            Course-staff: action_type='*', target_type=course, target_id=1
+        Права на чтение на конкретный объект: action_type='Read', target_type=course, target_id=1
+
+    Потом конкретные права (один или несколько) назначаются роли, а роли назначается пользователю.
     '''
 
     action_choices = (
@@ -60,7 +59,11 @@ class Permission(models.Model):
 
 class Role(models.Model):
     '''
-    Model of roles for sharing permissions to sso.
+    К данной модели группируются права. На эту модель ссылается пользователь.
+    У пользователя может быть много ролей.
+
+    Соответствие наборов прав ролям пользователям на Open edX:
+    https://docs.google.com/document/d/1QTTso8MntthcO7DJZHqFjS2KXc7mTpT16LTT53uFUIU/edit
     '''
 
     name = models.CharField(max_length=50, unique=True)

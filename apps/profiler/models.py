@@ -27,10 +27,6 @@ from apps.permissions.models import Role
 
 
 class User(AbstractUser):
-    '''
-    Here is your User class which is fully customizable and
-    based off of the AbstractUser from auth.models
-    '''
 
     sex_choice = [[1, u'мужской'], [2, u'женский']]
     education_choice = [[1, u'Кандидат или доктор наук, PhD'],
