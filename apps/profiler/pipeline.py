@@ -141,7 +141,7 @@ def update_profile(backend, user, response, *args, **kwargs):
 @partial
 def get_entries(strategy, user, name, user_storage, association_id=None, *args, **kwargs):
     entries = user_storage.get_social_auth_for_user(user, name, association_id)
-    if entries.count() == 1:
+    if user_storage.get_social_auth_for_user(user).count() == 1:
         strategy.session_set('last_social', 1)
     else:
         strategy.session_pop('last_social')
