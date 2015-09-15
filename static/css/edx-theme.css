@@ -513,8 +513,9 @@ body {
   border-top: 1px solid #ccc;
 }
 .footer-buttons .btn {
-  padding: 5px 50px;
+  padding: 5px 30px 3px 30px;
   font-size: 1.2em;
+  white-space: normal;
 }
 
 #profile-connect-social-network {
