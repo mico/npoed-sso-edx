@@ -224,7 +224,7 @@ body {
 }
 .reg-social-networks li {
   display: inline-block;
-  margin: 0 5px;
+  margin: 0 4px;
 }
 .reg-btn {
   display: inline-block;
@@ -280,10 +280,10 @@ body {
 }
 
 .reg-btn-cm a { /* community */
-  color: #00ff00;
+  color: #0071bc;
 }
 .reg-btn-cm .fa {
-  background-color: #00ff00;
+  background-color: #0071bc;
 }
 
 .reg-btn-ma a { /* mailru */
@@ -361,6 +361,11 @@ body {
   color: #777;
   font-weight: normal;
   width: 100%;
+}
+.profile-input .inline
+{
+  display: inline;
+  width: auto;
 }
 .profile-input .chosen-container
 {
@@ -476,7 +481,9 @@ body {
      -moz-box-shadow: 0 2px 1px rgba(0,0,0,0.3);
   -webkit-box-shadow: 0 2px 1px rgba(0,0,0,0.3);
 }
-.profile-input input:focus,
+.profile-input input[type="text"]:focus,
+.profile-input input[type="password"]:focus,
+.profile-input input[type="email"]:focus,
 .profile-input textarea:focus
 {
   color: #1F323C;

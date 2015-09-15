@@ -43,17 +43,29 @@
       <li><a href="{% url 'password_change' %}">Сменить пароль</a></li>
       <!-- <li><a href="{% url 'edx-push' pk=user.id %}">Push to edx</a></li> -->
     </ul>
-
-    <form method="post" class="profile-content-wrapper" id="profile-main-data-form">
+    <form method="post" class="profile-content-wrapper" id="profile-main-data-form" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="row">
         <div class="col-xs-12">
-          {% comment %}
+          {% if user.icon_profile %}
           <div class="profile-photo">
-            <img src="/media/icon_profile/{{ user.id }}.jpeg" class="img-responsive">
+            <img src="{{ user.icon_profile.url }}" class="img-responsive">
           </div>
-          {% endcomment %}
-          {% include "profile_input.html" with input=form.icon_profile %}
+          <div class="profile-input file">
+            <label for="{{ form.icon_profile.id_for_label }}">{{ form.icon_profile.label }}</label>
+            <div class="row">
+              <div class="col-sm-9">
+                <input class="inline" id="{{ form.icon_profile.id_for_label }}" name="icon_profile" type="file" />
+              </div>
+              <div class="col-sm-3 text-right">
+                <input id="icon_profile-clear_id" name="icon_profile-clear" type="checkbox" />
+                <label class="inline" for="icon_profile-clear_id">Очистить</label>
+              </div>
+            </div>
+          </div>
+          {% else %}
+            {% include "profile_input.html" with input=form.icon_profile %}
+          {% endif %}
           {% include "profile_input.html" with input=form.username %}
           {% include "profile_input.html" with input=form.last_name %}
           {% include "profile_input.html" with input=form.first_name %}
@@ -127,4 +139,27 @@
   {% endif %}
 
 </div>
+
+{% if last_social %}
+  <div id="last-social-modal" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Вы удалили свою последнюю привязку к социальной сети</h4>
+        </div>
+
+        <div class="modal-body">
+          <p>Чтобы и в дальнейшем пользоваться нашим порталом, убедитесь, что вы помните пароль от вашей учётной записи.</p>
+          <p>Если вы забыли пароль, можете его восстановить <a href="/user/password/reset/">здесь</a>.</p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
 {% endblock content %}
