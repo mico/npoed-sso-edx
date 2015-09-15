@@ -216,6 +216,7 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = 'info@google.ru'
 EMAIL_FROM = DEFAULT_FROM_EMAIL
+URL_PREFIX_EDX = 'http'
 
 try:
     from local_settings import *
@@ -226,7 +227,7 @@ except ImportError:
 if RAVEN_CONFIG:
     INSTALLED_APPS += ('raven.contrib.django.raven_compat',)
 
-EDX_API_LOGIN_URL = 'http://%s/auth/login/sso_npoed-oauth2' % EDX_LMS_URL
-EDX_COURSES_API = 'http://%s/api/extended/courses/' % EDX_LMS_URL
-EDX_ENROLLMENTS_API = 'http://%s/api/extended/enrollment' % EDX_LMS_URL
-EDX_CRETEUSER_URL = 'http://%s/auth/complete/sso_npoed-oauth2/' % EDX_LMS_URL
+EDX_API_LOGIN_URL = '{0}://{1}/auth/login/sso_npoed-oauth2'.format(URL_PREFIX_EDX, EDX_LMS_URL)
+EDX_COURSES_API = '{0}://{1}/api/extended/courses/'.format(URL_PREFIX_EDX, EDX_LMS_URL)
+EDX_ENROLLMENTS_API = '{0}://{1}/api/extended/enrollment'.format(URL_PREFIX_EDX, EDX_LMS_URL)
+EDX_CRETEUSER_URL = '{0}://{1}/auth/complete/sso_npoed-oauth2/'.format(URL_PREFIX_EDX, EDX_LMS_URL)
