@@ -77,9 +77,13 @@ def update_profile(backend, user, response, *args, **kwargs):
 
         bdate = response.get('bdate')
         if not user.date_of_birth and bdate:
-            bdate = datetime.strptime(bdate, "%d.%m.%Y").date()
-            user.date_of_birth = bdate
-            change_data = True
+            try:
+                bdate = datetime.strptime(bdate, "%d.%m.%Y").date()
+            except Exception:
+                pass
+            else:
+                user.date_of_birth = bdate
+                change_data = True
 
     elif backend.name == 'facebook':
         image_url = 'http://graph.facebook.com/{0}/picture?type=normal'.format(response['id'])
