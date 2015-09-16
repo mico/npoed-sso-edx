@@ -120,9 +120,7 @@ def _update_course_permissions(sender, obj, request, **kwargs):
 
 def _update_roles(users, request):
     client = Client.objects.filter(url__contains=request.META['REMOTE_HOST'])
-
     for user in users.iterator():
-        role = user.role.first()
         if client:
             grant = Grant.objects.create(
                 user=user,
@@ -130,10 +128,8 @@ def _update_roles(users, request):
                 redirect_uri=client[0].redirect_uri,
                 scope=2
             )
-
-            params = urllib.urlencode({
+            params = {
                 'state': ''.join(random.sample(string.ascii_letters, 32)),
                 'code': grant.code
-            })
-
-            r = requests.get('%s?%s' % (url, params, ))
+            }
+            r = requests.get(settings.EDX_CRETEUSER_URL, params)
