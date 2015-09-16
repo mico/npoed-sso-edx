@@ -1,3 +1,6 @@
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
+
 import re
 
 from django import template
@@ -6,7 +9,6 @@ from social.backends.oauth import OAuthAuth
 
 
 register = template.Library()
-
 name_re = re.compile(r'([^O])Auth')
 
 

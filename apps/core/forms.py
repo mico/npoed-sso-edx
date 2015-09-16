@@ -1,14 +1,5 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
-"""
-    apps.forms.views
-    ~~~~~~~~~
-
-    :copyright: (c) 2015 by dorosh.
-"""
-
-__author__ = 'dorosh'
-__date__ = '03.08.2015'
 
 from django.core.exceptions import ObjectDoesNotExist
 from django import forms
