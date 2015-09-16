@@ -1,3 +1,6 @@
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
+
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
@@ -17,6 +20,10 @@ User = get_user_model()
 class ManagePermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
+        """
+        Только пользователи с правами 'Manage(permissions)' на объект
+        могут менять права на данный объект
+        """
         user = request.user
         is_manager = User.objects.select_related().filter(id=user.id,
                 role__permissions__action_type='Manage(permissions)').exists()
@@ -25,7 +32,7 @@ class ManagePermission(permissions.BasePermission):
 
 class UaserFilter(django_filters.FilterSet):
     target_type = django_filters.CharFilter(distinct=True,
-                                    name='role__permissions__target_type__name')
+                                            name='role__permissions__target_type__name')
     target_id = django_filters.CharFilter(distinct=True,
                                           name='role__permissions__target_id')
 

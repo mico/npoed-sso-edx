@@ -1,5 +1,5 @@
-from django.conf.urls import url, patterns, include
-import views
+from django.conf.urls import url, patterns
+from apps.openedx_objects import views
 
 
 urlpatterns = patterns('',
