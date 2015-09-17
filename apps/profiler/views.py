@@ -1,21 +1,10 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
-"""
-    apps.core.views
-    ~~~~~~~~~
-
-    :copyright: (c) 2015 by dorosh.
-"""
-
-__author__ = 'dorosh'
-__date__ = '15.03.2015'
-
-import json
 
 from django.conf import settings
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView, UpdateView
-from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse, Http404
+from django.http import HttpResponseBadRequest, JsonResponse, Http404
 from django.contrib.auth import login, get_user_model
 from django.template.loader import render_to_string
 from django.contrib.sites.models import Site, RequestSite
@@ -42,7 +31,6 @@ from apps.permissions.models import Permission
 from apps.openedx_objects.models import (
     EdxCourse, EdxCourseRun, EdxOrg, EdxLibrary
 )
-
 from raven import Client
 
 RAVEN_CONFIG = getattr(settings, 'RAVEN_CONFIG', {})
@@ -50,7 +38,6 @@ client = None
 
 if RAVEN_CONFIG:
     client = Client(RAVEN_CONFIG.get('dsn'))
-
 
 User = get_user_model()
 
@@ -261,5 +248,4 @@ def ajax_auth(request, backend):
         raise HttpResponseBadRequest('Wrong backend type')
     user = request.backend.do_auth(token, ajax=True)
     login(request, user)
-    data = {'id': user.id, 'username': user.username}
-    return HttpResponse(json.dumps(data), mimetype='application/json')
+    return JsonResponse({'id': user.id, 'username': user.username})
