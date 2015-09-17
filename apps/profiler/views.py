@@ -39,7 +39,18 @@ from apps.core.decorators import render_to
 from apps.profiler.forms import UserForm, LoginForm, RegUserForm
 from apps.profiler.models import RegistrationProfile
 from apps.permissions.models import Permission
-from apps.openedx_objects.models import EdxCourse, EdxCourseRun
+from apps.openedx_objects.models import (
+    EdxCourse, EdxCourseRun, EdxOrg, EdxLibrary
+)
+
+from raven import Client
+
+RAVEN_CONFIG = getattr(settings, 'RAVEN_CONFIG', {})
+client = None
+
+if RAVEN_CONFIG:
+    client = Client(RAVEN_CONFIG.get('dsn'))
+
 
 User = get_user_model()
 
@@ -68,23 +79,36 @@ class UserProfileAPI(APIView):
             if permission.target_type is not None:
                 obj = permission.get_object()
                 if obj is not None:
-                    if permission.target_type.name == EdxCourseRun._meta.verbose_name:
+                    if permission.target_type.model == EdxCourseRun._meta.verbose_name:
                         obj = permission.target_type.model_class().objects.get(
                             pk=permission.target_id
                         )
                         name = obj.course.course_id
-                    elif permission.target_type.name == EdxCourse._meta.verbose_name:
+                    elif permission.target_type.model in [
+                        EdxCourse._meta.verbose_name, EdxLibrary._meta.verbose_name]:
                         obj = permission.target_type.model_class().objects.get(
                             pk=permission.target_id
                         )
                         name = obj.course_id
-                    else:
+                    elif permission.target_type.model == EdxOrg._meta.verbose_name:
+                        obj = permission.target_type.model_class().objects.get(
+                            pk=permission.target_id
+                        )
                         name = obj.name
+                    else:
+                        msg = 'None'
+                        if permission.target_type:
+                            msg = permission.target_type.model
+                        if client:
+                            client.captureMessage(
+                                'This object is not permited: {}'.format(msg)
+                            )
+                        continue
                 else:
                     if permission.target_id:
                         continue
                     name = '*'
-                target_name = permission.target_type.name
+                target_name = permission.target_type.model
             else:
                 name = '*'
                 target_name = '*'

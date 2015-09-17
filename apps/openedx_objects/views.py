@@ -16,7 +16,9 @@ from rest_framework.decorators import api_view
 from provider.oauth2.models import Grant, Client
 
 from apps.profiler.models import User
-from .models import EdxCourse, EdxOrg, EdxCourseRun, EdxCourseEnrollment
+from .models import (
+    EdxCourse, EdxOrg, EdxCourseRun, EdxCourseEnrollment, EdxLibrary
+)
 from .signals import api_course_create
 
 import json
