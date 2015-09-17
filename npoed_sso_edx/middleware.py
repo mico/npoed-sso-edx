@@ -19,16 +19,16 @@ class SocialAuthExceptionMiddleware(SocialAuthExceptionMiddlewareBase):
     def process_exception(self, request, exception):
 
         message = self.get_message(request, exception)
+        backend = getattr(request, 'backend', None)
+        backend_name = getattr(backend, 'name', 'unknown-backend')
         if type(exception) == AuthAlreadyAssociated:
-            backend = getattr(request, 'backend', None)
-            backend_name = getattr(backend, 'name', 'unknown-backend')
             return render(request, "auth_already_associated.html",
                           {'message': message, 'backend_name': backend_name})
         elif isinstance(exception, (SocialAuthBaseException,
                                     SMTPRecipientsRefused, )):
             if client:
-                client.captureMessage('Social Auth Base: {}'.format(
-                        self.get_message(request, exception)))
+                client.captureMessage('Social Auth Base: {}. Backend name: {}'.format(
+                        self.get_message(request, exception), backend_name))
             return render(request, "auth_errors.html", {'message': message})
         else:
             if client:

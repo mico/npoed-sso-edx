@@ -47,6 +47,21 @@ class EdxCourse(BaseObjectModel):
         return self.name or self.course_id
 
 
+class EdxLibrary(BaseObjectModel):
+    """
+    Модель для хранения объектов библиотек в edx
+    """
+
+    course_id = models.CharField(max_length=255, unique=True)
+    org = models.ForeignKey(EdxOrg)
+
+    class Meta:
+        verbose_name = 'edxlibrary'
+
+    def __unicode__(self):
+        return self.course_id
+
+
 class EdxCourseRun(BaseObjectModel):
     """
     Модель для хранения объектов конкретного запуска курса в edx

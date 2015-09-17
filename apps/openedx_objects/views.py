@@ -7,7 +7,7 @@ API для доступа к отображению edx объектов в sso
 """
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.contenttypes.models import ContentType
 from django.dispatch import receiver
 from django.db.models import Q
@@ -53,6 +53,26 @@ def course(request):
 
     return HttpResponse(json.dumps({'message': message, 'status': 'SUCCESS'}),
                         content_type="application/json")
+
+
+@api_view(['POST'])
+def library(request):
+    message = 'Library is updated!'
+    data = request.data.dict()
+    org_name = data.pop('org', None)
+    course_id = data.pop('course_id', None)
+
+    org_obj, org_created = EdxOrg.objects.update_or_create(name=org_name)
+    data['org'] = org_obj
+
+    course_obj, course_created = EdxLibrary.objects.update_or_create(
+        course_id=course_id, defaults=data)
+    if course_created:
+        if not org_created:
+            api_course_create.send(library, obj=course_obj, request=request)
+        message = 'Library is created!'
+
+    return JsonResponse({'message': message, 'status': 'SUCCESS'})
 
 
 @api_view(['POST', 'DELETE'])
