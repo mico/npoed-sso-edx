@@ -1,6 +1,8 @@
 from django.contrib import admin
 
-from .models import EdxCourse, EdxOrg, EdxCourseRun, EdxCourseEnrollment
+from .models import (
+    EdxCourse, EdxOrg, EdxCourseRun, EdxCourseEnrollment, EdxLibrary
+)
 
 
 class EdxCourseEnrollmentAdmin(admin.ModelAdmin):
@@ -35,6 +37,11 @@ class EdxOrgAdmin(admin.ModelAdmin):
     inlines = [EdxCourseInline, ]
 
 
+class EdxLibraryAdmin(admin.ModelAdmin):
+    list_display = ['id', 'course_id', 'org', 'is_published', 'is_archived']
+
+
+admin.site.register(EdxLibrary, EdxLibraryAdmin)
 admin.site.register(EdxOrg, EdxOrgAdmin)
 admin.site.register(EdxCourse, EdxCourseAdmin)
 admin.site.register(EdxCourseRun, EdxCourseRunAdmin)

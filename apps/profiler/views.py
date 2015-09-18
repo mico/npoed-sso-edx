@@ -28,8 +28,9 @@ from apps.core.decorators import render_to
 from apps.profiler.forms import UserForm, LoginForm, RegUserForm
 from apps.profiler.models import RegistrationProfile
 from apps.permissions.models import Permission
-from apps.openedx_objects.models import EdxCourse, EdxCourseRun
-
+from apps.openedx_objects.models import (
+    EdxCourse, EdxCourseRun, EdxOrg, EdxLibrary
+)
 from raven import Client
 
 RAVEN_CONFIG = getattr(settings, 'RAVEN_CONFIG', {})
@@ -70,7 +71,8 @@ class UserProfileAPI(APIView):
                             pk=permission.target_id
                         )
                         name = obj.course.course_id
-                    elif permission.target_type.model == EdxCourse._meta.verbose_name:
+                    elif permission.target_type.model in [
+                        EdxCourse._meta.verbose_name, EdxLibrary._meta.verbose_name]:
                         obj = permission.target_type.model_class().objects.get(
                             pk=permission.target_id
                         )
@@ -89,12 +91,11 @@ class UserProfileAPI(APIView):
                                 'This object is not permited: {}'.format(msg)
                             )
                         continue
-
                 else:
                     if permission.target_id:
                         continue
                     name = '*'
-                target_name = permission.target_type.name
+                target_name = permission.target_type.model
             else:
                 name = '*'
                 target_name = '*'
