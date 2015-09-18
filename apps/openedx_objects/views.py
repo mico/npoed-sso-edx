@@ -7,7 +7,7 @@ API для доступа к отображению edx объектов в sso
 """
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 from django.dispatch import receiver
 from django.db.models import Q
@@ -21,7 +21,6 @@ from .models import (
 )
 from .signals import api_course_create
 
-import json
 import string
 import random
 import requests
@@ -53,8 +52,7 @@ def course(request):
     elif run_created:
         api_course_create.send(course, obj=run_obj, request=request)
 
-    return HttpResponse(json.dumps({'message': message, 'status': 'SUCCESS'}),
-                        content_type="application/json")
+    return JsonResponse({'message': message, 'status': 'SUCCESS'})
 
 
 @api_view(['POST'])
@@ -69,9 +67,8 @@ def library(request):
 
     course_obj, course_created = EdxLibrary.objects.update_or_create(
         course_id=course_id, defaults=data)
-    if course_created:
-        if not org_created:
-            api_course_create.send(library, obj=course_obj, request=request)
+    if course_created and not org_created:
+        api_course_create.send(library, obj=course_obj, request=request)
         message = 'Library is created!'
 
     return JsonResponse({'message': message, 'status': 'SUCCESS'})
@@ -97,9 +94,8 @@ def enrollment(request):
         )
         if created:
             message = 'Course enrollment is created!'
-        return HttpResponse(json.dumps({'message': message, 'status': 'SUCCESS'}),
-                        content_type="application/json")
-
+        return JsonResponse({'message': message, 'status': 'SUCCESS'})
+    
     elif request.method == 'DELETE':
         username = data.get('user')
         course_id = data.get('course_id')
@@ -108,8 +104,8 @@ def enrollment(request):
         EdxCourseEnrollment.objects.filter(user__username=username,
                             course_run__name=course_run,
                             course_run__course__course_id=course_id).delete()
-        return HttpResponse(json.dumps({'message': 'CourseEnrollment is deleted',
-                         'status': 'SUCCESS'}), content_type="application/json")
+        return JsonResponse({'message': 'CourseEnrollment is deleted',
+                             'status': 'SUCCESS'})
 
 
 @receiver(api_course_create)
@@ -120,8 +116,9 @@ def _update_course_permissions(sender, obj, request, **kwargs):
     """
     org_content_type = ContentType.objects.get_for_model(EdxOrg)
     course_content_type = ContentType.objects.get_for_model(EdxCourse)
+    library_content_type = ContentType.objects.get_for_model(EdxLibrary)
 
-    if isinstance(obj, EdxCourse):
+    if isinstance(obj, (EdxCourse, EdxLibrary, )):
         users = User.objects.prefetch_related().filter(
             role__permissions__target_id=obj.org_id,
             role__permissions__target_type=org_content_type
@@ -141,7 +138,7 @@ def _update_course_permissions(sender, obj, request, **kwargs):
 
 
 def _update_roles(users, request):
-    client = Client.objects.filter(url__contains=request.META['REMOTE_HOST'])
+    client = Client.objects.filter(url__contains=settings.EDX_CRETEUSER_URL)
     for user in users.iterator():
         if client:
             grant = Grant.objects.create(
