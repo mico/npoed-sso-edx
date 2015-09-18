@@ -28,7 +28,12 @@ from apps.core.utils import LoginRequiredMixin, SuperUserRequiredMixin
 User = get_user_model()
 
 
-def _push_to_edx(user, success_url):
+def push_to_edx(user):
+    #  Для использования функции из других приложений
+    return _push_to_edx(user)
+
+
+def _push_to_edx(user, success_url=None):
     """
     Специальный хак, чтоб активировать процесс логина/регистрации пользователя в edx
     через sso по инициативе sso
@@ -38,6 +43,7 @@ def _push_to_edx(user, success_url):
 
     # вибираем текущий oauth клиент
     client = Client.objects.filter(redirect_uri=settings.EDX_CRETEUSER_URL)
+    status_code = None
     if client:
         # создаем grant запись (второй шаг авторизации после проверки валидности запроса от клиента)
         grant = Grant.objects.create(
@@ -51,8 +57,12 @@ def _push_to_edx(user, success_url):
         # с этими параметрами возвращаемся на edx
         # дальше редиректы отработают по процессу oauth взаимодействия
         # и авторизационный бекенд создаст или засинкает пользователя
-        r = requests.get(settings.EDX_CRETEUSER_URL, params)
-    return redirect(success_url)
+        r = requests.get(settings.EDX_CRETEUSER_URL, params, verify=False)  # не хотим проверять SSL сертификаты
+        status_code = r.status_code
+    if not success_url:
+        return status_code
+    else:
+        return redirect(success_url)
 
 
 class Index(TemplateView):
