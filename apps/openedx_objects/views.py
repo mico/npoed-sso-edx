@@ -7,6 +7,7 @@ API для доступа к отображению edx объектов в sso
 """
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 from django.dispatch import receiver
@@ -15,7 +16,6 @@ from django.db.models import Q
 from rest_framework.decorators import api_view
 from provider.oauth2.models import Grant, Client
 
-from apps.profiler.models import User
 from .models import (
     EdxCourse, EdxOrg, EdxCourseRun, EdxCourseEnrollment, EdxLibrary
 )
@@ -138,7 +138,7 @@ def _update_course_permissions(sender, obj, request, **kwargs):
 
 
 def _update_roles(users, request):
-    client = Client.objects.filter(url__contains=settings.EDX_CRETEUSER_URL)
+    client = Client.objects.filter(redirect_uri=settings.EDX_CRETEUSER_URL)
     for user in users.iterator():
         if client:
             grant = Grant.objects.create(
