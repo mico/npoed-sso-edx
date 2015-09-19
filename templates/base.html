@@ -59,7 +59,7 @@
           </span>
         {% else %}
           <div class="dropdown" id="sb_profile">
-            <span class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown"><span class="icon profile-icon"></span><span class="hidden-sm">{{ user.first_name }} {{ user.last_name }}</span></span>
+            <span class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown"><span class="icon profile-icon"></span><span class="hidden-sm">Мой профиль</span></span>
             <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
               <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ plp_url }}my/" title="Мои курсы">Мои курсы</a></li>
               <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'profile' %}" title="Профиль">Профиль</a></li>
