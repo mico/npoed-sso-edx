@@ -216,7 +216,7 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = 'info@google.ru'
 EMAIL_FROM = DEFAULT_FROM_EMAIL
-URL_PREFIX_EDX = 'http'
+URL_PREFIX_EDX = 'https'
 
 try:
     from local_settings import *
