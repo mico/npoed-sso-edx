@@ -1,14 +1,5 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
-"""
-    apps.profiler.forms
-    ~~~~~~~~~
-
-    :copyright: (c) 2015 by dorosh.
-"""
-
-__author__ = 'dorosh'
-__date__ = '15.03.2015'
 
 from django import forms
 from django.utils.safestring import mark_safe

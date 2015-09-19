@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
 
-from .models import EdxCourse, EdxOrg, EdxCourseRun, EdxCourseEnrollment
+from .models import (
+    EdxCourse, EdxOrg, EdxCourseRun, EdxCourseEnrollment, EdxLibrary
+)
 from .utils import datetime_parser
 from apps.profiler.models import User
 
@@ -14,6 +16,7 @@ log = logging.getLogger(__name__)
 
 
 _uoc_course = EdxCourse.objects.update_or_create
+_uoc_library = EdxLibrary.objects.update_or_create
 _uoc_org = EdxOrg.objects.update_or_create
 _uoc_run = EdxCourseRun.objects.update_or_create
 _uoc_enrollment = EdxCourseEnrollment.objects.update_or_create
@@ -51,6 +54,11 @@ def get_edx_objects():
                 org_obj.id not in orgs and orgs.append(org_obj.id)
                 if created:
                     print 'Organisation "%s" is created' % course['org']
+            else:
+                try:
+                    org_obj = EdxOrg.objects.get(name=course['org'])
+                except EdxOrg.DoesNotExist:
+                    continue
 
             course_id = course.pop('id')
             course_obj, created = _uoc_course(
@@ -119,3 +127,57 @@ def add_enrollments(result, run_obj):
                 log.info('Enrollment "%s - %s" is created' % (enrollment['user'], run_obj))
 
     return enrollments
+
+
+def get_edx_libraries():
+    """
+    Получаем из edx библиотеки через API.
+    Процесс полной синхронизации.
+    Необходимо использовать в случае если sso по какой-то причине не получал инкриментальные апдейты
+    """
+    if not settings.EDX_API_KEY:
+        log.error("EDX_API_KEY settings should be specified!")
+        return
+
+    request = requests.Session()
+    request.headers.update({'X-Edx-Api-Key': settings.EDX_API_KEY})
+
+    url = settings.EDX_LIBRARIES_API
+    params = {'format': 'json'}
+    enrl_params = copy(params)
+    libraries = []
+    orgs = []
+
+    r = request.get(url, params=params)
+    # TODO: Check response code here!
+    try:
+        data = json.loads(r.text)
+    except Exception:
+        data = []
+    for library in data:
+        if library['org'] not in orgs:
+            org_obj, created = _uoc_org(name=library['org'])
+            org_obj.id not in orgs and orgs.append(org_obj.id)
+            if created:
+                print 'Organisation "%s" is created' % library['org']
+        else:
+            try:
+                org_obj = EdxOrg.objects.get(name=library['org'])
+            except EdxOrg.DoesNotExist:
+                continue
+
+        library_key = library.pop('library_key')
+        library_obj, created = _uoc_library(
+            course_id=library_key, defaults={'org': org_obj}
+        )
+
+        if created:
+            log.info('Course "%s" is created' % library['display_name'])
+
+        if library_obj.id not in libraries:
+            libraries.append(library_obj.id)
+
+    # TODO: Remove these objects only if all response codes from edx is 200
+    if data:
+        EdxLibrary.objects.exclude(id__in=libraries).delete()
+        EdxOrg.objects.exclude(id__in=orgs).delete()

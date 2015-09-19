@@ -1,14 +1,5 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
-"""
-    apps.profiler.pipline
-    ~~~~~~~~~
-
-    :copyright: (c) 2015 by dorosh.
-"""
-
-__author__ = 'dorosh'
-__date__ = '04.08.2015'
 
 from urllib import urlopen
 from datetime import datetime
@@ -77,9 +68,13 @@ def update_profile(backend, user, response, *args, **kwargs):
 
         bdate = response.get('bdate')
         if not user.date_of_birth and bdate:
-            bdate = datetime.strptime(bdate, "%d.%m.%Y").date()
-            user.date_of_birth = bdate
-            change_data = True
+            try:
+                bdate = datetime.strptime(bdate, "%d.%m.%Y").date()
+            except Exception:
+                pass
+            else:
+                user.date_of_birth = bdate
+                change_data = True
 
     elif backend.name == 'facebook':
         image_url = 'http://graph.facebook.com/{0}/picture?type=normal'.format(response['id'])
@@ -141,7 +136,7 @@ def update_profile(backend, user, response, *args, **kwargs):
 @partial
 def get_entries(strategy, user, name, user_storage, association_id=None, *args, **kwargs):
     entries = user_storage.get_social_auth_for_user(user, name, association_id)
-    if entries.count() == 1:
+    if user_storage.get_social_auth_for_user(user).count() == 1:
         strategy.session_set('last_social', 1)
     else:
         strategy.session_pop('last_social')

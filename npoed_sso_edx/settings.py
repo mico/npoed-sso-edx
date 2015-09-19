@@ -216,7 +216,7 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = 'info@google.ru'
 EMAIL_FROM = DEFAULT_FROM_EMAIL
-URL_PREFIX_EDX = 'http'
+URL_PREFIX_EDX = 'https'
 
 try:
     from local_settings import *
@@ -229,5 +229,7 @@ if RAVEN_CONFIG:
 
 EDX_API_LOGIN_URL = '{0}://{1}/auth/login/sso_npoed-oauth2'.format(URL_PREFIX_EDX, EDX_LMS_URL)
 EDX_COURSES_API = '{0}://{1}/api/extended/courses/'.format(URL_PREFIX_EDX, EDX_LMS_URL)
+EDX_LIBRARIES_API = '{0}://{1}/api/extended/libraries/'.format(URL_PREFIX_EDX, EDX_LMS_URL)
 EDX_ENROLLMENTS_API = '{0}://{1}/api/extended/enrollment'.format(URL_PREFIX_EDX, EDX_LMS_URL)
-EDX_CRETEUSER_URL = '{0}://{1}/auth/complete/sso_npoed-oauth2/'.format(URL_PREFIX_EDX, EDX_LMS_URL)
+# Let's create user in Studio to avoid redirects
+EDX_CRETEUSER_URL = '{0}://{1}/auth/complete/sso_npoed_cms-oauth2/'.format(URL_PREFIX_EDX, EDX_CMS_URL)

@@ -1,14 +1,5 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
-"""
-    apps.profiler.models
-    ~~~~~~~~~
-
-    :copyright: (c) 2015 by dorosh.
-"""
-
-__author__ = 'dorosh'
-__date__ = '31.08.2015'
 
 import urllib
 import os.path
@@ -27,10 +18,6 @@ from apps.permissions.models import Role
 
 
 class User(AbstractUser):
-    '''
-    Here is your User class which is fully customizable and
-    based off of the AbstractUser from auth.models
-    '''
 
     sex_choice = [[1, u'мужской'], [2, u'женский']]
     education_choice = [[1, u'Кандидат или доктор наук, PhD'],
@@ -67,6 +54,20 @@ class User(AbstractUser):
     role = models.ManyToManyField(Role, blank=True, null=True)
     # about me field
     about_me = models.TextField(blank=True, null=True, verbose_name=u'О себе')
+
+    def save(self, force_insert=False, force_update=False, using=None,
+            update_fields=None):
+        try:
+            usr = User.objects.get(id=self.id)
+            is_active = usr.is_active
+        except:
+            is_active = False
+        super(User, self).save(
+            force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
+        if self.is_active and not is_active:
+            from apps.core.views import push_to_edx
+            push_to_edx(self)
+
 
 
 class RegistrationProfile(BaseRegistrationProfile):
