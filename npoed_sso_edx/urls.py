@@ -5,10 +5,12 @@ from django.contrib.admin import site as admin_site
 from django.contrib.auth.views import logout
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
+from django.contrib.auth.decorators import login_required
 
 from social.apps.django_app.views import complete
 from social.utils import setting_name
 from functools import update_wrapper
+from oauth2_provider.views import Redirect
 
 from apps.core.decorators import set_auth_cookie, external_redirect
 from apps.core.views import login
@@ -89,6 +91,9 @@ urlpatterns = patterns(
     url(r'^ajax-auth/(?P<backend>[^/]+)/$', 'apps.profiler.views.ajax_auth',
         name='ajax-auth'),
     url(r'^email/$', 'apps.profiler.views.require_email', name='require_email'),
+
+    url('^oauth2/redirect/?$',
+        set_auth_cookie(login_required(Redirect.as_view())), name='redirect'),
     url(r'^oauth2/', include('oauth2_provider.urls', namespace='oauth2')),
 
     # url(r'^done/$', 'apps.profiler.views.done', name='done'),
