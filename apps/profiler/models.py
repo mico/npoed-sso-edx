@@ -3,6 +3,9 @@
 
 import urllib
 import os.path
+import os
+from uuid import uuid4
+from datetime import datetime
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -15,6 +18,16 @@ from django_countries.fields import CountryField
 from registration.models import RegistrationProfile as BaseRegistrationProfile
 
 from apps.permissions.models import Role
+
+
+def path_and_rename(path):
+    def wrapper(instance, filename):
+        ext = filename.split('.')[-1]
+        # set filename as random string
+        filename = '{}.{}'.format(uuid4().hex, ext)
+        return os.path.join(path, filename[0], filename[1:3], filename)
+    return wrapper
+
 
 
 class User(AbstractUser):
@@ -36,7 +49,7 @@ class User(AbstractUser):
     gender = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name=u'Пол',
                                               choices=sex_choice)
     date_of_birth = models.DateField(blank=True, null=True, verbose_name=u'Дата рождения')
-    icon_profile = models.ImageField(upload_to='icon_profile',
+    icon_profile = models.ImageField(upload_to=path_and_rename('icon_profile'),
                                      blank=True, null=True, verbose_name=u'Фото')
     # location
     time_zone = models.CharField(max_length=50, default='GMT+4', verbose_name=u'Часовой пояс')
