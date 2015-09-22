@@ -1,5 +1,6 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
+import base64
 
 from django.conf import settings
 from django.core.mail import send_mail
@@ -7,9 +8,11 @@ from django.core.urlresolvers import reverse
 
 
 def send_validation(strategy, backend, code):
-    url = '{0}?verification_code={1}'.format(
-        reverse('social:complete', args=(backend.name,)),
-        code.code
+    encoded = base64.b64encode(strategy.request.session.session_key)
+
+    url = '{0}?verification_code={1}||{2}'.format(
+        reverse('email_complete', args=(backend.name,)),
+        code.code, encoded
     )
     url = strategy.request.build_absolute_uri(url)
     # Убедимся, что мы правильно ходим в случае https

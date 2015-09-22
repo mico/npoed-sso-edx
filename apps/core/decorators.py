@@ -24,11 +24,13 @@ def set_auth_cookie(view):
 
         response.set_cookie('authenticated', str(int(is_auth)),
                             domain=settings.AUTH_SESSION_COOKIE_DOMAIN,
-                            secure=settings.SESSION_COOKIE_SECURE or None)
+                            secure=settings.SESSION_COOKIE_SECURE or None,
+                            max_age=settings.SESSION_COOKIE_AGE)
         response.set_cookie('authenticated_user',
                             is_auth and user.username or 'Anonymous',
                             domain=settings.AUTH_SESSION_COOKIE_DOMAIN,
-                            secure=settings.SESSION_COOKIE_SECURE or None)
+                            secure=settings.SESSION_COOKIE_SECURE or None,
+                            max_age=settings.SESSION_COOKIE_AGE)
         return response
 
     return wrapper
