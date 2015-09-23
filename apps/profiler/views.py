@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.sessions.backends.db import SessionStore
+from django.contrib.auth import logout
 
 from social.backends.oauth import BaseOAuth1, BaseOAuth2
 from social.backends.google import GooglePlusAuth
@@ -28,7 +29,7 @@ from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from apps.core.utils import LoginRequiredMixin
+from apps.core.utils import LoginRequiredMixin, decrypt
 from apps.core.decorators import render_to
 from apps.profiler.forms import UserForm, LoginForm, RegUserForm
 from apps.profiler.models import RegistrationProfile
@@ -259,7 +260,8 @@ def ajax_auth(request, backend):
 
 def email_complete(request, backend, *args, **kwargs):
     """Authentication complete view"""
-    verification_code = request.GET.get('verification_code')
+    logout(request)
+    verification_code = decrypt(request.GET.get('verification_code', ''))
     if '||' in verification_code:
         verification_code, session_key = verification_code.split('||')
         session_key = base64.b64decode(session_key)
