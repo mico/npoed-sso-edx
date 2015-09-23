@@ -15,7 +15,8 @@ from oauth2_provider.views import Redirect
 from apps.core.decorators import set_auth_cookie, external_redirect
 from apps.core.views import login
 from apps.profiler.views import (
-    CustomActivationView, Login, RegistrationView, UserProfileAPI, RegisteredView
+    CustomActivationView, Login, RegistrationView, UserProfileAPI,
+    RegisteredView, email_complete
 )
 from apps.profiler.forms import (
     CustomPasswordResetForm, CustomSetPasswordForm, CustomPasswordChangeForm
@@ -40,6 +41,8 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin_site.urls)),
 
     # social auth
+    url(r'^email_complete/(?P<backend>[^/]+){0}$'.format(extra),
+        set_auth_cookie(email_complete), name='email_complete'),
     url(r'^complete/(?P<backend>[^/]+){0}$'.format(extra),
         set_auth_cookie(complete), name='social:complete'),
     url(r'^', include('social.apps.django_app.urls', namespace='social')),
