@@ -1,5 +1,6 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
+import base64
 
 from django.conf import settings
 from django.views.generic import TemplateView
@@ -9,11 +10,15 @@ from django.contrib.auth import login, get_user_model
 from django.template.loader import render_to_string
 from django.contrib.sites.models import Site, RequestSite
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
+from django.contrib.sessions.backends.db import SessionStore
 
 from social.backends.oauth import BaseOAuth1, BaseOAuth2
 from social.backends.google import GooglePlusAuth
 from social.backends.utils import load_backends
 from social.apps.django_app.utils import psa
+from social.utils import setting_name
 
 from registration.backends.default.views import (
     ActivationView, RegistrationView as RW
@@ -33,6 +38,7 @@ from apps.openedx_objects.models import (
 )
 from raven import Client
 
+NAMESPACE = getattr(settings, setting_name('URL_NAMESPACE'), None) or 'social'
 RAVEN_CONFIG = getattr(settings, 'RAVEN_CONFIG', {})
 client = None
 
@@ -249,3 +255,19 @@ def ajax_auth(request, backend):
     user = request.backend.do_auth(token, ajax=True)
     login(request, user)
     return JsonResponse({'id': user.id, 'username': user.username})
+
+
+def email_complete(request, backend, *args, **kwargs):
+    """Authentication complete view"""
+    verification_code = request.GET.get('verification_code')
+    if '||' in verification_code:
+        verification_code, session_key = verification_code.split('||')
+        session_key = base64.b64decode(session_key)
+        session = SessionStore(session_key)
+        request.session.update(dict(session.items()))
+
+    url = '{0}?verification_code={1}'.format(
+        reverse('social:complete', args=(backend,)),
+        verification_code
+    )
+    return redirect(url)
