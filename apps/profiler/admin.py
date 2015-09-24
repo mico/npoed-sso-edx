@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
+from social.apps.django_app.default.models import Code
+
 
 @admin.register(get_user_model())
 class CustomUserAdmin(UserAdmin):
@@ -37,3 +39,8 @@ class CustomUserAdmin(UserAdmin):
                     )
          }, ),
     )
+
+
+@admin.register(Code)
+class CodeAdmin(admin.ModelAdmin):
+    list_display = ('email', 'code', 'verified', )
