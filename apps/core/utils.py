@@ -22,7 +22,7 @@ url_regex = re.compile(r"""(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}
 _DEFAULT_RANDOM_PASSWORD_LENGTH = 12
 _PASSWORD_CHARSET = string.letters + string.digits
 
-BLOCK_SIZE = 32
+BLOCK_SIZE = 16
 PADDING = '^'
 pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * PADDING
 EncodeAES = lambda c, s: base64.b64encode(c.encrypt(pad(s)))
@@ -32,10 +32,12 @@ cipher = AES.new(secret)
 
 
 def encrypt(data):
-    return EncodeAES(cipher, data)
-
+    enc = EncodeAES(cipher, data)
+    enc = enc.replace('+', '_')
+    return enc
 
 def decrypt(encoded):
+    encoded = encoded.replace('_', '+')
     return DecodeAES(cipher, encoded)
 
 

@@ -260,12 +260,13 @@ def ajax_auth(request, backend):
 
 def email_complete(request, backend, *args, **kwargs):
     """Authentication complete view"""
-    logout(request)
     verification_code = decrypt(request.GET.get('verification_code', ''))
     if '||' in verification_code:
         verification_code, session_key = verification_code.split('||')
         session_key = base64.b64decode(session_key)
         session = SessionStore(session_key)
+        if request.session.session_key != session_key:
+            logout(request)
         request.session.update(dict(session.items()))
 
     url = '{0}?verification_code={1}'.format(
