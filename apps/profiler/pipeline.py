@@ -125,8 +125,7 @@ def update_profile(backend, user, response, *args, **kwargs):
     if image_url and not user.icon_profile:
         try:
             image_content = urlopen(image_url)
-            image_name = default_storage.get_available_name(
-                user.icon_profile.field.upload_to + '/' + str(user.id) + '.' + image_content.headers.subtype)
+            image_name = '.'.join([str(user.id), image_content.headers.subtype])
             user.icon_profile.save(image_name, ContentFile(image_content.read()))
             user.save()
         except Exception:
