@@ -58,6 +58,20 @@ class UserForm(forms.ModelForm):
             raise forms.ValidationError(u'Этот e-mail уже используется')
         return email
 
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        if len(first_name) > 30:
+            raise forms.ValidationError(
+                u'Имя слишком длинное, максимальная длина 30')
+        return first_name
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        if len(last_name) > 30:
+            raise forms.ValidationError(
+                u'Фамилия слишком длинная, максимальная длина 30')
+        return last_name
+
 
 class RegUserForm(RegistrationFormUniqueEmail):
 
