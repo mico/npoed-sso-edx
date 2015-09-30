@@ -94,6 +94,7 @@ urlpatterns = patterns(
     url(r'^ajax-auth/(?P<backend>[^/]+)/$', 'apps.profiler.views.ajax_auth',
         name='ajax-auth'),
     url(r'^email/$', 'apps.profiler.views.require_email', name='require_email'),
+    url(r'^email-change/$', 'apps.profiler.views.email_change', name='email_change'),
 
     url('^oauth2/redirect/?$',
         set_auth_cookie(login_required(Redirect.as_view())), name='redirect'),

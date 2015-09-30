@@ -56,7 +56,32 @@ class UserForm(forms.ModelForm):
         username = self.cleaned_data['username']
         if User.objects.exclude(username=username).filter(email=email).exists():
             raise forms.ValidationError(u'Этот e-mail уже используется')
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise forms.ValidationError(u'Неправильный логин')
+        else:
+            if user.email != email:
+                msg = u'''
+                       На вашу почту {} было отослано письмо 
+                       для активации нового email
+                      '''.format(email)
+                raise forms.ValidationError(msg)
         return email
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        if len(first_name) > 30:
+            raise forms.ValidationError(
+                u'Фамилия слишком длинная, максимальная длина 30')
+        return first_name
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        if len(last_name) > 30:
+            raise forms.ValidationError(
+                u'Фамилия слишком длинная, максимальная длина 30')
+        return last_name
 
 
 class RegUserForm(RegistrationFormUniqueEmail):
@@ -111,7 +136,7 @@ class LoginForm(AuthenticationForm):
         cleaned_data = super(LoginForm, self).clean()
         try:
             user = User.objects.get(username=cleaned_data.get("username"))
-        except:
+        except User.DoesNotExist:
             raise forms.ValidationError(u'Неправильный логин')
         if not user.is_active:
             raise forms.ValidationError(u'Этот аккаунт не активирован')
