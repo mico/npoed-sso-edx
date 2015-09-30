@@ -166,6 +166,13 @@ class Profile(LoginRequiredMixin, UpdateView):
         if form.is_valid():
             return self.form_valid(form)
         else:
+            email = request.POST.get('email')
+            if Site._meta.installed:
+                site = Site.objects.get_current()
+            else:
+                site = RequestSite(request)
+            if email != self.object.email:
+                send_change_email(self.object, email, site, request=request)
             return self.form_invalid(form)
 
 
@@ -274,3 +281,18 @@ def email_complete(request, backend, *args, **kwargs):
         verification_code
     )
     return redirect(url)
+
+
+def email_change(request, backend, *args, **kwargs):
+    """Authentication complete view"""
+    verification_code = decrypt(request.GET.get('verification_code', ''))
+    if '||' in verification_code:
+        pk, email = verification_code.split('||')
+        try:
+            user = User.objects.get(pk=pk)
+            user.email = email
+            user.save()
+        except User.DoesNotExist:
+            raise Http404
+
+    return redirect(reverse('profile'))
