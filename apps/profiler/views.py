@@ -32,7 +32,7 @@ from rest_framework.response import Response
 from apps.core.utils import LoginRequiredMixin, decrypt
 from apps.core.decorators import render_to
 from apps.profiler.forms import UserForm, LoginForm, RegUserForm
-from apps.profiler.models import RegistrationProfile
+from apps.profiler.models import RegistrationProfile, send_change_email
 from apps.permissions.models import Permission
 from apps.openedx_objects.models import (
     EdxCourse, EdxCourseRun, EdxOrg, EdxLibrary
@@ -283,11 +283,11 @@ def email_complete(request, backend, *args, **kwargs):
     return redirect(url)
 
 
-def email_change(request, backend, *args, **kwargs):
+def email_change(request, *args, **kwargs):
     """Authentication complete view"""
-    verification_code = decrypt(request.GET.get('verification_code', ''))
-    if '||' in verification_code:
-        pk, email = verification_code.split('||')
+    activation_key = decrypt(request.GET.get('activation_key', ''))
+    if '||' in activation_key:
+        pk, email = activation_key.split('||')
         try:
             user = User.objects.get(pk=pk)
             user.email = email

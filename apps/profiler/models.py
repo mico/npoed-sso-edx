@@ -89,7 +89,7 @@ class RegistrationProfile(BaseRegistrationProfile):
          proxy = True
 
      def send_activation_email(self, site, request=None):
-         ctx_dict = {} if request is None else RequestContext(request, ctx_dict)
+         ctx_dict = {} if request is None else RequestContext(request, {})
          prefix = getattr(settings, 'URL_PREFIX', 'http')
          ctx_dict.update({
              'user': self.user,
@@ -127,7 +127,7 @@ class RegistrationProfile(BaseRegistrationProfile):
 
 
 def send_change_email(user, email, site, request=None):
-    ctx_dict = {} if request is None else RequestContext(request, ctx_dict)
+    ctx_dict = {} if request is None else RequestContext(request, {})
     prefix = getattr(settings, 'URL_PREFIX', 'http')
 
     ctx_dict.update({
