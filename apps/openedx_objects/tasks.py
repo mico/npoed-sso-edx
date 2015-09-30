@@ -148,38 +148,36 @@ def get_edx_libraries():
     libraries = []
     orgs = []
 
-    while True:
-        r = request.get(url, params=params)
-        # TODO: Check response code here!
-
-        for library in json.loads(r.text):
-            if library['org'] not in orgs:
-                org_obj, created = _uoc_org(name=library['org'])
-                org_obj.id not in orgs and orgs.append(org_obj.id)
-                if created:
-                    print 'Organisation "%s" is created' % course['org']
-            else:
-                try:
-                    org_obj = EdxOrg.objects.get(name=course['org'])
-                except EdxOrg.DoesNotExist:
-                    continue
-
-            library_key = library.pop('library_key')
-            library_obj, created = _uoc_library(
-                course_id=library_key, defaults={'org': org_obj}
-            )
-
+    r = request.get(url, params=params)
+    # TODO: Check response code here!
+    try:
+        data = json.loads(r.text)
+    except Exception:
+        data = []
+    for library in data:
+        if library['org'] not in orgs:
+            org_obj, created = _uoc_org(name=library['org'])
+            org_obj.id not in orgs and orgs.append(org_obj.id)
             if created:
-                log.info('Course "%s" is created' % course['name'])
+                print 'Organisation "%s" is created' % library['org']
+        else:
+            try:
+                org_obj = EdxOrg.objects.get(name=library['org'])
+            except EdxOrg.DoesNotExist:
+                continue
 
-            if library_obj.id not in libraries:
-                libraries.append(library_obj.id)
+        library_key = library.pop('library_key')
+        library_obj, created = _uoc_library(
+            course_id=library_key, defaults={'org': org_obj}
+        )
 
-        # переходим на следующий шаг пагинации
-        url = data.get('next')
-        if url is None:
-            break
+        if created:
+            log.info('Course "%s" is created' % library['display_name'])
+
+        if library_obj.id not in libraries:
+            libraries.append(library_obj.id)
 
     # TODO: Remove these objects only if all response codes from edx is 200
-    EdxLibrary.objects.exclude(id__in=libraries).delete()
-    EdxOrg.objects.exclude(id__in=orgs).delete()
+    if data:
+        EdxLibrary.objects.exclude(id__in=libraries).delete()
+        EdxOrg.objects.exclude(id__in=orgs).delete()
