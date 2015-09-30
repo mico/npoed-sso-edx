@@ -233,3 +233,4 @@ EDX_LIBRARIES_API = '{0}://{1}/api/extended/libraries/'.format(URL_PREFIX_EDX, E
 EDX_ENROLLMENTS_API = '{0}://{1}/api/extended/enrollment'.format(URL_PREFIX_EDX, EDX_LMS_URL)
 # Let's create user in Studio to avoid redirects
 EDX_CRETEUSER_URL = '{0}://{1}/auth/complete/sso_npoed_cms-oauth2/'.format(URL_PREFIX_EDX, EDX_CMS_URL)
+PLP_CRETEUSER_URL = '{0}/complete/npoedsso/'.format(PLP_URL)
