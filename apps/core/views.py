@@ -65,6 +65,43 @@ def _push_to_edx(user, success_url=None):
         return redirect(success_url)
 
 
+def push_to_plp(user):
+    #  Для использования функции из других приложений
+    return _push_to_plp(user)
+
+
+def _push_to_plp(user, success_url=None):
+    """
+    Специальный хак, чтоб активировать процесс логина/регистрации пользователя в plp
+    через sso по инициативе sso
+    Данную функцию следует вызывать например когда нужно в plp принудительно создать пользователя
+    без его участия или засинхронизировать данные его профиля, в т.ч. email
+    """
+
+    # вибираем текущий oauth клиент
+    client = Client.objects.filter(redirect_uri=settings.PLP_CRETEUSER_URL)
+    status_code = None
+    if client:
+        # создаем grant запись (второй шаг авторизации после проверки валидности запроса от клиента)
+        grant = Grant.objects.create(
+            user=user,
+            client=client[0],
+            redirect_uri=settings.PLP_CRETEUSER_URL,
+            scope=2
+        )
+        params = {'state': ''.join(random.sample(string.ascii_letters, 32)),
+                  'code': grant.code}
+        # с этими параметрами возвращаемся на plp
+        # дальше редиректы отработают по процессу oauth взаимодействия
+        # и авторизационный бекенд создаст или засинкает пользователя
+        r = requests.get(settings.PLP_CRETEUSER_URL, params, verify=False)  # не хотим проверять SSL сертификаты
+        status_code = r.status_code
+    if not success_url:
+        return status_code
+    else:
+        return redirect(success_url)
+
+
 class Index(TemplateView):
 
     template_name = 'index.html'
