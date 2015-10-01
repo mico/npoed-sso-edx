@@ -1,0 +1,5 @@
+Смена адреса электронной почты на сайте Открытое образование.
+
+Для активации вашего нового адреса электронной почты необходимо перейти по ссылке:
+{{ prefix }}://{{ site }}/email-change/{% if redirect_url %}?next={{ redirect_url }}{% else%}?{% endif %}activation_key={{ activation_key }}
+Спасибо!

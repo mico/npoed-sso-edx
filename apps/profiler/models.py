@@ -18,6 +18,7 @@ from django_countries.fields import CountryField
 from registration.models import RegistrationProfile as BaseRegistrationProfile
 
 from apps.permissions.models import Role
+from apps.core.utils import encrypt
 
 
 def path_and_rename(path):
@@ -82,53 +83,71 @@ class User(AbstractUser):
             push_to_edx(self)
 
 
-
 class RegistrationProfile(BaseRegistrationProfile):
 
      class Meta:
          proxy = True
 
      def send_activation_email(self, site, request=None):
-        ctx_dict = {}
-        if request is not None:
-            ctx_dict = RequestContext(request, ctx_dict)
-        # update ctx_dict after RequestContext is created
-        # because template context processors
-        # can overwrite some of the values like user
-        # if django.contrib.auth.context_processors.auth is used
-        prefix = 'http'
-        if hasattr(settings, 'URL_PREFIX'):
-            prefix = settings.URL_PREFIX
-        ctx_dict.update({
-            'user': self.user,
-            'activation_key': self.activation_key,
-            'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
-            'site': site,
-            'redirect_url': urllib.pathname2url(request.GET.get('next', '')),
-            'prefix': prefix,
-        })
+         ctx_dict = {} if request is None else RequestContext(request, {})
+         prefix = getattr(settings, 'URL_PREFIX', 'http')
+         ctx_dict.update({
+             'user': self.user,
+             'activation_key': self.activation_key,
+             'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
+             'site': site,
+             'redirect_url': urllib.pathname2url(request.GET.get('next', '')),
+             'prefix': prefix,
+         })
 
-        subject = (getattr(settings, 'REGISTRATION_EMAIL_SUBJECT_PREFIX', '') +
-                   render_to_string(
-                       'registration/activation_email_subject.txt', ctx_dict))
+         subject = (getattr(settings, 'REGISTRATION_EMAIL_SUBJECT_PREFIX', '') +
+                    render_to_string(
+                 'registration/activation_email_subject.txt', ctx_dict))
 
-        # Email subject *must not* contain newlines
-        subject = ''.join(subject.splitlines())
-        from_email = getattr(settings, 'REGISTRATION_DEFAULT_FROM_EMAIL',
-                             settings.DEFAULT_FROM_EMAIL)
-        message_txt = render_to_string('registration/activation_email.txt',
-                                       ctx_dict)
+         # Email subject *must not* contain newlines
+         subject = ''.join(subject.splitlines())
+         from_email = getattr(settings, 'REGISTRATION_DEFAULT_FROM_EMAIL',
+                              settings.DEFAULT_FROM_EMAIL)
+         message_txt = render_to_string('registration/activation_email.txt',
+                                        ctx_dict)
 
-        email_message = EmailMultiAlternatives(subject, message_txt,
-                                               from_email, [self.user.email])
+         email_message = EmailMultiAlternatives(subject, message_txt,
+                                                from_email, [self.user.email])
 
-        if getattr(settings, 'REGISTRATION_EMAIL_HTML', True):
-            try:
-                message_html = render_to_string(
-                    'registration/activation_email.html', ctx_dict)
-            except TemplateDoesNotExist:
-                pass
-            else:
-                email_message.attach_alternative(message_html, 'text/html')
+         if getattr(settings, 'REGISTRATION_EMAIL_HTML', True):
+             try:
+                 message_html = render_to_string(
+                     'registration/activation_email.html', ctx_dict)
+             except TemplateDoesNotExist:
+                 pass
+             else:
+                 email_message.attach_alternative(message_html, 'text/html')
 
-        email_message.send()
+         email_message.send()
+
+
+def send_change_email(user, email, site, request=None):
+    ctx_dict = {} if request is None else RequestContext(request, {})
+    prefix = getattr(settings, 'URL_PREFIX', 'http')
+
+    ctx_dict.update({
+        'user': user,
+        'activation_key': encrypt('{0}||{1}'.format(user.id, email)),
+        'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
+        'site': site,
+        'redirect_url': urllib.pathname2url(request.GET.get('next', '')),
+        'prefix': prefix,
+    })
+
+    subject = (getattr(settings, 'REGISTRATION_EMAIL_SUBJECT_PREFIX', '') +
+               render_to_string(
+            'registration/activation_email_subject.txt', ctx_dict))
+
+    # Email subject *must not* contain newlines
+    subject = ''.join(subject.splitlines())
+    from_email = getattr(settings, 'REGISTRATION_DEFAULT_FROM_EMAIL',
+                         settings.DEFAULT_FROM_EMAIL)
+    message_txt = render_to_string('registration/change_email.txt', ctx_dict)
+    email_message = EmailMultiAlternatives(subject, message_txt,
+                                           from_email, [email])
+    email_message.send()

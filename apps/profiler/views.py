@@ -32,7 +32,7 @@ from rest_framework.response import Response
 from apps.core.utils import LoginRequiredMixin, decrypt
 from apps.core.decorators import render_to
 from apps.profiler.forms import UserForm, LoginForm, RegUserForm
-from apps.profiler.models import RegistrationProfile
+from apps.profiler.models import RegistrationProfile, send_change_email
 from apps.permissions.models import Permission
 from apps.openedx_objects.models import (
     EdxCourse, EdxCourseRun, EdxOrg, EdxLibrary
@@ -166,6 +166,13 @@ class Profile(LoginRequiredMixin, UpdateView):
         if form.is_valid():
             return self.form_valid(form)
         else:
+            email = request.POST.get('email')
+            if Site._meta.installed:
+                site = Site.objects.get_current()
+            else:
+                site = RequestSite(request)
+            if email != self.object.email:
+                send_change_email(self.object, email, site, request=request)
             return self.form_invalid(form)
 
 
@@ -274,3 +281,18 @@ def email_complete(request, backend, *args, **kwargs):
         verification_code
     )
     return redirect(url)
+
+
+def email_change(request, *args, **kwargs):
+    """Authentication complete view"""
+    activation_key = decrypt(request.GET.get('activation_key', ''))
+    if '||' in activation_key:
+        pk, email = activation_key.split('||')
+        try:
+            user = User.objects.get(pk=pk)
+            user.email = email
+            user.save()
+        except User.DoesNotExist:
+            raise Http404
+
+    return redirect(reverse('profile'))
