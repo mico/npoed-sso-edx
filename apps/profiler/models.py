@@ -71,16 +71,12 @@ class User(AbstractUser):
 
     def save(self, force_insert=False, force_update=False, using=None,
             update_fields=None):
-        try:
-            usr = User.objects.get(id=self.id)
-            is_active = usr.is_active
-        except:
-            is_active = False
         super(User, self).save(
             force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
-        if self.is_active and not is_active:
-            from apps.core.views import push_to_edx
+        if self.is_active:
+            from apps.core.views import push_to_edx, push_to_plp
             push_to_edx(self)
+            push_to_plp(self)
 
 
 class RegistrationProfile(BaseRegistrationProfile):
