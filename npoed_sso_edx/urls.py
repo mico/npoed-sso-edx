@@ -16,7 +16,7 @@ from apps.core.decorators import set_auth_cookie, external_redirect
 from apps.core.views import login
 from apps.profiler.views import (
     CustomActivationView, Login, RegistrationView, UserProfileAPI,
-    RegisteredView, email_complete
+    RegisteredView, email_complete, IncorrectKeyView
 )
 from apps.profiler.forms import (
     CustomPasswordResetForm, CustomSetPasswordForm, CustomPasswordChangeForm
@@ -95,6 +95,7 @@ urlpatterns = patterns(
         name='ajax-auth'),
     url(r'^email/$', 'apps.profiler.views.require_email', name='require_email'),
     url(r'^email-change/$', 'apps.profiler.views.email_change', name='email_change'),
+    url(r'^incorrect-activation-key/$', IncorrectKeyView.as_view(), name='incorrect_key'),
 
     url('^oauth2/redirect/?$',
         set_auth_cookie(login_required(Redirect.as_view())), name='redirect'),
