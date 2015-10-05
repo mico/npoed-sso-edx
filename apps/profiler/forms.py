@@ -22,8 +22,7 @@ class UserForm(forms.ModelForm):
         'style': 'width: 100%;'}), required=False, label=u'О себе')
     username = forms.CharField(widget=forms.TextInput(
             attrs={'class':'disabled', 'readonly':'readonly'}), label=u'Логин')
-    email = forms.EmailField(widget=forms.TextInput(
-            attrs={'class':'disabled', 'readonly':'readonly'}), label=u'Адрес e-mail')
+    email = forms.EmailField(label=u'Адрес e-mail')
     last_name = forms.CharField(label=u'Фамилия')
     first_name = forms.CharField(label=u'Имя')
 

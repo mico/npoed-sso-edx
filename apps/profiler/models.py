@@ -125,13 +125,18 @@ class RegistrationProfile(BaseRegistrationProfile):
 def send_change_email(user, email, site, request=None):
     ctx_dict = {} if request is None else RequestContext(request, {})
     prefix = getattr(settings, 'URL_PREFIX', 'http')
+    redirect_url = ''
+    if request:
+        if getattr(request, 'GET'):
+            if getattr(request.GET, 'next'):
+                redirect_url = request.GET.get('next', '')
 
     ctx_dict.update({
         'user': user,
         'activation_key': encrypt('{0}||{1}'.format(user.id, email)),
         'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
         'site': site,
-        'redirect_url': urllib.pathname2url(request.GET.get('next', '')),
+        'redirect_url': redirect_url,
         'prefix': prefix,
     })
 
@@ -144,6 +149,8 @@ def send_change_email(user, email, site, request=None):
     from_email = getattr(settings, 'REGISTRATION_DEFAULT_FROM_EMAIL',
                          settings.DEFAULT_FROM_EMAIL)
     message_txt = render_to_string('registration/change_email.txt', ctx_dict)
+    if request is None:
+        message_txt = render_to_string('registration/change_email_fix.txt', ctx_dict)
     email_message = EmailMultiAlternatives(subject, message_txt,
                                            from_email, [email])
     email_message.send()
