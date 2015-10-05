@@ -285,7 +285,10 @@ def email_complete(request, backend, *args, **kwargs):
 
 def email_change(request, *args, **kwargs):
     """Authentication complete view"""
-    activation_key = decrypt(request.GET.get('activation_key', ''))
+    try:
+        activation_key = decrypt(request.GET.get('activation_key', ''))
+    except TypeError:
+        return redirect(reverse('incorrect_key'))
     if '||' in activation_key:
         pk, email = activation_key.split('||')
         try:
@@ -296,3 +299,8 @@ def email_change(request, *args, **kwargs):
             raise Http404
 
     return redirect(reverse('profile'))
+
+
+class IncorrectKeyView(TemplateView):
+
+    template_name = 'registration/incorrect_activation_key.html'
