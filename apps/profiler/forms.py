@@ -63,8 +63,8 @@ class UserForm(forms.ModelForm):
         else:
             if user.email != email:
                 msg = u'''
-                       На вашу почту {} было отослано письмо 
-                       для активации нового email
+                       На почту {} было отправлено письмо
+                       для активации нового e-mail
                       '''.format(email)
                 raise forms.ValidationError(msg)
         return email
