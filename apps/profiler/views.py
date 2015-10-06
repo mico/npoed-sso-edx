@@ -292,7 +292,7 @@ def email_change(request, *args, **kwargs):
     except TypeError:
         return redirect(reverse('incorrect_key'))
     if '||' in activation_key:
-        pk, email = activation_key.split('||')
+        pk, email, rand_val = activation_key.split('||')
         try:
             user = User.objects.get(pk=pk)
             user.email = email
