@@ -6,6 +6,7 @@ import os.path
 import os
 from uuid import uuid4
 from datetime import datetime
+import random
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -133,7 +134,7 @@ def send_change_email(user, email, site, request=None):
 
     ctx_dict.update({
         'user': user,
-        'activation_key': '{}1'.format(encrypt('{0}||{1}'.format(user.id, email))),
+        'activation_key': '{}1'.format(encrypt('{0}||{1}||{2}'.format(user.id, email, random.randint(1, 100000)))),
         'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
         'site': site,
         'redirect_url': redirect_url,
