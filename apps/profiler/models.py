@@ -133,7 +133,7 @@ def send_change_email(user, email, site, request=None):
 
     ctx_dict.update({
         'user': user,
-        'activation_key': encrypt('{0}||{1}'.format(user.id, email)),
+        'activation_key': '{}1'.format(encrypt('{0}||{1}'.format(user.id, email))),
         'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
         'site': site,
         'redirect_url': redirect_url,

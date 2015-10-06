@@ -286,7 +286,9 @@ def email_complete(request, backend, *args, **kwargs):
 def email_change(request, *args, **kwargs):
     """Authentication complete view"""
     try:
-        activation_key = decrypt(request.GET.get('activation_key', ''))
+        key = request.GET.get('activation_key', '')
+        if len(key) > 1:
+            activation_key = decrypt(key[:-1])
     except TypeError:
         return redirect(reverse('incorrect_key'))
     if '||' in activation_key:
