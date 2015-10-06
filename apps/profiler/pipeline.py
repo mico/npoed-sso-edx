@@ -149,14 +149,16 @@ def get_username(strategy, details, user=None, *args, **kwargs):
     username = details.get('username', '')
     if username:
         try:
-            users = User.objects.get(username=username)
-        except User.DoesNotExist:
-            return None
-
-        users = User.objects.filter(username__icontains=username).count()
-        username = '{}{}'.format(username, users + 1)
-        try:
-            username = unidecode(username)
+            username = unidecode(username).replace(' ', '')
         except:
             pass
+
+        try:
+            users = User.objects.get(username=username)
+        except User.DoesNotExist:
+            pass
+        else:
+            users = User.objects.filter(username__icontains=username).count()
+            username = '{}{}'.format(username, users + 1)
+
         return {'username': username}
