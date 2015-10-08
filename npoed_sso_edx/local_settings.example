@@ -64,3 +64,6 @@ URL_PREFIX = 'https'
 
 # prefix for https in edx
 URL_PREFIX_EDX = 'https'
+
+# domain satisfying cookie policy (for PLP-119)
+SET_COOKIE_DOMAIN = '.openedu.ru'
