@@ -83,6 +83,13 @@ class UserForm(forms.ModelForm):
                 u'Фамилия слишком длинная, максимальная длина 30')
         return last_name
 
+    def clean_second_name(self):
+        second_name = self.cleaned_data.get('second_name')
+        if len(second_name) > 30:
+            raise forms.ValidationError(
+                u'Отчество слишком длинное, максимальная длина 30')
+        return second_name
+
 
 class RegUserForm(RegistrationFormUniqueEmail):
 
