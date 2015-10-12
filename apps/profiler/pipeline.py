@@ -3,6 +3,7 @@
 
 from urllib import urlopen
 from datetime import datetime
+from unidecode import unidecode
 
 from django.core.files.storage import default_storage
 from django.shortcuts import redirect
@@ -11,6 +12,7 @@ from django.core.files.base import ContentFile
 from social.pipeline.partial import partial
 
 from apps.core.utils import make_random_password
+from apps.profiler.models import User
 
 
 @partial
@@ -140,3 +142,23 @@ def get_entries(strategy, user, name, user_storage, association_id=None, *args, 
     else:
         strategy.session_pop('last_social')
     return {'entries': entries}
+
+
+@partial
+def get_username(strategy, details, user=None, *args, **kwargs):
+    username = details.get('username', '')
+    if username:
+        try:
+            username = unidecode(username).replace(' ', '')
+        except:
+            pass
+
+        try:
+            users = User.objects.get(username=username)
+        except User.DoesNotExist:
+            pass
+        else:
+            users = User.objects.filter(username__icontains=username).count()
+            username = '{}{}'.format(username, users + 1)
+
+        return {'username': username}
