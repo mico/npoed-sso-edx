@@ -74,6 +74,7 @@ INSTALLED_APPS = (
     'apps.profiler',
     'apps.permissions',
     'apps.openedx_objects',
+    'apps.utm_tracker',
 )
 
 RAVEN_CONFIG = None
@@ -89,6 +90,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'npoed_sso_edx.middleware.SocialAuthExceptionMiddleware',
+    'apps.utm_tracker.middleware.UTMTrackingMiddleware',
 )
 
 ROOT_URLCONF = 'npoed_sso_edx.urls'
@@ -218,6 +220,9 @@ EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = 'info@google.ru'
 EMAIL_FROM = DEFAULT_FROM_EMAIL
 URL_PREFIX_EDX = 'https'
+
+# Remember to set correct SET_COOKIE_DOMAIN on test
+SET_COOKIE_DOMAIN = '.openedu.ru'
 
 try:
     from local_settings import *
