@@ -220,8 +220,10 @@ class CustomActivationView(ActivationView):
         if activated_user:
             context['activated_user'] = True
             context['username'] = activated_user.username
+
             bind_social = '{}?next='.format(reverse('bind_social'),
                                             request.GET.get('next'))
+
             return redirect(bind_social)
 
         return self.render_to_response(context)
@@ -230,6 +232,12 @@ class CustomActivationView(ActivationView):
 class BindSocialView(LoginRequiredMixin, TemplateView):
 
     template_name = 'registration/bind_social.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if request.GET.get('next'):
+            context['next'] = request.GET.get('next')
+        return self.render_to_response(context)
 
 
 @login_required
