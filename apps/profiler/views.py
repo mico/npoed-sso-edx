@@ -220,7 +220,9 @@ class CustomActivationView(ActivationView):
         if activated_user:
             context['activated_user'] = True
             context['username'] = activated_user.username
-            return redirect(reverse('bind_social'))
+            bind_social = '{}?next='.format(reverse('bind_social'),
+                                            request.GET.get('next'))
+            return redirect(bind_social)
 
         return self.render_to_response(context)
 
