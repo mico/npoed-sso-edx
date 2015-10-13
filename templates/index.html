@@ -322,8 +322,9 @@
 
   {% if backend %}
     <div id="email-required-modal" class="modal fade">
-      <form action="{% url "social:complete" backend=backend %}" method="post" role="form">{% csrf_token %}
-        <div class="modal-dialog">
+      <form action="{% url "social:complete" backend=backend %}" method="post" role="form">
+	{% csrf_token %}
+        <div class="auth-section">
           <div class="modal-content">
             <div class="modal-header">
               <a class="close" aria-hidden="true" href="{% url 'login' %}">&times;</a>

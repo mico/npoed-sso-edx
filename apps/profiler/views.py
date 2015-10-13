@@ -1,6 +1,7 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 import base64
+import urllib
 
 from django.conf import settings
 from django.views.generic import TemplateView
@@ -214,11 +215,31 @@ class CustomActivationView(ActivationView):
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         activated_user = self.activate(request, *args, **kwargs)
+        if request.GET.get('next'):
+            context['next'] = request.GET.get('next')
+
         if activated_user:
             context['activated_user'] = True
             context['username'] = activated_user.username
+            bind_social = '{}?next={}'.format(
+                reverse('bind_social'),
+                urllib.pathname2url(request.GET.get('next', ''))
+            )
+
+            return redirect(bind_social)
+        return self.render_to_response(context)
+
+
+class BindSocialView(LoginRequiredMixin, TemplateView):
+
+    template_name = 'registration/bind_social.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
         if request.GET.get('next'):
             context['next'] = request.GET.get('next')
+        elif request.session.get('next_past_bind'):
+            context['next'] = request.session.get('next_past_bind')
         return self.render_to_response(context)
 
 
@@ -240,13 +261,14 @@ def validation_sent(request):
         raise Http404
 
 
-@render_to('index.html')
+@render_to('registration/email.html')
 def require_email(request):
     try:
+        details = request.session['partial_pipeline']['kwargs']['details']
         backend = request.session['partial_pipeline']['backend']
     except KeyError:
         raise Http404
-    return context(email_required=True, backend=backend)
+    return context(email_required=True, backend=backend, **details)
 
 
 @psa('social:complete')
@@ -274,12 +296,17 @@ def email_complete(request, backend, *args, **kwargs):
         session = SessionStore(session_key)
         if request.session.session_key != session_key:
             logout(request)
+
         request.session.update(dict(session.items()))
 
-    url = '{0}?verification_code={1}'.format(
+    redirect_value = request.session.get('next', '')
+
+    url = '{0}?verification_code={1}&next={2}'.format(
         reverse('social:complete', args=(backend,)),
-        verification_code
+        verification_code, redirect_value
     )
+    request.session.update({'next': reverse('bind_social'),
+                            'next_past_bind': redirect_value})
     return redirect(url)
 
 

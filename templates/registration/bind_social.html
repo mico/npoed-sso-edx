@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load  backend_utils %}
+{% load static from staticfiles %}
+
+{% block extra_css %}
+  <link href="{% static 'css/edx-theme.css' %}" rel="stylesheet" type="text/css" />
+{% endblock extra_css %}
+
+{% block title %}Открытое образование - Активация завершена{% endblock title %}
+
+{% block content %}
+<div class="content-wrapper">
+  <div class="auth-wrapper">
+    <div class="auth-section">
+
+      <h2><span>Ваш аккаунт активирован</span></h2>
+      <p>Теперь вы можете приступить к обучению. Но прежде мы рекомендуем вам подключить аккаунты</p>
+      <p>(других) социальных сетей к вашему профилю, чтобы было удобно логиниться на нашем сайте.</p>
+      {% if request.user.social_auth.all %}<h2><span>Подключенные соцсети</span></h2>{% endif %}
+      {% for sublist in available_backends|social_backends %}
+        {% for name, backend in sublist %}
+            {% associated backend %}
+            {% if association %}
+		<form class="disconnect-social-networks" method="post"
+		      action="{% url 'social:disconnect_individual' backend=association.provider association_id=association.id %}?next={{ request.path }}">
+                  {% csrf_token %}
+                  <span class="link-{{ name }}"></span>
+                  <button type="submit" class="btn btn-default">Отключить</button>
+		</form>
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      <h2><span>Подключить соцсети к профилю</span></h2>
+      {% for sublist in available_backends|social_backends %}
+        {% for name, backend in sublist %}
+          {% associated backend %}
+          {% if not association %}
+		<a class="custom_img-thumbnail_link link-{{ name }}" href="{% url 'social:begin' backend=name %}?next={{ request.path }}">
+		  <span>Подключить</span>
+		</a>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+      <p><a class="btn" href="{% if next %}{{ next }}{% else %}{% url 'profile' %}{% endif %}">Перейти к курсам</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}
