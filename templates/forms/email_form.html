@@ -1,0 +1,5 @@
+{% if form.non_field_errors %}
+<div class="myerrors clearfix">{{ form.non_field_errors }}</div>
+{% endif %}
+<lable>E-Mail Адрес:</lable>
+{% if form.email.errors %}<div class="myerrors clearfix">{{ form.email.errors }}</div>{% endif %}{{ form.email }}

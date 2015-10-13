@@ -1,6 +1,7 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 import base64
+import urllib
 
 from django.conf import settings
 from django.views.generic import TemplateView
@@ -31,7 +32,7 @@ from rest_framework.response import Response
 
 from apps.core.utils import LoginRequiredMixin, decrypt
 from apps.core.decorators import render_to
-from apps.profiler.forms import UserForm, LoginForm, RegUserForm
+from apps.profiler.forms import UserForm, LoginForm, RegUserForm, EmailForm
 from apps.profiler.models import RegistrationProfile, send_change_email
 from apps.permissions.models import Permission
 from apps.openedx_objects.models import (
@@ -130,15 +131,15 @@ def context(**extra):
     }, **extra)
 
 
-class Login(FormView):
+class EmailValidation(FormView):
 
-    form_class = LoginForm
+    form_class = EmailForm
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(data=request.POST)
         return JsonResponse({
                 'status': 'ok' if form.is_valid() else 'error',
-                'form': render_to_string('forms/login_form.html', {'form': form})
+                'form': render_to_string('forms/email_form.html', {'form': form})
                 })
 
 
@@ -214,11 +215,32 @@ class CustomActivationView(ActivationView):
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         activated_user = self.activate(request, *args, **kwargs)
+        if request.GET.get('next'):
+            context['next'] = request.GET.get('next')
+
         if activated_user:
             context['activated_user'] = True
             context['username'] = activated_user.username
+            bind_social = '{}?next={}'.format(
+                reverse('bind_social'),
+                urllib.pathname2url(request.GET.get('next', ''))
+            )
+
+            return redirect(bind_social)
+        return self.render_to_response(context)
+
+
+class BindSocialView(LoginRequiredMixin, TemplateView):
+
+    template_name = 'registration/bind_social.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
         if request.GET.get('next'):
             context['next'] = request.GET.get('next')
+            request.session['next_past_bind'] = request.GET.get('next')
+        elif request.session.get('next_past_bind'):
+            context['next'] = request.session.get('next_past_bind')
         return self.render_to_response(context)
 
 
@@ -240,13 +262,15 @@ def validation_sent(request):
         raise Http404
 
 
-@render_to('index.html')
+@render_to('registration/email.html')
 def require_email(request):
     try:
+        details = request.session['partial_pipeline']['kwargs']['details']
+        form = EmailForm(initial={'email': details['email']})
         backend = request.session['partial_pipeline']['backend']
     except KeyError:
         raise Http404
-    return context(email_required=True, backend=backend)
+    return context(email_required=True, backend=backend, form=form, **details)
 
 
 @psa('social:complete')
@@ -274,12 +298,17 @@ def email_complete(request, backend, *args, **kwargs):
         session = SessionStore(session_key)
         if request.session.session_key != session_key:
             logout(request)
+
         request.session.update(dict(session.items()))
 
-    url = '{0}?verification_code={1}'.format(
+    redirect_value = request.session.get('next', '')
+
+    url = '{0}?verification_code={1}&next={2}'.format(
         reverse('social:complete', args=(backend,)),
-        verification_code
+        verification_code, redirect_value
     )
+    request.session.update({'next': reverse('bind_social'),
+                            'next_past_bind': redirect_value})
     return redirect(url)
 
 
