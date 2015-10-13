@@ -4,7 +4,7 @@
 from django.conf.urls import patterns, url
 from django.views.generic import TemplateView
 
-from apps.profiler.views import Profile, UserProfileAPI
+from apps.profiler.views import Profile, UserProfileAPI, UserMassRegistration
 
 
 urlpatterns = patterns(
@@ -14,4 +14,5 @@ urlpatterns = patterns(
     url(r'^profile_social/$',
         TemplateView.as_view(template_name='profile-social-networks.html'),
         name='profile-social'),
+    url(r'^users/mass_registration/$', UserMassRegistration.as_view(), name='users-mass-registration'),
 )
