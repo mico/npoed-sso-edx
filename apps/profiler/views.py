@@ -221,7 +221,7 @@ class CustomActivationView(ActivationView):
         if activated_user:
             context['activated_user'] = True
             context['username'] = activated_user.username
-            bind_social = '{}?next='.format(
+            bind_social = '{}?next={}'.format(
                 reverse('bind_social'),
                 urllib.pathname2url(request.GET.get('next', ''))
             )
