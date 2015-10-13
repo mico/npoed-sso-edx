@@ -16,11 +16,11 @@
       <h2><span>Ваш аккаунт активирован</span></h2>
       <p>Теперь вы можете приступить к обучению. Но прежде мы рекомендуем вам подключить аккаунты</p>
       <p>(других) социальных сетей к вашему профилю, чтобы было удобно логиниться на нашем сайте.</p>
+      {% if request.user.social_auth.all %}<h2><span>Подключенные соцсети</span></h2>{% endif %}
       {% for sublist in available_backends|social_backends %}
         {% for name, backend in sublist %}
             {% associated backend %}
             {% if association %}
-                {% if forloop.first %}<h2><span>Подключенные соцсети</span></h2>{% endif %}
 		<form class="disconnect-social-networks" method="post"
 		      action="{% url 'social:disconnect_individual' backend=association.provider association_id=association.id %}?next={{ request.path }}">
                   {% csrf_token %}
@@ -30,11 +30,11 @@
             {% endif %}
           {% endfor %}
         {% endfor %}
+      <h2><span>Подключить соцсети к профилю</span></h2>
       {% for sublist in available_backends|social_backends %}
         {% for name, backend in sublist %}
           {% associated backend %}
           {% if not association %}
-              {% if forloop.first %}<h2><span>Подключить соцсети к профилю</span></h2>{% endif %}
 		<a class="custom_img-thumbnail_link link-{{ name }}" href="{% url 'social:begin' backend=name %}?next={{ request.path }}">
 		  <span>Подключить</span>
 		</a>

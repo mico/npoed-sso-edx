@@ -1,6 +1,7 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 import base64
+import urllib
 
 from django.conf import settings
 from django.views.generic import TemplateView
@@ -220,12 +221,12 @@ class CustomActivationView(ActivationView):
         if activated_user:
             context['activated_user'] = True
             context['username'] = activated_user.username
-
-            bind_social = '{}?next='.format(reverse('bind_social'),
-                                            request.GET.get('next'))
+            bind_social = '{}?next='.format(
+                reverse('bind_social'),
+                urllib.pathname2url(request.GET.get('next', ''))
+            )
 
             return redirect(bind_social)
-
         return self.render_to_response(context)
 
 
@@ -237,6 +238,7 @@ class BindSocialView(LoginRequiredMixin, TemplateView):
         context = self.get_context_data(**kwargs)
         if request.GET.get('next'):
             context['next'] = request.GET.get('next')
+
         return self.render_to_response(context)
 
 
