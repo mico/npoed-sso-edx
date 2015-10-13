@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load  backend_utils %}
+{% load static from staticfiles %}
+
+{% block extra_css %}
+  <link href="{% static 'css/edx-theme.css' %}" rel="stylesheet" type="text/css" />
+{% endblock extra_css %}
+
+{% block title %}Открытое образование - Активация завершена{% endblock title %}
+
+{% block content %}
+<div class="content-wrapper">
+  <div class="auth-wrapper">
+    <div class="auth-section">
+
+      <h2><span>Активация завершена успешно!</span></h2>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
