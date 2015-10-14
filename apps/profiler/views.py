@@ -232,7 +232,7 @@ class CustomActivationView(ActivationView):
 
 class BindSocialView(LoginRequiredMixin, TemplateView):
 
-    template_name = 'registration/bind_social.html'
+    template_name = 'registration/email.html'
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)

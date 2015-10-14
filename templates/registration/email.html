@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load  backend_utils %}
+{% load static from staticfiles %}
+
+{% block extra_css %}
+  <link href="{% static 'css/edx-theme.css' %}" rel="stylesheet" type="text/css" />
+{% endblock extra_css %}
+
+{% block title %}Открытое образование - Активация завершена{% endblock title %}
+
+{% block content %}
+<div class="content-wrapper">
+  <div class="auth-wrapper">
+    <div class="auth-section">
+      <h2><span>Обновление данных профиля</span></h2>
+      <p>Вы авторизовались через соцсеть. Мы заполним ваш профиль на сайте следующими данными:</p>
+      <h2><span>Обновление данных профиля</span></h2>
+      <p>Подтвердите или измените адрес электронной почты. Мы будем присылать на него</p>
+      <p> уведомления и информацию о курсах, на которые вы запишетесь.</p>
+      <form action="{% url "social:complete" backend=backend %}" method="post" role="form">
+	{% csrf_token %}
+	<div class="modal-body">
+          <div class="form-group">
+            <label class="control-label" for="email">E-mail адрес:</label>
+            <input class="form-control" id="email" type="email" name="email" value="" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">Использовать указанный email</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
