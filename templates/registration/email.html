@@ -14,7 +14,15 @@
     <div class="auth-section">
       <h2><span>Обновление данных профиля</span></h2>
       <p>Вы авторизовались через соцсеть. Мы заполним ваш профиль на сайте следующими данными:</p>
-      <h2><span>Обновление данных профиля</span></h2>
+      <table>
+	<tr><td>Изображение</td><td><img src="{% static 'img/logo-small.png' %}" alt=""></td><tr>
+	<tr><td>ФИО</td><td>{{ first_name }} {{ last_name }}</td><tr>
+	<tr><td>Пол</td><td></td><tr>
+	<tr><td>Страна</td><td></td><tr>
+	<tr><td>Город</td><td></td><tr>
+	<tr><td>Вуз</td><td></td><tr>
+      </table>
+      <h2><span>Уточнение адреса электронной почты</span></h2>
       <p>Подтвердите или измените адрес электронной почты. Мы будем присылать на него</p>
       <p> уведомления и информацию о курсах, на которые вы запишетесь.</p>
       <form action="{% url "social:complete" backend=backend %}" method="post" role="form">
@@ -22,11 +30,11 @@
 	<div class="modal-body">
           <div class="form-group">
             <label class="control-label" for="email">E-mail адрес:</label>
-            <input class="form-control" id="email" type="email" name="email" value="" />
+            <input class="form-control" id="email" type="email" name="email" value="{{ email }}" />
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary">Использовать указанный email</button>
+	  <input type="submit" class="btn btn-primary" value="Использовать указанный email" />
         </div>
       </form>
     </div>

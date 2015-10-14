@@ -263,10 +263,11 @@ def validation_sent(request):
 @render_to('registration/email.html')
 def require_email(request):
     try:
+        details = request.session['partial_pipeline']['kwargs']['details']
         backend = request.session['partial_pipeline']['backend']
     except KeyError:
         raise Http404
-    return context(email_required=True, backend=backend)
+    return context(email_required=True, backend=backend, **details)
 
 
 @psa('social:complete')
