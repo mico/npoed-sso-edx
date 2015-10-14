@@ -232,7 +232,7 @@ class CustomActivationView(ActivationView):
 
 class BindSocialView(LoginRequiredMixin, TemplateView):
 
-    template_name = 'registration/email.html'
+    template_name = 'registration/bind_social.html'
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
@@ -260,7 +260,7 @@ def validation_sent(request):
         raise Http404
 
 
-@render_to('index.html')
+@render_to('registration/email.html')
 def require_email(request):
     try:
         backend = request.session['partial_pipeline']['backend']
