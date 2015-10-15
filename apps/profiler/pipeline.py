@@ -52,7 +52,7 @@ def update_details(details, *args, **kwargs):
 def require_email(strategy, details, user=None, is_new=False, *args, **kwargs):
 
     if kwargs:
-        update_details(details, kwargs)
+        update_details(details, **kwargs)
     if kwargs.get('ajax') or user and user.email:
         return
     elif is_new:
