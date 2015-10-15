@@ -95,7 +95,7 @@ def update_profile(backend, user, response, *args, **kwargs):
     if user is None or not response:
         return
 
-    gender_dict = {u'мужской': 1, u'женский': 2}
+    gender_dict = {'male': 1, 'female': 2}
     change_data = False
     image_url = None
 
@@ -105,7 +105,7 @@ def update_profile(backend, user, response, *args, **kwargs):
         if not user.gender and gender:
             change_data = True
             # in vk male has id 2, female has id 1
-            user.gender = {2: 1, 1: 2, u'мужской': 1, u'женский': 2}.get(gender)
+            user.gender = {2: 1, 1: 2, 'male': 1, 'female': 2}.get(gender)
 
         bdate = response.get('bdate')
         if not user.date_of_birth and bdate:
@@ -141,11 +141,10 @@ def update_profile(backend, user, response, *args, **kwargs):
     elif backend.name == 'mailru-oauth2':
 
         gender = response.get('sex')
-        print 
         if not user.gender and gender:
             change_data = True
             # in mailru male has id 0, female has id 1
-            user.gender = {0: 1, 1: 2, u'мужской': 1, u'женский': 2}.get(gender)
+            user.gender = {0: 1, 1: 2, 'male': 1, 'female': 2}.get(gender)
 
         birthday = response.get('birthday')
         if not user.date_of_birth and birthday:
