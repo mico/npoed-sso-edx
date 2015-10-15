@@ -297,11 +297,25 @@ def email_complete(request, backend, *args, **kwargs):
             logout(request)
         request.session.update(dict(session.items()))
 
-    url = '{0}?verification_code={1}'.format(
-        reverse('social:complete', args=(backend,)),
-        verification_code
+    url = '{0}?verification_code={1}&bind={2}'.format(
+        reverse('social:bind_complete', args=(backend,)),
+        verification_code, reverse('bind_social')
     )
     return redirect(url)
+
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.cache import never_cache
+from social.actions import do_complete
+from social.apps.django_app.utils import psa
+from social.apps.django_app.views import _do_login
+
+@never_cache
+@csrf_exempt
+@psa('social:bind_complete')
+def bind_complete(request, backend, *args, **kwargs):
+    """Authentication complete view"""
+    return do_complete(request.backend, _do_login, request.user,
+                       redirect_name='bind', *args, **kwargs)
 
 
 def email_change(request, *args, **kwargs):

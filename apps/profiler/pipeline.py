@@ -19,12 +19,15 @@ from apps.profiler.models import User
 def require_email(strategy, details, user=None, is_new=False, *args, **kwargs):
     if kwargs.get('ajax') or user and user.email:
         return
-    elif is_new and not details.get('email'):
+    elif is_new:# and not details.get('email'):
+        first_email = details.get('email')
         email = strategy.request_data().get('email')
         print details, user, email
-        if email:
+        if email and first_email != email:
             details['email'] = email
             details['validation'] = True
+        elif email and first_email == email:
+            return
         else:
             return redirect('require_email')
 
