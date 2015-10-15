@@ -41,7 +41,7 @@
           {% endif %}
         {% endfor %}
       {% endfor %}
-      <p><a class="btn" href="{{ next }}">Перейти к курсам</a></p>
+      <p><a class="btn" href="{% if next %}{{ next }}{% else %}{% url 'profile' %}{% endif %}">Перейти к курсам</a></p>
     </div>
   </div>
 </div>

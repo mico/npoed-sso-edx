@@ -238,7 +238,8 @@ class BindSocialView(LoginRequiredMixin, TemplateView):
         context = self.get_context_data(**kwargs)
         if request.GET.get('next'):
             context['next'] = request.GET.get('next')
-
+        elif request.session.get('next_past_bind'):
+            context['next'] = request.session.get('next_past_bind')
         return self.render_to_response(context)
 
 
@@ -295,27 +296,19 @@ def email_complete(request, backend, *args, **kwargs):
         session = SessionStore(session_key)
         if request.session.session_key != session_key:
             logout(request)
+
         request.session.update(dict(session.items()))
 
-    url = '{0}?verification_code={1}&bind={2}'.format(
-        reverse('social:bind_complete', args=(backend,)),
-        verification_code, reverse('bind_social')
+    redirect_value = request.session.get('next', '')
+    print redirect_value
+
+    url = '{0}?verification_code={1}&next={2}'.format(
+        reverse('social:complete', args=(backend,)),
+        verification_code, redirect_value
     )
+    request.session.update({'next': reverse('bind_social'),
+                            'next_past_bind': redirect_value})
     return redirect(url)
-
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.cache import never_cache
-from social.actions import do_complete
-from social.apps.django_app.utils import psa
-from social.apps.django_app.views import _do_login
-
-@never_cache
-@csrf_exempt
-@psa('social:bind_complete')
-def bind_complete(request, backend, *args, **kwargs):
-    """Authentication complete view"""
-    return do_complete(request.backend, _do_login, request.user,
-                       redirect_name='bind', *args, **kwargs)
 
 
 def email_change(request, *args, **kwargs):
