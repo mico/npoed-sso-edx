@@ -19,7 +19,7 @@ def update_details(details, *args, **kwargs):
 
     response = kwargs.get('response', {})
     backend = kwargs.get('backend', {})
-    gender_dict = {1: u'мужской', 2: u'женский'}
+    gender_dict = {1: 'male', 2: u'female'}
     change_data = False
     image_url = None
     out = {}
@@ -41,7 +41,7 @@ def update_details(details, *args, **kwargs):
         out['gender'] = gender_dict.get(response.get('gender'))
 
     elif backend.name == 'mailru-oauth2':
-        out['gender'] = {0: u'мужской', 1: u'женский'}.get(response.get('sex'))
+        out['gender'] = {0: 'male', 1: 'female'}.get(response.get('sex'))
         out['birthday'] = response.get('birthday')
         out['image_url'] = response.get('pic_32')
 
