@@ -238,6 +238,7 @@ class BindSocialView(LoginRequiredMixin, TemplateView):
         context = self.get_context_data(**kwargs)
         if request.GET.get('next'):
             context['next'] = request.GET.get('next')
+            request.session['next_past_bind'] = request.GET.get('next')
         elif request.session.get('next_past_bind'):
             context['next'] = request.session.get('next_past_bind')
         return self.render_to_response(context)

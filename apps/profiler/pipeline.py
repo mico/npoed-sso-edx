@@ -26,7 +26,7 @@ def update_details(details, *args, **kwargs):
 
     if backend.name == 'vk-oauth2':
         out['image_url'] = response.get('photo_100')
-        out['gender'] = {2: 'male', 1: 'female'}.get(response.get('sex'))
+        out['gender'] = response.get('sex')#{2: 'male', 1: 'female'}.get(response.get('sex'))
         out['bdate'] = response.get('bdate')
 
     elif backend.name == 'facebook':
