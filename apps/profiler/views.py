@@ -300,7 +300,6 @@ def email_complete(request, backend, *args, **kwargs):
         request.session.update(dict(session.items()))
 
     redirect_value = request.session.get('next', '')
-    print redirect_value
 
     url = '{0}?verification_code={1}&next={2}'.format(
         reverse('social:complete', args=(backend,)),

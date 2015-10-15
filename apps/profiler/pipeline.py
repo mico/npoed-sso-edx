@@ -15,14 +15,46 @@ from apps.core.utils import make_random_password
 from apps.profiler.models import User
 
 
+def update_details(details, *args, **kwargs):
+
+    response = kwargs.get('response', {})
+    backend = kwargs.get('backend', {})
+    gender_dict = {'male': 1, 'female': 2}
+    change_data = False
+    image_url = None
+    out = {}
+
+    if backend.name == 'vk-oauth2':
+        out['image_url'] = response.get('photo_100')
+        out['gender'] = response.get('sex')
+        out['bdate'] = response.get('bdate')
+
+    elif backend.name == 'facebook':
+        out['image_url'] = 'http://graph.facebook.com/{0}/picture?type=normal'.format(response['id'])
+        out['gender'] = response.get('gender')
+
+    elif backend.name == 'twitter':
+        out['image_url'] = response.get('profile_image_url')
+        out['country'] = response.get('country')
+
+    elif backend.name == 'google-oauth2':
+        out['gender'] = response.get('gender')
+
+    elif backend.name == 'mailru-oauth2':
+        out['gender'] = response.get('sex')
+        out['birthday'] = response.get('birthday')
+
+    details.update(out)
+
+
 @partial
 def require_email(strategy, details, user=None, is_new=False, *args, **kwargs):
+    update_details(details, kwargs)
     if kwargs.get('ajax') or user and user.email:
         return
-    elif is_new:# and not details.get('email'):
+    elif is_new:
         first_email = details.get('email')
         email = strategy.request_data().get('email')
-        print details, user, email
         if email and first_email != email:
             details['email'] = email
             details['validation'] = True
