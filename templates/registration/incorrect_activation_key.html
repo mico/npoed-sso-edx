@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load  backend_utils %}
+{% load static from staticfiles %}
+
+{% block extra_css %}
+  <link href="{% static 'css/edx-theme.css' %}" rel="stylesheet" type="text/css" />
+{% endblock extra_css %}
+
+{% block title %}Открытое образование - Некорректный активационный ключ{% endblock title %}
+
+{% block content %}
+<div class="content-wrapper">
+  <div class="auth-wrapper">
+    <div class="auth-section">
+      <h2><span>Неправильный ключ активации!</span></h2>
+        <h4><p style="color: red;">Ключ активации неверен!</p></h4>
+          <p>Чтобы подтвердить изменения, попробуйте скопировать адрес ссылки из письма и вставьте его в адресную строку Вашего браузера.</p>
+          <p>Вернуться к <a href="/profile/">профилю</a> </p>
+        <br>
+    </div>
+  </div>
+</div>
+{% endblock %}

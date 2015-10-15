@@ -139,6 +139,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.auth_allowed',
     'social.pipeline.social_auth.social_user',
     'social.pipeline.user.get_username',
+    'apps.profiler.pipeline.get_username',
     'apps.profiler.pipeline.require_email',
     'apps.profiler.pipeline.mail_validation',
     'social.pipeline.social_auth.associate_by_email',
@@ -177,7 +178,7 @@ SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'last_name', 'email', 'gender', ]
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_CREATE_USERS = True
-SOCIAL_AUTH_SLUGIFY_USERNAMES = True
+#SOCIAL_AUTH_SLUGIFY_USERNAMES = True
 SOCIAL_AUTH_FORCE_RANDOM_USERNAME = False
 SOCIAL_AUTH_DEFAULT_USERNAME = 'socialauth_user'
 SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
@@ -233,3 +234,4 @@ EDX_LIBRARIES_API = '{0}://{1}/api/extended/libraries/'.format(URL_PREFIX_EDX, E
 EDX_ENROLLMENTS_API = '{0}://{1}/api/extended/enrollment'.format(URL_PREFIX_EDX, EDX_LMS_URL)
 # Let's create user in Studio to avoid redirects
 EDX_CRETEUSER_URL = '{0}://{1}/auth/complete/sso_npoed_cms-oauth2/'.format(URL_PREFIX_EDX, EDX_CMS_URL)
+PLP_CRETEUSER_URL = '{0}/complete/npoedsso/'.format(PLP_URL)
