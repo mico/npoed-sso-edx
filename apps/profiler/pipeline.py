@@ -19,31 +19,33 @@ def update_details(details, *args, **kwargs):
 
     response = kwargs.get('response', {})
     backend = kwargs.get('backend', {})
-    gender_dict = {1: 'male', 2: u'female'}
+    gender_dict = {1: 'male', 2: 'female'}
     change_data = False
     image_url = None
     out = {}
 
+    print response
+
     if backend.name == 'vk-oauth2':
-        out['image_url'] = response.get('photo_100')
-        out['gender'] = response.get('sex')#{2: 'male', 1: 'female'}.get(response.get('sex'))
-        out['bdate'] = response.get('bdate')
+        out['prev_image_url'] = response.get('photo_100')
+        out['prev_gender'] = {2: 'male', 1: 'female'}.get(response.get('sex'))
+        out['prev_bdate'] = response.get('bdate')
 
     elif backend.name == 'facebook':
-        out['image_url'] = 'http://graph.facebook.com/{0}/picture?type=normal'.format(response['id'])
-        out['gender'] = gender_dict.get(response.get('gender'))
+        out['prev_image_url'] = 'http://graph.facebook.com/{0}/picture?type=normal'.format(response['id'])
+        out['prev_gender'] = gender_dict.get(response.get('gender'))
 
     elif backend.name == 'twitter':
-        out['image_url'] = response.get('profile_image_url')
-        out['country'] = response.get('country')
+        out['prev_image_url'] = response.get('profile_image_url')
+        out['prev_country'] = response.get('country')
 
     elif backend.name == 'google-oauth2':
-        out['gender'] = gender_dict.get(response.get('gender'))
+        out['prev_gender'] = gender_dict.get(response.get('gender'))
 
     elif backend.name == 'mailru-oauth2':
-        out['gender'] = {0: 'male', 1: 'female'}.get(response.get('sex'))
-        out['birthday'] = response.get('birthday')
-        out['image_url'] = response.get('pic_32')
+        out['prev_gender'] = {0: 'male', 1: 'female'}.get(response.get('sex'))
+        out['prev_birthday'] = response.get('birthday')
+        out['prev_image_url'] = response.get('pic_32')
 
     details.update(out)
 
@@ -105,7 +107,7 @@ def update_profile(backend, user, response, *args, **kwargs):
         if not user.gender and gender:
             change_data = True
             # in vk male has id 2, female has id 1
-            user.gender = {2: 1, 1: 2, 'male': 1, 'female': 2}.get(gender)
+            user.gender = {2: 1, 1: 2}.get(gender)
 
         bdate = response.get('bdate')
         if not user.date_of_birth and bdate:
@@ -144,7 +146,7 @@ def update_profile(backend, user, response, *args, **kwargs):
         if not user.gender and gender:
             change_data = True
             # in mailru male has id 0, female has id 1
-            user.gender = {0: 1, 1: 2, 'male': 1, 'female': 2}.get(gender)
+            user.gender = {0: 1, 1: 2}.get(gender)
 
         birthday = response.get('birthday')
         if not user.date_of_birth and birthday:
