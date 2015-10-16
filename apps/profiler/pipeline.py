@@ -16,16 +16,15 @@ from apps.profiler.models import User
 
 
 def update_details(details, *args, **kwargs):
-
+    '''
+    This function used for update extra fields social users. 
+    '''
     response = kwargs.get('response', {})
     backend = kwargs.get('backend', {})
     gender_dict = {1: 'male', 2: 'female'}
     change_data = False
     image_url = None
     out = {}
-
-    print response
-
     if backend.name == 'vk-oauth2':
         out['prev_image_url'] = response.get('photo_100')
         out['prev_gender'] = {2: 'male', 1: 'female'}.get(response.get('sex'))
