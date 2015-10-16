@@ -24,6 +24,8 @@ AUTH_SESSION_COOKIE_DOMAIN = ".sso.net"
 
 EDX_API_KEY = ''
 
+SSO_API_KEY = ''
+
 SITE_ID = 2
 
 SOCIAL_AUTH_FACEBOOK_KEY = ''
@@ -64,3 +66,6 @@ URL_PREFIX = 'https'
 
 # prefix for https in edx
 URL_PREFIX_EDX = 'https'
+
+# domain satisfying cookie policy (for PLP-119)
+SET_COOKIE_DOMAIN = '.openedu.ru'
