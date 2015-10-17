@@ -21,13 +21,13 @@ def update_details(details, *args, **kwargs):
     '''
     response = kwargs.get('response', {})
     backend = kwargs.get('backend', {})
-    gender_dict = {1: 'male', 2: 'female'}
+    gender_dict = {1: u'мужской', 2: u'женский'}
     change_data = False
     image_url = None
     out = {}
     if backend.name == 'vk-oauth2':
         out['prev_image_url'] = response.get('photo_100')
-        out['prev_gender'] = {2: 'male', 1: 'female'}.get(response.get('sex'))
+        out['prev_gender'] = {2: u'мужской', 1: u'женский'}.get(response.get('sex'))
         out['prev_bdate'] = response.get('bdate')
 
     elif backend.name == 'facebook':
@@ -42,7 +42,7 @@ def update_details(details, *args, **kwargs):
         out['prev_gender'] = gender_dict.get(response.get('gender'))
 
     elif backend.name == 'mailru-oauth2':
-        out['prev_gender'] = {0: 'male', 1: 'female'}.get(response.get('sex'))
+        out['prev_gender'] = {0: u'мужской', 1: u'женский'}.get(response.get('sex'))
         out['prev_birthday'] = response.get('birthday')
         out['prev_image_url'] = response.get('pic_32')
 
@@ -51,7 +51,6 @@ def update_details(details, *args, **kwargs):
 
 @partial
 def require_email(strategy, details, user=None, is_new=False, *args, **kwargs):
-
     if kwargs:
         update_details(details, **kwargs)
     if kwargs.get('ajax') or user and user.email:

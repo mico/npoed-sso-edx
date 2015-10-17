@@ -32,7 +32,7 @@ from rest_framework.response import Response
 
 from apps.core.utils import LoginRequiredMixin, decrypt
 from apps.core.decorators import render_to
-from apps.profiler.forms import UserForm, LoginForm, RegUserForm
+from apps.profiler.forms import UserForm, LoginForm, RegUserForm, EmailForm
 from apps.profiler.models import RegistrationProfile, send_change_email
 from apps.permissions.models import Permission
 from apps.openedx_objects.models import (
@@ -266,10 +266,11 @@ def validation_sent(request):
 def require_email(request):
     try:
         details = request.session['partial_pipeline']['kwargs']['details']
+        form = EmailForm(initial={'email': details['email']})
         backend = request.session['partial_pipeline']['backend']
     except KeyError:
         raise Http404
-    return context(email_required=True, backend=backend, **details)
+    return context(email_required=True, backend=backend, form=form, **details)
 
 
 @psa('social:complete')
