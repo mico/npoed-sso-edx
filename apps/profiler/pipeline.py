@@ -39,7 +39,10 @@ def update_details(details, *args, **kwargs):
         out['prev_country'] = response.get('country')
 
     elif backend.name == 'google-oauth2':
-        out['prev_gender'] = gender_dict.get(response.get('gender'))
+        out['prev_gender'] = {'male': u'мужской', 'female': u'женский'}.get(
+            response.get('gender')
+        )
+        out['prev_image_url'] = response.get('image', {}).get('url')
 
     elif backend.name == 'mailru-oauth2':
         out['prev_gender'] = {0: u'мужской', 1: u'женский'}.get(response.get('sex'))
@@ -132,7 +135,7 @@ def update_profile(backend, user, response, *args, **kwargs):
             user.country = country
 
     elif backend.name == 'google-oauth2':
-
+        image_url = response.get('image', {}).get('url')
         gender = response.get('gender')
         if not user.gender and gender:
             change_data = True
