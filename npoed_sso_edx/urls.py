@@ -15,7 +15,7 @@ from oauth2_provider.views import Redirect
 from apps.core.decorators import set_auth_cookie, external_redirect
 from apps.core.views import login
 from apps.profiler.views import (
-    CustomActivationView, Login, RegistrationView, UserProfileAPI,
+    CustomActivationView, RegistrationView, UserProfileAPI,
     RegisteredView, email_complete, IncorrectKeyView, BindSocialView
 )
 from apps.profiler.forms import (

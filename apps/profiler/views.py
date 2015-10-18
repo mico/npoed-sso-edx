@@ -131,15 +131,15 @@ def context(**extra):
     }, **extra)
 
 
-class Login(FormView):
+class EmailValidation(FormView):
 
-    form_class = LoginForm
+    form_class = EmailForm
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(data=request.POST)
         return JsonResponse({
                 'status': 'ok' if form.is_valid() else 'error',
-                'form': render_to_string('forms/login_form.html', {'form': form})
+                'form': form
                 })
 
 

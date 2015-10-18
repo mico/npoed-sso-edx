@@ -231,6 +231,24 @@
 
         $lastsocialModal.modal('show');
 
+        $(document).ready(function() {
+          $(document).on('click', "#social_email", function(e){
+            e.preventDefault();
+            $.ajax({
+              type: 'POST',
+              url: "/validation_email/",
+              dataType: 'json',
+              success: function(data) {
+                if(data['status'] == 'ok') {
+                  $("#social_email_form").submit();
+                } else {
+                  $("#social_email_form .form-group").html(data["form"]);
+                }
+              },
+            });
+          });
+        });
+
       });
     </script>
   {% endblock js %}
