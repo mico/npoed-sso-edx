@@ -139,7 +139,7 @@ class EmailValidation(FormView):
         form = self.form_class(data=request.POST)
         return JsonResponse({
                 'status': 'ok' if form.is_valid() else 'error',
-                'form': form
+                'form': render_to_string('forms/email_form.html', {'form': form})
                 })
 
 
