@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 import base64
 import urllib
+import random
+import logging
 
 from django.conf import settings
 from django.views.generic import TemplateView
@@ -15,6 +17,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.sessions.backends.db import SessionStore
 from django.contrib.auth import logout
+from django.core.validators import validate_email
 
 from social.backends.oauth import BaseOAuth1, BaseOAuth2
 from social.backends.google import GooglePlusAuth
@@ -48,6 +51,59 @@ if RAVEN_CONFIG:
     client = Client(RAVEN_CONFIG.get('dsn'))
 
 User = get_user_model()
+
+
+class ApiKeyPermission(permissions.BasePermission):
+    '''
+    Check Api key
+    '''
+    def has_permission(self, request, view):
+        api_key = getattr(settings, 'SSO_API_KEY', None)
+        if not api_key:
+            logging.error('SSO_API_KEY not configured')
+        key = request.META.get('HTTP_X_SSO_API_KEY')
+        if key and api_key and key == api_key:
+            return True
+        return False
+
+
+class UserMassRegistration(APIView):
+    '''
+    Массовая регистрация пользователей по списку емейлов и slug университета
+    '''
+    permission_classes = (ApiKeyPermission,)
+
+    def post(self, request, **kwargs):
+        emails = request.data.get('emails')
+        university = request.data.get('university')
+        if not university:
+            return Response({'errors': ['University slug must be specified']})
+        users = []
+        if emails and isinstance(emails, list):
+            make_active = []
+            for email in emails:
+                try:
+                    validate_email(email)
+                except:
+                    continue
+
+                users_q = User.objects.filter(email=email)
+                if users_q:
+                    user = users_q[0]
+                    users.append({'email': email, 'username': user.username})
+                else:
+                    username = '%s_%s' % (university, email.split('@')[0])
+                    while User.objects.filter(username=username).exists():
+                        username += str(random.randint(0, 9))
+                    password = User.objects.make_random_password()
+                    user = User.objects.create_user(username, email, password)
+                    make_active.append(user.id)
+                    users.append({'email': email, 'username': user.username})
+            User.objects.filter(id__in=make_active).update(is_active=True)
+
+        else:
+            return Response({'errors': ['Emails should be non-empty list']})
+        return Response({'users': users})
 
 
 class UserProfileAPI(APIView):
