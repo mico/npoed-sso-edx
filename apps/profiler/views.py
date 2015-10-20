@@ -18,6 +18,12 @@ from django.shortcuts import redirect
 from django.contrib.sessions.backends.db import SessionStore
 from django.contrib.auth import logout
 from django.core.validators import validate_email
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+from django.template import loader
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail
 
 from social.backends.oauth import BaseOAuth1, BaseOAuth2
 from social.backends.google import GooglePlusAuth
@@ -72,6 +78,8 @@ class UserMassRegistration(APIView):
     Массовая регистрация пользователей по списку емейлов и slug университета
     '''
     permission_classes = (ApiKeyPermission,)
+    email_subject = 'registration/password_set_subject.txt'
+    email_html = 'registration/password_set_email.html'
 
     def post(self, request, **kwargs):
         emails = request.data.get('emails')
@@ -99,6 +107,22 @@ class UserMassRegistration(APIView):
                     user = User.objects.create_user(username, email, password)
                     make_active.append(user.id)
                     users.append({'email': email, 'username': user.username})
+                    current_site = get_current_site(None)
+                    c = {
+                        'email': user.email,
+                        'domain': current_site.domain,
+                        'site_name': current_site.name,
+                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                        'user': user,
+                        'token': default_token_generator.make_token(user),
+                        'protocol': settings.URL_PREFIX,
+                    }
+                    subject = loader.render_to_string(self.email_subject, c)
+                    subject = ''.join(subject.splitlines())
+                    send_mail(subject,
+                              loader.render_to_string(self.email_html, c),
+                              settings.DEFAULT_FROM_EMAIL,
+                              [user.email])
             User.objects.filter(id__in=make_active).update(is_active=True)
 
         else:
