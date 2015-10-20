@@ -15,15 +15,58 @@ from apps.core.utils import make_random_password
 from apps.profiler.models import User
 
 
+def update_details(details, *args, **kwargs):
+    '''
+    This function used for update extra fields social users. 
+    '''
+    response = kwargs.get('response', {})
+    backend = kwargs.get('backend', {})
+    gender_dict = {1: u'мужской', 2: u'женский'}
+    change_data = False
+    image_url = None
+    out = {}
+
+    if backend.name == 'vk-oauth2':
+        out['prev_image_url'] = response.get('photo_100')
+        out['prev_gender'] = {2: u'мужской', 1: u'женский'}.get(response.get('sex'))
+        out['prev_bdate'] = response.get('bdate')
+
+    elif backend.name == 'facebook':
+        out['prev_image_url'] = 'http://graph.facebook.com/{0}/picture?type=normal'.format(response['id'])
+        out['prev_gender'] = gender_dict.get(response.get('gender'))
+
+    elif backend.name == 'twitter':
+        out['prev_image_url'] = response.get('profile_image_url')
+        out['prev_country'] = response.get('country')
+
+    elif backend.name == 'google-oauth2':
+        out['prev_gender'] = {'male': u'мужской', 'female': u'женский'}.get(
+            response.get('gender')
+        )
+        out['prev_image_url'] = response.get('image', {}).get('url')
+
+    elif backend.name == 'mailru-oauth2':
+        out['prev_gender'] = {0: u'мужской', 1: u'женский'}.get(response.get('sex'))
+        out['prev_birthday'] = response.get('birthday')
+        out['prev_image_url'] = response.get('pic_32')
+
+    details.update(out)
+
+
 @partial
 def require_email(strategy, details, user=None, is_new=False, *args, **kwargs):
+    if kwargs:
+        update_details(details, **kwargs)
     if kwargs.get('ajax') or user and user.email:
         return
-    elif is_new and not details.get('email'):
+    elif is_new:
+        first_email = details.get('email')
         email = strategy.request_data().get('email')
-        if email:
+        if email and first_email != email:
             details['email'] = email
             details['validation'] = True
+        elif email and first_email == email:
+            return
         else:
             return redirect('require_email')
 
@@ -93,7 +136,7 @@ def update_profile(backend, user, response, *args, **kwargs):
             user.country = country
 
     elif backend.name == 'google-oauth2':
-
+        image_url = response.get('image', {}).get('url')
         gender = response.get('gender')
         if not user.gender and gender:
             change_data = True

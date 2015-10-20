@@ -179,4 +179,10 @@ class CustomPasswordChangeForm(PasswordChangeForm):
             raise forms.ValidationError(
                 u'Пароль слишком короткий, минимальная длина %s' % settings.MIN_LENGTH_PASSWORD)
         return password
+
+
+class EmailForm(forms.Form):
+
+    email = forms.EmailField(label=u'E-mail адрес:')
+
 # TODO DRY ^

@@ -15,8 +15,8 @@ from oauth2_provider.views import Redirect
 from apps.core.decorators import set_auth_cookie, external_redirect
 from apps.core.views import login
 from apps.profiler.views import (
-    CustomActivationView, Login, RegistrationView, UserProfileAPI,
-    RegisteredView, email_complete, IncorrectKeyView
+    CustomActivationView, RegistrationView, UserProfileAPI,
+    RegisteredView, email_complete, IncorrectKeyView, BindSocialView
 )
 from apps.profiler.forms import (
     CustomPasswordResetForm, CustomSetPasswordForm, CustomPasswordChangeForm
@@ -53,6 +53,9 @@ urlpatterns = patterns(
     url(r'^accounts/activate/(?P<activation_key>\w+)/$',
         set_auth_cookie(CustomActivationView.as_view()),
         name='registration_activate'),
+    url(r'^bind_social/$', set_auth_cookie(BindSocialView.as_view()),
+        name='bind_social'),
+
     url(r'^register/$', set_auth_cookie(RegistrationView.as_view()),
         name='registration_register2'),
     url(r'^accounts/', include('registration.backends.default.urls')),
