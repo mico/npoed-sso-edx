@@ -90,11 +90,7 @@
         {% for name, backend in sublist %}
           {% associated backend %}
           {% if not association %}
-
-          {% if name != 'mailru-oauth2' %}
             <a class="custom_img-thumbnail_link link-{{ name }}" href="{% url 'social:begin' backend=name %}?next={{ request.path }}"><span>Подключить {{ name }}</span></a>
-          {% endif %}
-
           {% endif %}
         {% endfor %}
       {% endfor %}
