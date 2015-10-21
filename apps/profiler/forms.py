@@ -25,6 +25,8 @@ class UserForm(forms.ModelForm):
     email = forms.EmailField(label=u'Адрес e-mail')
     last_name = forms.CharField(label=u'Фамилия')
     first_name = forms.CharField(label=u'Имя')
+    second_name = forms.CharField(label=u'Отчество', widget=forms.TextInput(
+            attrs={"maxlength": '30'}))
 
     date_of_birth = forms.DateField(label=u'Дата рождения',
             widget=forms.TextInput(attrs={'class': 'vDateField'}), required=False)
