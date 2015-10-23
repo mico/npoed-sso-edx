@@ -75,6 +75,17 @@ INSTALLED_APPS = (
     'apps.permissions',
     'apps.openedx_objects',
     'apps.utm_tracker',
+    'django_jenkins',
+)
+
+PROJECT_APPS = ('apps.core',
+                'apps.profiler',
+                'apps.permissions',
+                'apps.openedx_objects',
+)
+
+JENKINS_TASKS = ('django_jenkins.tasks.run_pep8',
+                 'django_jenkins.tasks.run_pyflakes',
 )
 
 RAVEN_CONFIG = None
