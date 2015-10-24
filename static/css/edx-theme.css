@@ -155,6 +155,19 @@ body {
   width: 100%;
 }
 
+.auth-table td {
+  padding: 8px;
+}
+
+.auth-img {
+  display: block;
+  margin: auto;
+}
+
+.auth-row {
+  margin-bottom: 20px;
+}
+
 /* chosen.js SELECT tag replacement */
 .chosen-container-single .chosen-single {
   height: 40px;
@@ -572,3 +585,4 @@ body {
   margin: 0;
   padding: 0;
 }
+

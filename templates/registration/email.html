@@ -13,23 +13,34 @@
   <div class="auth-wrapper">
     <div class="auth-section">
       <h2><span>Обновление данных профиля</span></h2>
-      <p>Вы авторизовались через соцсеть. Мы заполним ваш профиль на сайте следующими данными:</p>
-      <table>
-	<tr><td>Изображение</td><td><img src="{{ prev_image_url }}" alt=""></td><tr>
-	<tr><td>ФИО</td><td>{{ first_name }} {{ last_name }}</td><tr>
-	<tr><td>Пол</td><td>{{ prev_gender }}</td><tr>
-	<tr><td>Страна</td><td>{{ prev_country }}</td><tr>
-	<tr><td>Город</td><td></td><tr>
-	<tr><td>Вуз</td><td></td><tr>
-      </table>
+      <p>Вы авторизовались через соцсеть. Мы заполним ваш профиль на сайте следующими данными. Вы можете изменить эти данные позднее в личном кабинете:</p>
+      <div class="auth-row row">
+        <div class="col-xs-6">
+          <table class="auth-table">
+            {% if first_name or last_name %}
+            <tr><td>ФИО:</td><td>{{ first_name }} {{ last_name }}</td><tr>
+            {% endif %}
+            {% if prev_gender %}
+            <tr><td>Пол:</td><td>{{ prev_gender }}</td><tr>
+            {% endif %}
+            {% if prev_imgae_url %}
+            <tr><td>Страна:</td><td>{{ prev_country }}</td><tr>
+            {% endif %}
+            {# TODO(adinvadim):  Добавить поле город и поле вуз #}
+          </table>
+        </div>
+        <div class="col-xs-6">
+              <img src="{{ prev_image_url }}" alt="" class="auth-img">
+        </div>
+      </div>
       <h2><span>Уточнение адреса электронной почты</span></h2>
       <p>Подтвердите или измените адрес электронной почты. Мы будем присылать на него</p>
       <p> уведомления и информацию о курсах, на которые вы запишетесь.</p>
       <form action="{% url "social:complete" backend=backend %}" method="post" role="form" id="social_email_form">
-	{% csrf_token %}
-	<div class="modal-body"><div class="form-group">{{ form }}</div></div>
+        {% csrf_token %}
+        <div class="modal-body"><div class="form-group">{{ form }}</div></div>
         <div class="modal-footer">
-	  <button class="btn btn-default" id="social_email" >Использовать указанный email</button>
+          <button class="btn btn-default" id="social_email" >Использовать указанную почту</button>
         </div>
       </form>
     </div>
