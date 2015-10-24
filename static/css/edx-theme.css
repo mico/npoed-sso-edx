@@ -104,7 +104,7 @@ body {
   color: red;
 }
 .content-wrapper {
-  width: 700px;
+  max-width: 700px;
   margin: 20px auto;
 }
 
@@ -586,3 +586,16 @@ body {
   padding: 0;
 }
 
+@media (max-width: 480px) {
+  .auth-wrapper h2 {
+    border-top: transparent;
+  }
+}
+
+
+@media (max-width: 767px) {
+  .modal-footer {
+    text-align: center;
+  }
+
+}

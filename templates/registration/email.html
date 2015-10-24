@@ -15,7 +15,10 @@
       <h2><span>Обновление данных профиля</span></h2>
       <p>Вы авторизовались через соцсеть. Мы заполним ваш профиль на сайте следующими данными. Вы можете изменить эти данные позднее в личном кабинете:</p>
       <div class="auth-row row">
-        <div class="col-xs-6">
+        <div class="col-sm-6">
+          <img src="{{ prev_image_url }}" alt="" class="auth-img">
+        </div>
+        <div class="col-sm-6">
           <table class="auth-table">
             {% if first_name or last_name %}
             <tr><td>ФИО:</td><td>{{ first_name }} {{ last_name }}</td><tr>
@@ -28,9 +31,6 @@
             {% endif %}
             {# TODO(adinvadim):  Добавить поле город и поле вуз #}
           </table>
-        </div>
-        <div class="col-xs-6">
-              <img src="{{ prev_image_url }}" alt="" class="auth-img">
         </div>
       </div>
       <h2><span>Уточнение адреса электронной почты</span></h2>
