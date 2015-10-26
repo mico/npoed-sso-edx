@@ -24,3 +24,4 @@ MySQL-python==1.2.5
 django-countries==3.3
 crypto==1.4.1
 pycrypto==2.6.1
+coverage==3.7.1

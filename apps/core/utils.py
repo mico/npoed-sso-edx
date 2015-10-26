@@ -5,6 +5,12 @@ import re
 import string
 import random
 import base64
+
+import sys
+if sys.platform == 'darwin':
+    import crypto
+    sys.modules['Crypto'] = crypto
+
 from Crypto.Cipher import AES
 
 from unidecode import unidecode

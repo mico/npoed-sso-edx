@@ -7,6 +7,6 @@ install:
   - cp npoed_sso_edx/local_settings.example npoed_sso_edx/local_settings.py
   - pip install -r requirements.txt
 script:
-  - ./manage.py test
+  - coverage run ./manage.py test
 after_success:
   - codecov
