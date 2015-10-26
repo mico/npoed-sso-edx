@@ -104,7 +104,7 @@ body {
   color: red;
 }
 .content-wrapper {
-  max-width: 700px;
+  width: 700px;
   margin: 20px auto;
 }
 
@@ -153,19 +153,6 @@ body {
   margin-left: 0;
   margin-right: 0;
   width: 100%;
-}
-
-.auth-table td {
-  padding: 8px;
-}
-
-.auth-img {
-  display: block;
-  margin: auto;
-}
-
-.auth-row {
-  margin-bottom: 20px;
 }
 
 /* chosen.js SELECT tag replacement */
@@ -584,18 +571,4 @@ body {
 #profile-connected-social-network li form {
   margin: 0;
   padding: 0;
-}
-
-@media (max-width: 480px) {
-  .auth-wrapper h2 {
-    border-top: transparent;
-  }
-}
-
-
-@media (max-width: 767px) {
-  .modal-footer {
-    text-align: center;
-  }
-
 }

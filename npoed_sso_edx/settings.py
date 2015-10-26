@@ -76,7 +76,6 @@ INSTALLED_APPS = (
     'apps.openedx_objects',
     'apps.utm_tracker',
     'django_jenkins',
-    'sslserver',
 )
 
 PROJECT_APPS = ('apps.core',

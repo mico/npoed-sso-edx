@@ -181,8 +181,6 @@ class CustomPasswordChangeForm(PasswordChangeForm):
 
 class EmailForm(forms.Form):
 
-    email = forms.EmailField()
-    email.label = ''
-    email.widget.attrs['placeholder'] = u'your.email@mail.ru'
+    email = forms.EmailField(label=u'E-mail адрес:')
 
 # TODO DRY ^
