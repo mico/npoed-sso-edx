@@ -5,6 +5,10 @@ import re
 import string
 import random
 import base64
+import crypto
+import sys
+
+sys.modules['Crypto'] = crypto
 from Crypto.Cipher import AES
 
 from unidecode import unidecode
