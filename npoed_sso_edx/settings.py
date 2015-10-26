@@ -75,7 +75,6 @@ INSTALLED_APPS = (
     'apps.permissions',
     'apps.openedx_objects',
     'apps.utm_tracker',
-    "sslserver"
 )
 
 RAVEN_CONFIG = None
