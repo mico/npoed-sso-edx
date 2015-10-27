@@ -1,0 +1,5 @@
+[run]
+source =
+    apps
+    npoed_sso_edx
+branch = False
